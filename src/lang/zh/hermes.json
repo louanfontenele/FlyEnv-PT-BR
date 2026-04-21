@@ -152,5 +152,7 @@
   "clear": "清空",
   "updateSkill": "更新",
   "resetSkill": "重置",
-  "categoryName": "分类"
+  "categoryName": "分类",
+  "lastActive": "最后活跃",
+  "id": "ID"
 }

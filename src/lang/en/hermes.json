@@ -152,5 +152,7 @@
   "clear": "Clear",
   "updateSkill": "Update",
   "resetSkill": "Reset",
-  "categoryName": "Category"
+  "categoryName": "Category",
+  "lastActive": "Last Active",
+  "id": "ID"
 }

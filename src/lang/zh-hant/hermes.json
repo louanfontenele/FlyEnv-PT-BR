@@ -151,5 +151,7 @@
   "search": "搜索",
   "clear": "清空",
   "updateSkill": "更新",
-  "resetSkill": "重置"
+  "resetSkill": "重置",
+  "lastActive": "最後活躍",
+  "id": "ID"
 }

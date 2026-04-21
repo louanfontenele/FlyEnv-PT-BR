@@ -1,6 +1,14 @@
 import { Base } from '../Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import { execPromiseWithEnv, readFile, remove, existsSync, waitTime, readdir, writeFile } from '../../Fn'
+import {
+  execPromiseWithEnv,
+  readFile,
+  remove,
+  existsSync,
+  waitTime,
+  readdir,
+  writeFile
+} from '../../Fn'
 import { tmpdir, homedir } from 'node:os'
 import { join } from 'node:path'
 import { uuid } from '../../Fn'
@@ -192,7 +200,10 @@ class Hermes extends Base {
       // Also try simple list format: disabled: [skill-a, skill-b]
       const simpleMatch = content.match(/skills:\s*\n(?:\s+.*\n)*\s+disabled:\s*\[([^\]]*)\]/)
       if (simpleMatch) {
-        const items = simpleMatch[1].split(',').map((s) => s.trim()).filter(Boolean)
+        const items = simpleMatch[1]
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
         return new Set(items)
       }
       return new Set()
@@ -330,15 +341,35 @@ class Hermes extends Base {
   listSessions() {
     return new ForkPromise(async (resolve) => {
       const tmp = join(tmpdir(), `${uuid()}.txt`)
-      let list: any[] = []
+      const list: any[] = []
       try {
         await execPromiseWithEnv(`${this.hermesBin()} sessions list > "${tmp}" 2>&1`)
         const content = await readFile(tmp, 'utf-8')
         const lines = content
           .trim()
           .split('\n')
-          .filter((l) => l.trim().length > 0)
-        list = lines.map((line) => ({ name: line.trim() }))
+          .map((l) => l.trimEnd())
+          .filter((l) => {
+            const trimmed = l.trim()
+            return (
+              trimmed.length > 0 &&
+              !trimmed.includes('─') &&
+              !(trimmed.startsWith('Preview') && trimmed.includes('Last Active'))
+            )
+          })
+        for (const line of lines) {
+          const parts = line.trim().split(/\s{2,}/)
+          if (parts.length >= 4) {
+            list.push({
+              name: parts[0],
+              lastActive: parts[1],
+              src: parts[2],
+              id: parts[3]
+            })
+          } else if (parts.length >= 1 && parts[0]) {
+            list.push({ name: parts[0], lastActive: '', src: '', id: '' })
+          }
+        }
       } catch (e) {
         console.log('hermes sessions list error: ', e)
       } finally {
@@ -347,6 +378,17 @@ class Hermes extends Base {
         }
       }
       resolve(list)
+    })
+  }
+
+  deleteSession(id: string) {
+    return new ForkPromise(async (resolve, reject) => {
+      try {
+        await execPromiseWithEnv(`${this.hermesBin()} sessions delete "${id}"`)
+        resolve(true)
+      } catch (e: any) {
+        reject(e?.message ?? 'fail')
+      }
     })
   }
 
@@ -502,7 +544,9 @@ class Hermes extends Base {
   searchSkills(query: string, limit = 20) {
     return new ForkPromise(async (resolve) => {
       try {
-        const output = await this.runCommand(`${this.hermesBin()} skills search "${query}" --limit ${limit}`)
+        const output = await this.runCommand(
+          `${this.hermesBin()} skills search "${query}" --limit ${limit}`
+        )
         const list = this.parseSearchOutput(output)
         resolve(list)
       } catch (e) {
@@ -601,7 +645,9 @@ class Hermes extends Base {
           return
         }
         const content = await readFile(configPath, 'utf-8')
-        const match = content.match(/skills:\s*\n(?:\s+.*\n)*\s+disabled:\s*\n((?:\s*-\s*[^\n]+\n)*)/)
+        const match = content.match(
+          /skills:\s*\n(?:\s+.*\n)*\s+disabled:\s*\n((?:\s*-\s*[^\n]+\n)*)/
+        )
         const disabled: string[] = []
         if (match) {
           const disabledLines = match[1]
@@ -612,7 +658,10 @@ class Hermes extends Base {
         }
         const simpleMatch = content.match(/skills:\s*\n(?:\s+.*\n)*\s+disabled:\s*\[([^\]]*)\]/)
         if (simpleMatch) {
-          const items = simpleMatch[1].split(',').map((s) => s.trim()).filter(Boolean)
+          const items = simpleMatch[1]
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
           disabled.push(...items)
         }
         resolve({ disabled: [...new Set(disabled)] })
@@ -632,19 +681,82 @@ class Hermes extends Base {
           content = await readFile(configPath, 'utf-8')
         }
 
-        const disabledYaml = disabled.length > 0 ? disabled.map((d) => `  - ${d}`).join('\n') : '  []'
+        const newDisabledLines =
+          disabled.length > 0
+            ? ['  disabled:', ...disabled.map((d) => `    - ${d}`)]
+            : ['  disabled: []']
 
+        let newContent: string
         if (content.includes('skills:')) {
-          // Replace existing skills.disabled
-          const newContent = content.replace(
-            /(skills:\s*\n(?:\s+.*\n)*?)(\s+disabled:\s*(?:\[[^\]]*\]|(?:\n(?:\s+-\s*[^\n]+\n?)*))?)/,
-            `$1  disabled:\n${disabledYaml}\n`
-          )
-          await writeFile(configPath, newContent)
+          const lines = content.split('\n')
+          const result: string[] = []
+          let inSkills = false
+          let inDisabled = false
+          let disabledInserted = false
+
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i]
+            const trimmed = line.trim()
+
+            if (trimmed === 'skills:') {
+              inSkills = true
+              inDisabled = false
+              result.push(line)
+              continue
+            }
+
+            if (inSkills) {
+              // Skills block ends when a non-empty, non-indented line appears
+              if (line.length > 0 && !line.startsWith(' ') && !line.startsWith('\t')) {
+                if (!disabledInserted) {
+                  result.push(...newDisabledLines)
+                  disabledInserted = true
+                }
+                inSkills = false
+                result.push(line)
+                continue
+              }
+
+              // Replace existing disabled key
+              if (trimmed.startsWith('disabled:')) {
+                inDisabled = true
+                disabledInserted = true
+                result.push(...newDisabledLines)
+                continue
+              }
+
+              // Skip old disabled value lines
+              if (inDisabled) {
+                if (trimmed.startsWith('- ') || trimmed.length === 0) {
+                  continue
+                }
+                inDisabled = false
+              }
+            }
+
+            result.push(line)
+          }
+
+          // If file ends inside skills block, append disabled
+          if (inSkills && !disabledInserted) {
+            result.push(...newDisabledLines)
+          }
+
+          newContent = result.join('\n')
+          if (!newContent.endsWith('\n')) {
+            newContent += '\n'
+          }
         } else {
-          content += `\nskills:\n  disabled:\n${disabledYaml}\n`
-          await writeFile(configPath, content)
+          const parts: string[] = []
+          if (content.length > 0) {
+            parts.push(content.trimEnd())
+          }
+          parts.push('skills:')
+          parts.push(...newDisabledLines)
+          newContent = parts.join('\n') + '\n'
         }
+
+        await writeFile(configPath, newContent)
         resolve(true)
       } catch (e: any) {
         reject(e?.message ?? 'fail')

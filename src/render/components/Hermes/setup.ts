@@ -30,6 +30,9 @@ export interface ProviderItem {
 
 export interface SessionItem {
   name: string
+  lastActive: string
+  src: string
+  id: string
 }
 
 export interface InstalledSkillItem {
@@ -96,6 +99,8 @@ class Hermes {
   skillInspectContent = ''
   skillInspectVisible = false
   skillConfig: { disabled: string[] } = { disabled: [] }
+
+  skillViewTab: 'code' | 'both' | 'preview' = 'both'
 
   get actions(): string[] {
     const actions: string[] = []
@@ -274,6 +279,20 @@ class Hermes {
       IPC.off(key)
       if (res?.code === 0) {
         this.sessions = res?.data ?? []
+      }
+    })
+  }
+
+  deleteSession(id: string) {
+    this.loading = true
+    IPC.send('app-fork:hermes', 'deleteSession', id).then((key: string, res: any) => {
+      IPC.off(key)
+      this.loading = false
+      if (res?.code === 0) {
+        MessageSuccess(I18nT('base.success'))
+        this.refreshSessions()
+      } else {
+        MessageError(res?.msg ?? I18nT('base.fail'))
       }
     })
   }

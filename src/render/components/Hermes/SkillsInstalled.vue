@@ -59,46 +59,50 @@
         <el-tag v-else size="small" type="danger">{{ I18nT('hermes.disabled') }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column :label="I18nT('base.action')" width="100" align="center" fixed="right">
+    <el-table-column :label="I18nT('base.action')" width="100px" align="center">
       <template #default="{ row }">
-        <el-popover
-          effect="dark"
-          popper-class="host-list-poper"
-          placement="left-start"
-          width="auto"
-          :show-arrow="false"
-        >
-          <ul v-poper-fix class="host-list-menu">
-            <li @click.stop="handleView(row)">
-              <yb-icon :svg="import('@/svg/eye.svg?raw')" width="13" height="13" />
-              <span class="ml-3">{{ I18nT('base.view') }}</span>
-            </li>
-            <li v-if="!row.isBuiltin" @click.stop="HermesSetup.updateSkill(row.name)">
-              <yb-icon :svg="import('@/svg/icon_refresh.svg?raw')" width="13" height="13" />
-              <span class="ml-3">{{ I18nT('hermes.updateSkill') }}</span>
-            </li>
-            <li v-if="!row.isBuiltin" @click.stop="handleUninstall(row.name)">
-              <yb-icon :svg="import('@/svg/trash.svg?raw')" width="13" height="13" />
-              <span class="ml-3">{{ I18nT('base.uninstall') }}</span>
-            </li>
-            <li @click.stop="handleReset(row.name)">
-              <yb-icon :svg="import('@/svg/load-default.svg?raw')" width="13" height="13" />
-              <span class="ml-3">{{ I18nT('hermes.resetSkill') }}</span>
-            </li>
-            <li @click.stop="HermesSetup.toggleSkillEnabled(row.name, !row.enabled)">
-              <yb-icon :svg="import('@/svg/switch.svg?raw')" width="13" height="13" />
-              <span class="ml-3">{{
-                row.enabled ? I18nT('hermes.disable') : I18nT('hermes.enable')
-              }}</span>
-            </li>
-          </ul>
+        <div class="h-full w-full flex items-center justify-center">
+          <el-popover
+            effect="dark"
+            popper-class="host-list-poper"
+            placement="left-start"
+            width="auto"
+            :show-arrow="false"
+          >
+            <ul v-poper-fix class="host-list-menu">
+              <li @click.stop="handleView(row)">
+                <yb-icon :svg="import('@/svg/eye.svg?raw')" width="13" height="13" />
+                <span class="ml-3">{{ I18nT('base.info') }}</span>
+              </li>
+              <li v-if="!row.isBuiltin" @click.stop="HermesSetup.updateSkill(row.name)">
+                <yb-icon :svg="import('@/svg/icon_refresh.svg?raw')" width="13" height="13" />
+                <span class="ml-3">{{ I18nT('hermes.updateSkill') }}</span>
+              </li>
+              <li v-if="!row.isBuiltin" @click.stop="handleUninstall(row.name)">
+                <yb-icon :svg="import('@/svg/trash.svg?raw')" width="13" height="13" />
+                <span class="ml-3">{{ I18nT('base.uninstall') }}</span>
+              </li>
+              <li @click.stop="handleReset(row.name)">
+                <yb-icon :svg="import('@/svg/load-default.svg?raw')" width="13" height="13" />
+                <span class="ml-3">{{ I18nT('hermes.resetSkill') }}</span>
+              </li>
+              <li @click.stop="HermesSetup.toggleSkillEnabled(row.name, !row.enabled)">
+                <yb-icon :svg="import('@/svg/switch.svg?raw')" width="13" height="13" />
+                <span class="ml-3">{{
+                  row.enabled ? I18nT('hermes.disable') : I18nT('hermes.enable')
+                }}</span>
+              </li>
+            </ul>
 
-          <template #reference>
-            <div class="right">
-              <yb-icon :svg="import('@/svg/more1.svg?raw')" width="22" height="22" />
-            </div>
-          </template>
-        </el-popover>
+            <template #reference>
+              <div
+                class="w-[30px] h-[30px] flex items-center justify-center cursor-pointer hover:text-yellow-500"
+              >
+                <yb-icon :svg="import('@/svg/more1.svg?raw')" width="22" height="22" />
+              </div>
+            </template>
+          </el-popover>
+        </div>
       </template>
     </el-table-column>
   </el-table>

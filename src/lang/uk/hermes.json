@@ -151,5 +151,7 @@
   "search": "Search",
   "clear": "Clear",
   "updateSkill": "Update",
-  "resetSkill": "Reset"
+  "resetSkill": "Reset",
+  "lastActive": "Last Active",
+  "id": "ID"
 }

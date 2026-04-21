@@ -13,19 +13,25 @@
       </div>
     </template>
     <div class="p-5 h-full overflow-hidden flex flex-col">
-      <el-input v-model="search" :placeholder="I18nT('hermes.searchSession')" clearable class="mb-3" />
+      <el-input
+        v-model="search"
+        :placeholder="I18nT('hermes.searchSession')"
+        clearable
+        class="mb-3"
+      />
       <el-scrollbar class="flex-1">
         <el-table :data="filteredSessions" stripe style="width: 100%">
           <el-table-column prop="name" :label="I18nT('hermes.sessionName')" />
-          <el-table-column width="120">
+          <el-table-column prop="lastActive" :label="I18nT('hermes.lastActive')" width="140" />
+          <el-table-column prop="src" :label="I18nT('hermes.source')" width="100" />
+          <el-table-column prop="id" :label="I18nT('hermes.id')" width="220" />
+          <el-table-column width="120" :label="I18nT('base.operation')" align="center">
             <template #default="{ row }">
-              <el-button link type="danger" @click="deleteSession(row)">
-                {{ I18nT('base.delete') }}
-              </el-button>
+              <el-button link type="danger" :icon="Delete" @click="deleteSession(row)"> </el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-empty v-if="filteredSessions.length === 0" :description="I18nT('base.noData')" />
+        <el-empty v-if="filteredSessions.length === 0" />
       </el-scrollbar>
     </div>
   </el-card>
@@ -35,6 +41,8 @@
   import { ref, computed, onMounted } from 'vue'
   import { I18nT } from '@lang/index'
   import { HermesSetup, SessionItem } from './setup'
+  import { Delete } from '@element-plus/icons-vue'
+  import { ElMessageBox } from 'element-plus'
 
   const search = ref('')
 
@@ -46,7 +54,15 @@
   })
 
   const deleteSession = (row: SessionItem) => {
-    HermesSetup.sessions = HermesSetup.sessions.filter((s) => s.name !== row.name)
+    ElMessageBox.confirm(I18nT('base.delAlertContent'), I18nT('base.delAlertTitle'), {
+      confirmButtonText: I18nT('base.confirm'),
+      cancelButtonText: I18nT('base.cancel'),
+      type: 'warning'
+    })
+      .then(() => {
+        HermesSetup.deleteSession(row.id)
+      })
+      .catch(() => {})
   }
 
   onMounted(() => {

@@ -151,5 +151,7 @@
   "search": "Tìm kiếm",
   "clear": "Xóa",
   "updateSkill": "Cập nhật",
-  "resetSkill": "Đặt lại"
+  "resetSkill": "Đặt lại",
+  "lastActive": "Last Active",
+  "id": "ID"
 }
