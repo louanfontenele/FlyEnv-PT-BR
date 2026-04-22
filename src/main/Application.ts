@@ -476,10 +476,10 @@ export default class Application extends EventEmitter {
     console.log('TrayManager action: ', action, typeFlag)
     switch (action) {
       case 'exit':
-        this.emit('application:exit')
+        this.ipcHandler.emit('application:exit')
         break
       case 'show':
-        this.emit('application:show', 'index')
+        this.ipcHandler.emit('application:show', 'index')
         break
       case 'groupDo':
         this.windowManager.sendCommandTo(
@@ -530,30 +530,5 @@ export default class Application extends EventEmitter {
         app.relaunch()
         app.exit()
       })
-  }
-
-  // ===== 命令发送 =====
-
-  sendCommand(command: string, ...args: any) {
-    if (!this.emit(command, ...args)) {
-      const window = this.windowManager.getFocusedWindow()
-      if (window) {
-        this.windowManager.sendCommandTo(window, command, ...args)
-      }
-    }
-  }
-
-  sendCommandToAll(command: string, ...args: any) {
-    if (!this.emit(command, ...args)) {
-      this.windowManager.getWindowList().forEach((window) => {
-        this.windowManager.sendCommandTo(window, command, ...args)
-      })
-    }
-  }
-
-  sendMessageToAll(channel: string, ...args: any) {
-    this.windowManager.getWindowList().forEach((window) => {
-      this.windowManager.sendMessageTo(window, channel, ...args)
-    })
   }
 }
