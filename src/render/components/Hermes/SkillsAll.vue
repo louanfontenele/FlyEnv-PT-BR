@@ -1,76 +1,136 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="flex items-center gap-2 mb-3">
-      <el-input
-        v-model="skillSearchInput"
-        :placeholder="I18nT('hermes.searchSkill')"
-        clearable
-        style="width: 300px"
-        @keyup.enter="handleSearch"
-      />
-      <el-button type="primary" @click="handleSearch">{{ I18nT('hermes.search') }}</el-button>
-      <el-button @click="handleClearSearch">{{ I18nT('hermes.clear') }}</el-button>
-    </div>
-    <el-table :data="HermesSetup.allSkills" style="width: 100%; flex: 1">
-      <el-table-column type="index" width="50" />
-      <el-table-column
-        prop="name"
-        :label="I18nT('hermes.name')"
-        min-width="140"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        prop="description"
-        :label="I18nT('hermes.description')"
-        min-width="240"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        prop="source"
-        :label="I18nT('hermes.source')"
-        width="120"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        prop="trust"
-        :label="I18nT('hermes.trust')"
-        width="120"
-        show-overflow-tooltip
-      />
-      <el-table-column :label="I18nT('base.action')" width="180" align="center" fixed="right">
-        <template #default="{ row }">
-          <el-button link size="small" type="primary" @click="HermesSetup.inspectSkill(row.name)">
-            {{ I18nT('hermes.preview') }}
-          </el-button>
-          <el-button link size="small" type="success" @click="HermesSetup.installSkill(row.name)">
-            {{ I18nT('base.install') }}
-          </el-button>
+    <template v-if="HermesSetup.installing">
+      <div class="flex-1 overflow-hidden p-5">
+        <div ref="xtermDom" class="w-full h-full overflow-hidden"></div>
+      </div>
+      <div
+        class="flex-shrink-0 px-5 py-3 border-t border-gray-200 dark:border-gray-700 flex items-center"
+      >
+        <template v-if="HermesSetup.installEnd">
+          <el-button type="primary" @click.stop="HermesSetup.taskConfirm()">{{
+            I18nT('base.confirm')
+          }}</el-button>
         </template>
-      </el-table-column>
-    </el-table>
-    <div class="flex justify-end mt-3">
-      <el-pagination
-        v-model:current-page="HermesSetup.skillPage"
-        v-model:page-size="HermesSetup.skillPageSize"
-        :total="HermesSetup.skillTotal"
-        :page-sizes="[10, 20, 50]"
-        layout="total, sizes, prev, pager, next"
-        @size-change="handlePageChange"
-        @current-change="handlePageChange"
-      />
-    </div>
+        <template v-else>
+          <el-button @click.stop="HermesSetup.taskCancel()">{{ I18nT('base.cancel') }}</el-button>
+        </template>
+      </div>
+    </template>
+    <template v-else>
+      <div class="flex flex-col h-full p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <el-input
+            v-model="skillSearchInput"
+            :placeholder="I18nT('hermes.searchSkill')"
+            clearable
+            size="small"
+            style="width: 300px"
+            @keyup.enter="handleSearch"
+          />
+          <el-button size="small" type="primary" @click="handleSearch">{{
+            I18nT('hermes.search')
+          }}</el-button>
+          <el-button style="margin-left: 0" size="small" @click="handleClearSearch">{{
+            I18nT('hermes.clear')
+          }}</el-button>
+        </div>
+        <el-table :data="currentSource.skills" style="width: 100%; flex: 1">
+          <el-table-column type="index" width="50" />
+          <el-table-column
+            prop="name"
+            :label="I18nT('hermes.name')"
+            min-width="140"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            prop="description"
+            :label="I18nT('hermes.description')"
+            min-width="240"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            prop="source"
+            :label="I18nT('hermes.source')"
+            width="120"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            prop="trust"
+            :label="I18nT('hermes.trust')"
+            width="120"
+            show-overflow-tooltip
+          />
+          <el-table-column :label="I18nT('base.action')" width="180" align="center" fixed="right">
+            <template #default="{ row }">
+              <el-button
+                link
+                size="small"
+                type="primary"
+                @click="HermesSetup.inspectSkill(row.name)"
+              >
+                {{ I18nT('hermes.preview') }}
+              </el-button>
+              <el-button link size="small" type="success" @click="installSkill(row.name)">
+                {{ I18nT('base.install') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="flex justify-start mt-3">
+          <el-pagination
+            v-model:current-page="currentSource.page"
+            v-model:page-size="currentSource.pageSize"
+            :total="currentSource.total"
+            :page-sizes="[10, 20, 50]"
+            layout="total, sizes, prev, pager, next"
+            @size-change="handlePageChange"
+            @current-change="handlePageChange"
+          />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch } from 'vue'
+  import { ref, watch, computed, onMounted, onUnmounted, nextTick } from 'vue'
   import { I18nT } from '@lang/index'
   import { HermesSetup } from './setup'
+  import XTerm from '@/util/XTerm'
 
+  const xtermDom = ref()
   const skillSearchInput = ref('')
 
+  const installSkill = (name: string) => {
+    HermesSetup.installSkill(name, xtermDom)
+  }
+
+  onMounted(() => {
+    if (HermesSetup.installing) {
+      nextTick().then(() => {
+        const execXTerm: XTerm = HermesSetup.xterm as any
+        if (execXTerm && xtermDom.value) {
+          execXTerm.mount(xtermDom.value).then().catch()
+        }
+      })
+    }
+  })
+
+  onUnmounted(() => {
+    HermesSetup?.xterm?.unmounted?.()
+  })
+
+  const currentSource = computed(() => {
+    const tab = HermesSetup.skillTab
+    if (tab === 'installed') {
+      return HermesSetup.onlineSkill['all']
+    }
+    return HermesSetup.onlineSkill[tab]
+  })
+
   const handleSearch = () => {
-    HermesSetup.skillPage = 1
+    currentSource.value.page = 1
     if (skillSearchInput.value) {
       HermesSetup.searchAllSkills(skillSearchInput.value)
     } else {
@@ -80,7 +140,7 @@
 
   const handleClearSearch = () => {
     skillSearchInput.value = ''
-    HermesSetup.skillPage = 1
+    currentSource.value.page = 1
     HermesSetup.browseAllSkills()
   }
 
@@ -94,14 +154,8 @@
 
   watch(
     () => HermesSetup.skillTab,
-    (val) => {
-      if (val === 'all') {
-        if (skillSearchInput.value) {
-          handleSearch()
-        } else {
-          HermesSetup.browseAllSkills()
-        }
-      }
+    () => {
+      skillSearchInput.value = ''
     }
   )
 </script>

@@ -1,11 +1,14 @@
 import IPC from '@/util/IPC'
 import { reactiveBind } from '@/util/Index'
 import { shell } from '@/util/NodeFn'
+import { AsyncComponentShow } from '@/util/AsyncComponent'
 import { markRaw, nextTick, Ref } from 'vue'
 import XTerm from '@/util/XTerm'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import CommandData from './command.json'
+
+let SkillInspectVM: any
 
 export interface CommandItem {
   label: string
@@ -54,6 +57,26 @@ export interface BrowseSkillItem {
   trust: string
 }
 
+export type OnlineSkillSource =
+  | 'all'
+  | 'official'
+  | 'skills-sh'
+  | 'well-known'
+  | 'github'
+  | 'clawhub'
+  | 'lobehub'
+
+export type SkillTab = 'installed' | OnlineSkillSource
+
+export interface OnlineSkillState {
+  skills: BrowseSkillItem[]
+  page: number
+  pageSize: number
+  total: number
+  totalPages: number
+  loading: boolean
+}
+
 export interface SearchSkillItem {
   name: string
   description: string
@@ -69,7 +92,11 @@ class Hermes {
   installed: boolean = false
   version: string = ''
   gatewayRunning: boolean = false
-  loading: boolean = true
+
+  loading: boolean = false
+
+  installedSkillLoading: boolean = false
+
   gatewayStatus: string = ''
   configPaths: Record<string, string> = {}
   skills: string[] = []
@@ -88,16 +115,19 @@ class Hermes {
   logTab: string = ''
 
   // Skills tab
-  skillTab: 'installed' | 'all' = 'installed'
+  skillTab: SkillTab = 'installed'
   installedSkills: InstalledSkillItem[] = []
-  allSkills: BrowseSkillItem[] = []
+  onlineSkill: Record<OnlineSkillSource, OnlineSkillState> = {
+    all: { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false },
+    official: { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false },
+    'skills-sh': { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false },
+    'well-known': { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false },
+    github: { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false },
+    clawhub: { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false },
+    lobehub: { skills: [], page: 1, pageSize: 20, total: 0, totalPages: 1, loading: false }
+  }
   skillSearch = ''
-  skillPage = 1
-  skillPageSize = 20
-  skillTotal = 0
-  skillTotalPages = 1
-  skillInspectContent = ''
-  skillInspectVisible = false
+  skillInspectCache: Record<string, string> = {}
   skillConfig: { disabled: string[] } = { disabled: [] }
 
   skillViewTab: 'code' | 'both' | 'preview' = 'both'
@@ -260,18 +290,21 @@ class Hermes {
     })
   }
 
-  installSkill(name: string) {
-    this.loading = true
-    IPC.send('app-fork:hermes', 'installSkill', name).then((key: string, res: any) => {
-      IPC.off(key)
-      this.loading = false
-      if (res?.code === 0) {
-        MessageSuccess(I18nT('hermes.skillInstallSuccess'))
-        this.refreshSkills()
-      } else {
-        MessageError(res?.msg ?? I18nT('hermes.skillInstallFail'))
-      }
-    })
+  async installSkill(name: string, domRef: Ref<HTMLElement>) {
+    if (this.installing) {
+      return
+    }
+    this.currentAction = 'installSkill'
+    this.installEnd = false
+    this.installing = true
+    await nextTick()
+
+    const execXTerm = new XTerm()
+    this.xterm = markRaw(execXTerm)
+    await execXTerm.mount(domRef.value)
+    const command: string[] = [`hermes skills install ${name}`]
+    await execXTerm.send(command, false)
+    this.installEnd = true
   }
 
   refreshSessions() {
@@ -318,9 +351,14 @@ class Hermes {
   // ========== Skills Management ==========
 
   refreshInstalledSkills() {
+    if (this.installedSkillLoading) {
+      return
+    }
+    this.installedSkillLoading = true
     this.loading = true
     IPC.send('app-fork:hermes', 'listInstalledSkills').then((key: string, res: any) => {
       IPC.off(key)
+      this.installedSkillLoading = false
       this.loading = false
       if (res?.code === 0) {
         this.installedSkills = res?.data ?? []
@@ -329,51 +367,78 @@ class Hermes {
   }
 
   browseAllSkills() {
+    const source = this.skillTab === 'installed' ? 'all' : this.skillTab
+    const state = this.onlineSkill[source]
+    if (state.loading) {
+      return
+    }
     this.loading = true
-    IPC.send('app-fork:hermes', 'browseSkills', this.skillPage, this.skillPageSize).then(
+    state.loading = true
+    IPC.send('app-fork:hermes', 'browseSkills', state.page, state.pageSize, source).then(
       (key: string, res: any) => {
         IPC.off(key)
         this.loading = false
+        state.loading = false
         if (res?.code === 0) {
-          this.allSkills = res?.data?.list ?? []
-          this.skillTotal = res?.data?.total ?? 0
-          this.skillTotalPages = res?.data?.totalPages ?? 1
-          this.skillPage = res?.data?.currentPage ?? 1
+          state.skills = res?.data?.list ?? []
+          state.total = res?.data?.total ?? 0
+          state.totalPages = res?.data?.totalPages ?? 1
+          state.page = res?.data?.currentPage ?? 1
         }
       }
     )
   }
 
   searchAllSkills(query: string) {
+    const source = this.skillTab === 'installed' ? 'all' : this.skillTab
+    const state = this.onlineSkill[source]
     this.loading = true
-    IPC.send('app-fork:hermes', 'searchSkills', query, this.skillPageSize).then(
+    IPC.send('app-fork:hermes', 'searchSkills', query, state.pageSize).then(
       (key: string, res: any) => {
         IPC.off(key)
         this.loading = false
         if (res?.code === 0) {
-          this.allSkills = (res?.data ?? []).map((item: SearchSkillItem, index: number) => ({
+          state.skills = (res?.data ?? []).map((item: SearchSkillItem, index: number) => ({
             num: index + 1,
             name: item.name,
             description: item.description,
             source: item.source,
             trust: item.trust
           }))
-          this.skillTotal = this.allSkills.length
-          this.skillTotalPages = 1
-          this.skillPage = 1
+          state.total = state.skills.length
+          state.totalPages = 1
+          state.page = 1
         }
       }
     )
   }
 
   inspectSkill(identifier: string) {
+    const showInspect = (content: string) => {
+      if (!SkillInspectVM) {
+        import('./SkillInspect.vue').then((res) => {
+          SkillInspectVM = res.default
+          AsyncComponentShow(SkillInspectVM, { content }).then()
+        })
+      } else {
+        AsyncComponentShow(SkillInspectVM, { content }).then()
+      }
+    }
+
+    const cached = this.skillInspectCache[identifier]
+    if (cached !== undefined) {
+      showInspect(cached)
+      return
+    }
+
     this.loading = true
     IPC.send('app-fork:hermes', 'inspectSkill', identifier).then((key: string, res: any) => {
       IPC.off(key)
       this.loading = false
       if (res?.code === 0) {
-        this.skillInspectContent = res?.data ?? ''
-        this.skillInspectVisible = true
+        const data = res?.data ?? ''
+        this.skillInspectCache[identifier] = data
+        showInspect(data)
       }
     })
   }
@@ -477,6 +542,9 @@ class Hermes {
     delete this.xterm
     if (this.needRefreshActions.includes(this.currentAction)) {
       this.init()
+    }
+    if (this.currentAction === 'installSkill') {
+      this.refreshInstalledSkills()
     }
     this.currentAction = ''
   }

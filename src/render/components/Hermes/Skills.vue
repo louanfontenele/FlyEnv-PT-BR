@@ -18,11 +18,24 @@
             </template>
           </el-popover>
           <el-button class="button" link @click="HermesSetup.openSkillsDocs()">
-            <yb-icon style="width: 20px; height: 20px" :svg="import('@/svg/http.svg?raw')"></yb-icon>
+            <yb-icon
+              style="width: 20px; height: 20px"
+              :svg="import('@/svg/http.svg?raw')"
+            ></yb-icon>
           </el-button>
           <el-radio-group v-model="HermesSetup.skillTab" size="small" class="ml-6">
-            <el-radio-button class="flex-1" :label="I18nT('hermes.installed')" value="installed"></el-radio-button>
-            <el-radio-button class="flex-1" :label="I18nT('hermes.allSkills')" value="all"></el-radio-button>
+            <el-radio-button
+              class="flex-1"
+              :label="I18nT('hermes.installed')"
+              value="installed"
+            ></el-radio-button>
+            <el-radio-button class="flex-1" label="All" value="all"></el-radio-button>
+            <el-radio-button class="flex-1" label="Official" value="official"></el-radio-button>
+            <el-radio-button class="flex-1" label="Skills.sh" value="skills-sh"></el-radio-button>
+            <el-radio-button class="flex-1" label="Well-known" value="well-known"></el-radio-button>
+            <el-radio-button class="flex-1" label="GitHub" value="github"></el-radio-button>
+            <el-radio-button class="flex-1" label="ClawHub" value="clawhub"></el-radio-button>
+            <el-radio-button class="flex-1" label="LobeHub" value="lobehub"></el-radio-button>
           </el-radio-group>
         </div>
         <el-button class="button" link :disabled="HermesSetup.loading" @click="handleRefresh">
@@ -40,15 +53,11 @@
     <template v-else>
       <SkillsAll />
     </template>
-
-    <el-dialog v-model="HermesSetup.skillInspectVisible" :title="I18nT('hermes.preview')" width="70%" top="5vh">
-      <pre class="whitespace-pre-wrap break-words text-sm bg-gray-50 dark:bg-gray-900 p-4 rounded overflow-auto max-h-[70vh]">{{ HermesSetup.skillInspectContent }}</pre>
-    </el-dialog>
   </el-card>
 </template>
 
 <script lang="ts" setup>
-  import { onMounted } from 'vue'
+  import { onMounted, watch } from 'vue'
   import { I18nT } from '@lang/index'
   import { HermesSetup } from './setup'
   import { FolderOpened } from '@element-plus/icons-vue'
@@ -62,6 +71,18 @@
       HermesSetup.browseAllSkills()
     }
   }
+
+  watch(
+    () => HermesSetup.skillTab,
+    (v) => {
+      if (v !== 'installed') {
+        const state = HermesSetup.onlineSkill[v]
+        if (state.skills.length === 0) {
+          HermesSetup.browseAllSkills()
+        }
+      }
+    }
+  )
 
   onMounted(() => {
     HermesSetup.fetchSkillConfig()

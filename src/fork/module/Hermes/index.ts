@@ -414,17 +414,6 @@ class Hermes extends Base {
     })
   }
 
-  installSkill(name: string) {
-    return new ForkPromise(async (resolve, reject) => {
-      try {
-        await execPromiseWithEnv(`${this.hermesBin()} skills install "${name}"`)
-        resolve(true)
-      } catch (e: any) {
-        reject(e?.message ?? 'fail')
-      }
-    })
-  }
-
   openDashboard(port = 9119) {
     return new ForkPromise(async (resolve, reject) => {
       try {

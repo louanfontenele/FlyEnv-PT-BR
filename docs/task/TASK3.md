@@ -1,13 +1,28 @@
-# src/render/components/Hermes/SkillsInstalled.vue 优化
+# Hermes模块 技能安装 优化
 
-1. 技能名称 点击 在文件夹中显示对应的文件
-文件路径规则: ~/.hermes/skills/{分类}/{技能名称}/SKILL.md
-2. 分类名称 点击 打开分类文件夹
-分类文件夹路径规则: ~/.hermes/skills/{分类}
-3. 操作改成弹出式
-参照 src/render/components/Host/ListTable.vue 里的操作栏. 改成弹出式的.
-4. 操作里新增 查看 菜单.
-点击弹出窗口, 展示 markdown编辑和预览. 可参考 src/render/components/Tools/MarkdownPreview/index.vue
-5. 技能相关的IPC, 传递对象的话, 需要 JSON 深拷贝下. 否则因为VUE的关系,会报错
+## 执行步骤
+1. 参考 src/render/components/Hermes/Service.vue 和 src/render/components/Hermes/setup.ts 里的 doAction
+把 installSkill 方法, 改成同样的 Node-PTY + XTerm的形式.
+
+## 任务执行原则
+
+**请认真读取并深刻理解下面的原则。并严格按照下面的原则执行任务**
+
+### 编码前先思考。
+1. 不确定时必须停下来问，不能猜。
+2. 存在多种理解时列出选项让用户选，而不是替用户做决定。
+3. 发现有更简单的方案时，主动说出来，该推回来就推回来。
+
+### 简约至上。
+1. 没被要求的功能不写。
+2. 只用一次的代码不建抽象层。
+3. 没人要求的「灵活性」和「可配置」不加。
+4. 不可能发生的异常场景不做错误处理。
+
+### 精确编辑。
+1. 只动你被要求动的部分。
+2. 匹配项目已有的代码风格，哪怕你觉得自己写得更好。
+3. 看到不相关的问题，提一嘴就行，别动手。
+4. 如果你的改动导致某些代码不再被使用，清理掉，那是你的责任。但之前就存在的问题，没人让你改就不要碰。
 
 
