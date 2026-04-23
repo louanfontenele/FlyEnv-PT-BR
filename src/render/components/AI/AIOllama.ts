@@ -70,7 +70,7 @@ export class AIOllama extends AIBase {
             reject(new Error(res?.msg))
           } else if (res?.code === 200) {
             const json: any = res.msg
-            message += json.message.content
+            message += json?.message?.thinking ?? json?.message?.content ?? ''
             if (!messageObj) {
               messageObj = reactive({
                 role: 'assistant',
@@ -81,6 +81,7 @@ export class AIOllama extends AIBase {
             } else {
               messageObj.content = message
             }
+            console.log('messageObj', messageObj)
             if (tool_calls) {
               messageObj!.tool_calls = tool_calls
             }

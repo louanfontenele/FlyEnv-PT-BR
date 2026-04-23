@@ -1,4 +1,4 @@
-import { ipcMain, shell } from 'electron'
+import { ipcMain, shell, app } from 'electron'
 import { EventEmitter } from 'events'
 import { isMacOS, isWindows, isLinux } from '@shared/utils'
 import { execPromiseSudo } from '@shared/child-process'
@@ -410,6 +410,7 @@ export default class IPCHandler extends EventEmitter {
 
   private handleAutoHide() {
     this.deps.mainWindow?.hide()
+    app?.dock?.hide()
   }
 
   private handleMinimize() {
