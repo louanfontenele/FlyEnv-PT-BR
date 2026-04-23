@@ -1,8 +1,8 @@
-# FlyEnv新版本4.14.1更新日志
+# FlyEnv新版本4.14.2更新日志
 
 本次更新内容：
-1. 添加 mkcert 模块
-2. 修复PostgreSQL启动后,关闭失败的问题
+1. 添加 Hermes Agent 模块.
+2. 修复Windows版本托盘退出无效的问题
 
 参照：
 ```
@@ -66,4 +66,9 @@
   **Enjoy the update!**
 ```
 
-出一个FlyEnv最新版本的更新日志。
+出一个FlyEnv最新版本的更新日志。 添加到 RELEASE_NOTES.md 里
+
+## 备注
+
+如果你不清楚 Hermes Agent 是什么. 可以先浏览 https://hermes-agent.nousresearch.com/docs/
+项目里 Hermes 模块在 src/fork/module/Hermes 和 src/render/components/Hermes. 可以先浏览下看看都有哪些功能.

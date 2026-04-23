@@ -2,6 +2,51 @@
 
 All notable changes to FlyEnv will be documented in this file.
 
+## [4.14.2] - 2026-04-23
+
+# **FlyEnv v4.14.2 Update Release Notes**
+
+## **🚀 New Features**
+
+### **1. Added Hermes Agent Module**
+
+FlyEnv now integrates **[Hermes Agent](https://hermes-agent.nousresearch.com/)** — a powerful AI agent framework from Nous Research — directly into your development environment! You can now install, configure, and manage Hermes Agent with just a few clicks from the FlyEnv UI.
+
+This integration allows you to:
+- **One-Click Installation**: Install Hermes Agent seamlessly using the built-in installer
+- **Gateway Management**: Start and stop the Hermes gateway service directly from the interface
+- **AI Provider Configuration**: Easily configure AI providers including Ollama, OpenRouter, and Anthropic
+- **Configuration File Editor**: View and edit core configuration files (`config.yaml`, `.env`, `SOUL.md`) within the UI
+- **Session Management**: Browse and manage your chat sessions effortlessly
+- **Skills Management**: Discover, install, update, and uninstall skills from multiple sources including official, community, GitHub, ClawHub, and LobeHub
+- **Rich Command Shortcuts**: Access a comprehensive set of quick commands for chat, gateway, configuration, model auth, plugins, memory, MCP, logs, backup, and more
+- **Log Viewer**: Monitor gateway and agent logs in real-time
+
+*Supported on macOS and Linux.*
+
+---
+
+## **🛠️ Improvements & Bug Fixes**
+
+### **2. Fixed Windows Tray Exit Issue**
+
+Resolved a critical issue where exiting the application from the system tray was not functioning properly on Windows. The tray menu's quit action now correctly terminates the application.
+
+---
+
+## **📦 Build & Transparency**
+
+All FlyEnv installation packages are built using **[GitHub Actions](https://github.com/xpf0000/FlyEnv/actions)**. You can verify the build process and download the artifacts directly from the following links:
+
+- **Global Build History:** [GitHub Actions](https://github.com/xpf0000/FlyEnv/actions)
+
+---
+
+We welcome your continued feedback and bug reports via [GitHub Issues](https://github.com/xpf0000/FlyEnv/issues)
+
+**Enjoy the update!**
+
+
 ## [4.14.1] - 2026-04-11
 
 # **FlyEnv v4.14.1 Update Release Notes**
