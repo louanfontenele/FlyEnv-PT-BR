@@ -344,9 +344,12 @@ class Hermes extends Base {
       const list: any[] = []
       try {
         await execPromiseWithEnv(`${this.hermesBin()} sessions list > "${tmp}" 2>&1`)
-        const content = await readFile(tmp, 'utf-8')
+        const content: string = (await readFile(tmp, 'utf-8')).trim()
+        if (content.startsWith('No sessions found')) {
+          resolve(list)
+          return
+        }
         const lines = content
-          .trim()
           .split('\n')
           .map((l) => l.trimEnd())
           .filter((l) => {
