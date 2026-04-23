@@ -61,19 +61,36 @@
             width="120"
             show-overflow-tooltip
           />
-          <el-table-column :label="I18nT('base.action')" width="180" align="center" fixed="right">
+          <el-table-column :label="I18nT('base.action')" width="100px" align="center">
             <template #default="{ row }">
-              <el-button
-                link
-                size="small"
-                type="primary"
-                @click="HermesSetup.inspectSkill(row.name)"
-              >
-                {{ I18nT('hermes.preview') }}
-              </el-button>
-              <el-button link size="small" type="success" @click="installSkill(row.name)">
-                {{ I18nT('base.install') }}
-              </el-button>
+              <div class="h-full w-full flex items-center justify-center">
+                <el-popover
+                  effect="dark"
+                  popper-class="host-list-poper"
+                  placement="left-start"
+                  width="auto"
+                  :show-arrow="false"
+                >
+                  <ul v-poper-fix class="host-list-menu">
+                    <li @click.stop="HermesSetup.inspectSkill(row.name)">
+                      <yb-icon :svg="import('@/svg/eye.svg?raw')" width="13" height="13" />
+                      <span class="ml-3">{{ I18nT('hermes.preview') }}</span>
+                    </li>
+                    <li @click.stop="installSkill(row.name)">
+                      <yb-icon :svg="import('@/svg/Download.svg?raw')" width="13" height="13" />
+                      <span class="ml-3">{{ I18nT('base.install') }}</span>
+                    </li>
+                  </ul>
+
+                  <template #reference>
+                    <div
+                      class="w-[30px] h-[30px] flex items-center justify-center cursor-pointer hover:text-yellow-500"
+                    >
+                      <yb-icon :svg="import('@/svg/more1.svg?raw')" width="22" height="22" />
+                    </div>
+                  </template>
+                </el-popover>
+              </div>
             </template>
           </el-table-column>
         </el-table>
