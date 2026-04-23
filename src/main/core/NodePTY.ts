@@ -36,6 +36,9 @@ class NodePTY {
           encoding: 'utf8'
         })
         pty.onData((data: string) => {
+          if (!this.pty?.[key] || this.pty?.[key]?.killed) {
+            return
+          }
           console.log('pty.onData: ', data)
           if (data.trim() === 'Password:') {
             if (global.Server.Password) {
@@ -91,6 +94,9 @@ class NodePTY {
           }
         }
         pty.onData(async (data: string) => {
+          if (!this.pty?.[key] || this.pty?.[key]?.killed) {
+            return
+          }
           this._callback?.(`NodePty:data:${key}`, `NodePty:data:${key}`, data)
           const item = this.pty[key]
           if (item) {
@@ -123,6 +129,9 @@ class NodePTY {
           encoding: 'utf8'
         })
         pty.onData((data: string) => {
+          if (!this.pty?.[key] || this.pty?.[key]?.killed) {
+            return
+          }
           console.log('pty.onData: ', data)
           if (data.trim() === 'Password:') {
             if (global.Server.Password) {
@@ -159,6 +168,9 @@ class NodePTY {
 
   exitPtyByKey(key: string) {
     const item = this.pty[key]
+    if (item) {
+      item.killed = true
+    }
     const execFile = item?.execFile
     if (execFile && existsSync(execFile)) {
       remove(execFile).then().catch()
@@ -173,6 +185,7 @@ class NodePTY {
   }
 
   exitAllPty() {
+    this._callback = undefined
     for (const key in this.pty) {
       this.exitPtyByKey(key)
     }
@@ -194,15 +207,6 @@ class NodePTY {
         remove(tmplFile).catch()
       })
       const pty = this.pty?.[ptyKey]?.pty
-      // param.forEach((s) => {
-      //   pty?.write(`${s}\r`)
-      // })
-      // if (isWindows()) {
-      //   pty?.write(`"END" | Out-File -FilePath "${tmplFile}"\r`)
-      // } else {
-      //   pty?.write(`echo "END" > "${tmplFile}"\r`)
-      // }
-
       // ===== 修改的核心逻辑 =====
       if (isWindows()) {
         // Windows PowerShell 使用 ';' 按顺序执行
@@ -250,17 +254,29 @@ class NodePTY {
   }
 
   write(ptyKey: string, data: string) {
-    const pty = this.pty?.[ptyKey]?.pty
+    const item = this.pty?.[ptyKey]
+    if (!item || item.killed) {
+      return
+    }
+    const pty = item?.pty
     pty?.write(data)
   }
 
   clean(ptyKey: string) {
-    const pty = this.pty?.[ptyKey]?.pty
+    const item = this.pty?.[ptyKey]
+    if (!item || item.killed) {
+      return
+    }
+    const pty = item?.pty
     pty?.write('clear\r')
   }
 
   resize(ptyKey: string, { cols, rows }: any) {
-    const pty = this.pty?.[ptyKey]?.pty
+    const item = this.pty?.[ptyKey]
+    if (!item || item.killed) {
+      return
+    }
+    const pty = item?.pty
     pty?.resize(cols, rows)
   }
 

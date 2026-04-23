@@ -12,6 +12,7 @@ export interface PtyLast {
 }
 
 export interface PtyItem {
+  killed?: boolean
   pty: IPty
   data: string
   task: {
