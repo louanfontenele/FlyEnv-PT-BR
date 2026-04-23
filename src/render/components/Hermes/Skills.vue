@@ -21,7 +21,7 @@
             ></yb-icon>
           </el-button>
           <el-scrollbar class="flex-1 ml-6 h-full overflow-hidden">
-            <div class="h-full flex items-center">
+            <div class="h-full flex items-center py-1">
               <el-radio-group
                 v-model="HermesSetup.skillTab"
                 style="flex-wrap: nowrap"
