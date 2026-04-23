@@ -316,18 +316,21 @@ class Hermes {
     })
   }
 
-  deleteSession(id: string) {
-    this.loading = true
-    IPC.send('app-fork:hermes', 'deleteSession', id).then((key: string, res: any) => {
-      IPC.off(key)
-      this.loading = false
-      if (res?.code === 0) {
-        MessageSuccess(I18nT('base.success'))
-        this.refreshSessions()
-      } else {
-        MessageError(res?.msg ?? I18nT('base.fail'))
-      }
-    })
+  async deleteSession(id: string, domRef: Ref<HTMLElement>) {
+    if (this.installing) {
+      return
+    }
+    this.currentAction = 'deleteSession'
+    this.installEnd = false
+    this.installing = true
+    await nextTick()
+
+    const execXTerm = new XTerm()
+    this.xterm = markRaw(execXTerm)
+    await execXTerm.mount(domRef.value)
+    const command: string[] = [`hermes sessions delete "${id}"`]
+    await execXTerm.send(command, false)
+    this.installEnd = true
   }
 
   getLogFiles(): Promise<Array<{ name: string; path: string }>> {
@@ -516,7 +519,12 @@ class Hermes {
   openSkillsDir() {
     IPC.send('app-fork:hermes', 'openSkillsDir').then((key: string, res: any) => {
       IPC.off(key)
-      if (res?.code !== 0) {
+      if (res?.code === 0) {
+        const dir = res?.data
+        if (dir) {
+          shell.openPath(dir).catch()
+        }
+      } else {
         MessageError(res?.msg ?? I18nT('base.fail'))
       }
     })
@@ -545,6 +553,9 @@ class Hermes {
     }
     if (this.currentAction === 'installSkill') {
       this.refreshInstalledSkills()
+    }
+    if (this.currentAction === 'deleteSession') {
+      this.refreshSessions()
     }
     this.currentAction = ''
   }

@@ -392,17 +392,6 @@ class Hermes extends Base {
     })
   }
 
-  deleteSession(id: string) {
-    return new ForkPromise(async (resolve, reject) => {
-      try {
-        await execPromiseWithEnv(`${this.hermesBin()} sessions delete "${id}"`)
-        resolve(true)
-      } catch (e: any) {
-        reject(e?.message ?? 'fail')
-      }
-    })
-  }
-
   listSkills() {
     return new ForkPromise(async (resolve) => {
       const tmp = join(tmpdir(), `${uuid()}.txt`)
@@ -422,28 +411,6 @@ class Hermes extends Base {
         }
       }
       resolve(list)
-    })
-  }
-
-  openDashboard(port = 9119) {
-    return new ForkPromise(async (resolve, reject) => {
-      try {
-        await execPromiseWithEnv(`${this.hermesBin()} dashboard --port ${port} --no-open`)
-        resolve(true)
-      } catch (e: any) {
-        reject(e?.message ?? 'fail')
-      }
-    })
-  }
-
-  runChat(query: string) {
-    return new ForkPromise(async (resolve, reject) => {
-      try {
-        await execPromiseWithEnv(`${this.hermesBin()} chat -q "${query}"`)
-        resolve(true)
-      } catch (e: any) {
-        reject(e?.message ?? 'fail')
-      }
     })
   }
 
@@ -768,14 +735,7 @@ class Hermes extends Base {
     return new ForkPromise(async (resolve, reject) => {
       try {
         const skillsDir = join(this.hermesHome(), 'skills')
-        if (isWindows()) {
-          await execPromiseWithEnv(`explorer "${skillsDir}"`)
-        } else if (process.platform === 'darwin') {
-          await execPromiseWithEnv(`open "${skillsDir}"`)
-        } else {
-          await execPromiseWithEnv(`xdg-open "${skillsDir}"`)
-        }
-        resolve(true)
+        resolve(skillsDir)
       } catch (e: any) {
         reject(e?.message ?? 'fail')
       }

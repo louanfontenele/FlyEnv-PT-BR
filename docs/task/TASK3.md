@@ -1,8 +1,8 @@
-# Hermes模块 线上技能列表 操作栏 优化
+# Hermes模块 会话删除 优化
 
 ## 执行步骤
-1. 参照 src/render/components/Hermes/SkillsInstalled.vue 里的 操作列
-把 src/render/components/Hermes/SkillsAll.vue 里的 操作列, 改成同样的 el-popover 的形式.
+1. 参考 src/render/components/Hermes/Service.vue 和 src/render/components/Hermes/setup.ts 里的 doAction
+   把 src/render/components/Hermes/Sessions.vue 里使用的 会话删除 HermesSetup.deleteSession 方法, 改成同样的 Node-PTY + XTerm的形式.
 
 ## 任务执行原则
 
