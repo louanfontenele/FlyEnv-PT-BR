@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "JDK&Tomcat Personalizat",
   "useSSL": "Utilizare SSL",
   "projectAGroup": "Servicii site",
-  "projectBGroup": "Servicii Aplicații",
   "nodeJSVersion": "Versiune NodeJS",
   "startFile": "Fişier de pornire",
   "runDirectory": "Director de lucru",

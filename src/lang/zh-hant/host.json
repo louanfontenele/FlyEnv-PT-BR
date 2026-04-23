@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "自訂 JDK&Tomcat",
   "useSSL": "使用 SSL",
   "projectAGroup": "公共服務",
-  "projectBGroup": "獨立服務",
   "nodeJSVersion": "NodeJS 版本",
   "startFile": "啟動檔案",
   "runDirectory": "執行目錄",

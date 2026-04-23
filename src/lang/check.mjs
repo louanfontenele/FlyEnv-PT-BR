@@ -145,7 +145,8 @@ function diffKey() {
 }
 
 function checkNoUseKey() {
-  const excludeLangFile = ['menu', 'aside', 'toolType', 'openclaw']
+  const excludeLangFile = ['menu', 'aside', 'toolType']
+  const excludeKeys = ['openclaw.category.', 'openclaw.cmd.', 'hermes.category.', 'hermes.cmd.']
 
   const allLangFile = new Set()
   const allKeys = new Map() // 格式: { '文件名.key': Set(包含此键的语言包) }
@@ -167,13 +168,16 @@ function checkNoUseKey() {
         const content = require(file)
         const keys = getFlattenedKeys(content)
 
-        keys.forEach((key) => {
+        for (const key of keys) {
           const fullKey = `${fileName}.${key}`
+          if (excludeKeys.some((k) => fullKey.includes(k))) {
+            continue
+          }
           if (!allKeys.has(fullKey)) {
             allKeys.set(fullKey, new Set())
           }
           allKeys.get(fullKey).add(pack)
-        })
+        }
       })
     })
   }

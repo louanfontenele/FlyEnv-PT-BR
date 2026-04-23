@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "JDK&Tomcat Kustom",
   "useSSL": "Gunakan SSL",
   "projectAGroup": "Layanan Situs",
-  "projectBGroup": "Layanan Aplikasi",
   "nodeJSVersion": "Versi NodeJS",
   "startFile": "File Mulai",
   "runDirectory": "Direktori Kerja",

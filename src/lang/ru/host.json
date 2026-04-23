@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Пользовательские JDK&Tomcat",
   "useSSL": "Использовать SSL",
   "projectAGroup": "Услуги сайта",
-  "projectBGroup": "Сервисы приложения",
   "nodeJSVersion": "Версия NodeJS",
   "startFile": "Начать файл",
   "runDirectory": "Рабочая папка",

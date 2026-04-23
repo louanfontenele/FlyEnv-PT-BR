@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Xüsusi JDK və Tomcat",
   "useSSL": "SSL istifadə et",
   "projectAGroup": "Sayt Xidmətləri",
-  "projectBGroup": "Tətbiq Xidmətləri",
   "nodeJSVersion": "NodeJS Versiyası",
   "startFile": "Başlanğıc Faylı",
   "runDirectory": "İcra Qovluğu",

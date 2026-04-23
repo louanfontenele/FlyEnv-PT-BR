@@ -4,11 +4,7 @@
   "gatewayRunning": "Cổng kết nối đang chạy",
   "gatewayStopped": "Cổng kết nối đã dừng",
   "startGatewayFail": "Khởi động cổng kết nối thất bại",
-  "startDashboardFail": "Khởi động bảng điều khiển thất bại",
   "HermesOfficialWebsite": "Trang chủ Hermes",
-  "HermesLocalDashboard": "Bảng điều khiển Hermes (Local)",
-  "openDashboard": "Mở bảng điều khiển",
-  "openChat": "Mở trò chuyện",
   "providers": "Nhà cung cấp",
   "skills": "Kỹ năng",
   "sessions": "Phiên làm việc",
@@ -17,11 +13,8 @@
   "providerTip": "Cấu hình endpoint LLM mà Hermes sử dụng. Nếu dùng Ollama, hãy đảm bảo độ dài context tối thiểu 32K.",
   "providerSaved": "Đã lưu cấu hình nhà cung cấp",
   "searchSkill": "Tìm kiếm hoặc nhập tên kỹ năng",
-  "skillInstallSuccess": "Cài đặt kỹ năng thành công",
-  "skillInstallFail": "Cài đặt kỹ năng thất bại",
   "searchSession": "Tìm kiếm phiên làm việc",
   "sessionName": "Tên phiên",
-  "update": "Cập nhật Hermes",
   "category": {
     "basicInfo": "Thông tin cơ bản",
     "chatSession": "Trò chuyện & Phiên",
@@ -123,7 +116,6 @@
     "uninstall": "Gỡ Hermes Agent"
   },
   "installed": "Đã cài đặt",
-  "allSkills": "Tất cả kỹ năng",
   "openSkillsDir": "Mở thư mục kỹ năng",
   "preview": "Xem trước",
   "builtin": "Tích hợp sẵn",
@@ -153,5 +145,6 @@
   "updateSkill": "Cập nhật",
   "resetSkill": "Đặt lại",
   "lastActive": "Last Active",
-  "id": "ID"
+  "id": "ID",
+  "categoryName": "Danh mục"
 }

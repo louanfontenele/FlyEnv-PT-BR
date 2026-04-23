@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "JDK & Tomcat tùy chỉnh",
   "useSSL": "Sử dụng SSL",
   "projectAGroup": "Dịch vụ trang web",
-  "projectBGroup": "Dịch vụ ứng dụng",
   "nodeJSVersion": "Phiên bản NodeJS",
   "startFile": "Tệp khởi động",
   "runDirectory": "Thư mục chạy",

@@ -4,11 +4,7 @@
   "gatewayRunning": "閘道運行中",
   "gatewayStopped": "閘道已停止",
   "startGatewayFail": "閘道啟動失敗",
-  "startDashboardFail": "儀表板啟動失敗",
   "HermesOfficialWebsite": "Hermes 官網",
-  "HermesLocalDashboard": "Hermes 本地儀表板",
-  "openDashboard": "打開儀表板",
-  "openChat": "打開聊天",
   "providers": "模型提供商",
   "skills": "技能",
   "sessions": "會話",
@@ -17,11 +13,8 @@
   "providerTip": "配置 Hermes 使用的 LLM 端點。Ollama 用戶應確保上下文長度至少設置為 32K。",
   "providerSaved": "提供商設置已保存",
   "searchSkill": "搜索或輸入技能名稱",
-  "skillInstallSuccess": "技能安裝成功",
-  "skillInstallFail": "技能安裝失敗",
   "searchSession": "搜索會話",
   "sessionName": "會話名稱",
-  "update": "Update Hermes",
   "category": {
     "basicInfo": "基本信息",
     "chatSession": "聊天與會話",
@@ -123,7 +116,6 @@
     "uninstall": "解除安裝 Hermes Agent"
   },
   "installed": "已安装",
-  "allSkills": "全部技能",
   "openSkillsDir": "打开技能目录",
   "preview": "预览",
   "builtin": "内置",
@@ -153,5 +145,6 @@
   "updateSkill": "更新",
   "resetSkill": "重置",
   "lastActive": "最後活躍",
-  "id": "ID"
+  "id": "ID",
+  "categoryName": "分類"
 }

@@ -4,11 +4,7 @@
   "gatewayRunning": "Gateway is running",
   "gatewayStopped": "Gateway is stopped",
   "startGatewayFail": "Gateway start failed",
-  "startDashboardFail": "Dashboard start failed",
   "HermesOfficialWebsite": "Hermes Home",
-  "HermesLocalDashboard": "Hermes Dashboard",
-  "openDashboard": "Open Dashboard",
-  "openChat": "Open Chat",
   "providers": "Providers",
   "skills": "Skills",
   "sessions": "Sessions",
@@ -17,11 +13,8 @@
   "providerTip": "Configure the LLM endpoint used by Hermes. Ollama users should ensure context length is set to at least 32K.",
   "providerSaved": "Provider settings saved",
   "searchSkill": "Search or enter skill name",
-  "skillInstallSuccess": "Skill installed successfully",
-  "skillInstallFail": "Skill installation failed",
   "searchSession": "Search sessions",
   "sessionName": "Session Name",
-  "update": "Update Hermes",
   "category": {
     "basicInfo": "Basic Info",
     "chatSession": "Chat & Sessions",
@@ -123,7 +116,6 @@
     "uninstall": "Uninstall Hermes Agent"
   },
   "installed": "Installed",
-  "allSkills": "All Skills",
   "openSkillsDir": "Open skills directory",
   "preview": "Preview",
   "builtin": "Built-in",
@@ -153,5 +145,6 @@
   "updateSkill": "Update",
   "resetSkill": "Reset",
   "lastActive": "Last Active",
-  "id": "ID"
+  "id": "ID",
+  "categoryName": "カテゴリー"
 }

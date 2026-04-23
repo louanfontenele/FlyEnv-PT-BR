@@ -51,7 +51,6 @@
   "customJDKAndTomcat": "Προσαρμοσμένο JDK&Tomcat",
   "useSSL": "Χρήση SSL",
   "projectAGroup": "Υπηρεσίες Ιστοσελίδας",
-  "projectBGroup": "Υπηρεσίες Εφαρμογών",
   "nodeJSVersion": "Έκδοση NodeJS",
   "startFile": "Αρχείο Έναρξης",
   "runDirectory": "Κατάλογος Εργασίας",

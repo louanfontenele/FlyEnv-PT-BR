@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Anpassad JDK & Tomcat",
   "useSSL": "Använd SSL",
   "projectAGroup": "Global tjänst",
-  "projectBGroup": "Enkel tjänst",
   "nodeJSVersion": "NodeJS-version",
   "startFile": "Startfil",
   "runDirectory": "Körkatalog",

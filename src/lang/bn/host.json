@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "কাস্টম JDK&Tomcat",
   "useSSL": "SSL ব্যবহার করুন",
   "projectAGroup": "সাইট সার্ভিস",
-  "projectBGroup": "অ্যাপ সার্ভিস",
   "nodeJSVersion": "NodeJS সংস্করণ",
   "startFile": "স্টার্ট ফাইল",
   "runDirectory": "ওয়ার্কিং ডিরেক্টরি",

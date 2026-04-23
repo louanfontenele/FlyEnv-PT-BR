@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Mukautettu JDK&Tomcat",
   "useSSL": "Käytä SSL:ää",
   "projectAGroup": "Sivuston Palvelut",
-  "projectBGroup": "Sovelluksen Palvelut",
   "nodeJSVersion": "Nodejs Versio",
   "startFile": "Aloita Tiedosto",
   "runDirectory": "Työhakemisto",

@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "JDK et Tomcat personnalisés",
   "useSSL": "Utiliser SSL",
   "projectAGroup": "Services de site",
-  "projectBGroup": "Services d'application",
   "nodeJSVersion": "Version NodeJS",
   "startFile": "Fichier de démarrage",
   "runDirectory": "Répertoire de travail",

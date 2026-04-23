@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Vlastní JDK&Tomcat",
   "useSSL": "Použít SSL",
   "projectAGroup": "Služby webu",
-  "projectBGroup": "Služby aplikací",
   "nodeJSVersion": "Verze NodeJS",
   "startFile": "Spustit soubor",
   "runDirectory": "Pracovní adresář",

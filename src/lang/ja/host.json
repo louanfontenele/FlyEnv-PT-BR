@@ -49,7 +49,6 @@
   "customJDKAndTomcat": "カスタムJDK＆Tomcat",
   "useSSL": "SSLを使用",
   "projectAGroup": "サイトサービス",
-  "projectBGroup": "アプリサービス",
   "nodeJSVersion": "NodeJSバージョン",
   "startFile": "起動ファイル",
   "runDirectory": "作業ディレクトリ",

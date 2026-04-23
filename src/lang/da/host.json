@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Brugerdefineret JDK&Tomcat",
   "useSSL": "Brug SSL",
   "projectAGroup": "Websteds Tjenester",
-  "projectBGroup": "App Services",
   "nodeJSVersion": "NodeJS Version",
   "startFile": "Start Fil",
   "runDirectory": "Arbejdsmappe",

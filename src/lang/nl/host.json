@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "Aangepaste JDK&Tomcat",
   "useSSL": "SSL gebruiken",
   "projectAGroup": "Website diensten",
-  "projectBGroup": "App diensten",
   "nodeJSVersion": "NodeJS versie",
   "startFile": "Start bestand",
   "runDirectory": "Werken Map",

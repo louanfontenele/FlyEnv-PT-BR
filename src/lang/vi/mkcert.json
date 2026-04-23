@@ -5,15 +5,9 @@
   "install": "Cài đặt mkcert",
   "checkAgain": "Kiểm tra lại",
   "recheck": "Kiểm tra lại",
-  "installing": "Đang cài đặt mkcert...",
-  "installingCA": "Đang cài đặt CA...",
   "installCA": "Cài đặt CA",
-  "installCATip": "Cài đặt CA cục bộ vào kho lưu trữ tin cậy của hệ thống/trình duyệt",
   "carootLabel": "Đường dẫn CA Root",
   "certificates": "Chứng chỉ",
   "generate": "Tạo",
-  "generateTip": "Tạo một chứng chỉ tin cậy cho máy chủ (host) này",
-  "generating": "Đang tạo...",
-  "noSSLHosts": "Không có máy chủ nào được bật SSL. Vui lòng bật SSL trên một máy chủ trước.",
-  "certGenerated": "Đã tạo chứng chỉ thành công"
+  "noSSLHosts": "Không có máy chủ nào được bật SSL. Vui lòng bật SSL trên một máy chủ trước."
 }

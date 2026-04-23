@@ -52,7 +52,6 @@
   "customJDKAndTomcat": "JDK و Tomcat مخصصان",
   "useSSL": "استخدام SSL",
   "projectAGroup": "خدمات الموقع",
-  "projectBGroup": "خدمات التطبيق",
   "nodeJSVersion": "إصدار NodeJS",
   "startFile": "ملف التشغيل",
   "runDirectory": "دليل العمل",
