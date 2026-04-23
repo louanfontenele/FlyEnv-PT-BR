@@ -2,7 +2,7 @@
   <el-card class="version-manager">
     <template #header>
       <div class="card-header">
-        <div class="flex items-center justify-between flex-1 overflow-hidden">
+        <div class="flex items-center flex-1 overflow-hidden">
           <span>{{ I18nT('hermes.skills') }}</span>
           <el-popover :show-after="600" placement="top" width="auto">
             <template #default>
@@ -10,7 +10,7 @@
             </template>
             <template #reference>
               <el-button class="ml-2" link @click.stop="HermesSetup.openSkillsDir()">
-                <FolderOpened class="w-[20px] h-[20px]" />
+                <FolderOpened class="w-[18px] h-[18px]" />
               </el-button>
             </template>
           </el-popover>
