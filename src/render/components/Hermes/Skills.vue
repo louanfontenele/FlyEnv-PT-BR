@@ -2,7 +2,7 @@
   <el-card class="version-manager">
     <template #header>
       <div class="card-header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-1 overflow-hidden">
           <span>{{ I18nT('hermes.skills') }}</span>
           <el-popover :show-after="600" placement="top" width="auto">
             <template #default>
@@ -35,7 +35,12 @@
             <el-radio-button class="flex-1" label="LobeHub" value="lobehub"></el-radio-button>
           </el-radio-group>
         </div>
-        <el-button class="button" link :disabled="HermesSetup.loading" @click="handleRefresh">
+        <el-button
+          class="button flex-shrink-0"
+          link
+          :disabled="HermesSetup.loading"
+          @click="handleRefresh"
+        >
           <yb-icon
             :svg="import('@/svg/icon_refresh.svg?raw')"
             class="refresh-icon"
