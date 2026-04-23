@@ -363,24 +363,18 @@ class Hermes extends Base {
           })
         for (const line of lines) {
           const lineTrim = line.trim()
-          const arr = lineTrim.split(/\s{8,}/)
-          console.log('listSessions arr: ', arr)
-          if (arr.length !== 2) {
-            continue
-          }
-          const name = arr.shift()
-          const parts =
-            arr
-              .pop()
-              ?.trim()
-              ?.split(/\s{3,}/) ?? []
+          const parts = lineTrim.split(/\s{3,}/).filter(Boolean)
           console.log('listSessions parts: ', parts)
-          if (parts.length === 3) {
+          if (parts.length >= 4) {
+            const id = parts.pop()
+            const src = parts.pop()
+            const lastActive = parts.pop()
+            const name = parts.join(' ')
             list.push({
               name,
-              lastActive: parts[0],
-              src: parts[1],
-              id: parts[2]
+              lastActive,
+              src,
+              id
             })
           }
         }
