@@ -254,11 +254,17 @@ class Hermes extends Base {
 
       appDebugLog('[Hermes][getGatewayStatus]', status).catch()
 
-      const isRunning = status.includes('Gateway service is loaded') && status.includes('"PID"')
+      const isRunning =
+        (status.includes('User gateway service is running') ||
+          status.includes('Gateway service is loaded') ||
+          status.includes('Active: active (running)')) &&
+        status.includes('"PID"')
       const isInstalled =
         isRunning ||
         status.includes('Gateway service is not loaded') ||
-        status.includes('Service definition matches')
+        status.includes('Service definition matches') ||
+        status.includes('User gateway service is stopped') ||
+        status.includes('Loaded: loaded')
 
       resolve({
         status,

@@ -27,8 +27,12 @@
             class="mb-3"
           />
           <el-scrollbar class="flex-1">
-            <el-table :data="filteredSessions" stripe style="width: 100%">
-              <el-table-column prop="name" :label="I18nT('hermes.sessionName')" />
+            <el-table :data="filteredSessions" show-overflow-tooltip stripe style="width: 100%">
+              <el-table-column prop="name" :label="I18nT('hermes.sessionName')">
+                <template #default="scope">
+                  <span class="truncate">{{ scope.row.name }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="lastActive" :label="I18nT('hermes.lastActive')" width="140" />
               <el-table-column prop="src" :label="I18nT('hermes.source')" width="100" />
               <el-table-column prop="id" :label="I18nT('hermes.id')" width="220" />
