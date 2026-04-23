@@ -3,37 +3,43 @@
     <template #header>
       <div class="card-header">
         <div class="flex items-center flex-1 overflow-hidden">
-          <span>{{ I18nT('hermes.skills') }}</span>
+          <span class="flex-shrink-0">{{ I18nT('hermes.skills') }}</span>
           <el-popover :show-after="600" placement="top" width="auto">
             <template #default>
               <span>{{ I18nT('hermes.openSkillsDir') }}</span>
             </template>
             <template #reference>
-              <el-button class="ml-2" link @click.stop="HermesSetup.openSkillsDir()">
+              <el-button class="ml-2 flex-shrink-0" link @click.stop="HermesSetup.openSkillsDir()">
                 <FolderOpened class="w-[18px] h-[18px]" />
               </el-button>
             </template>
           </el-popover>
-          <el-button class="button" link @click="HermesSetup.openSkillsDocs()">
+          <el-button class="button flex-shrink-0" link @click="HermesSetup.openSkillsDocs()">
             <yb-icon
               style="width: 20px; height: 20px"
               :svg="import('@/svg/http.svg?raw')"
             ></yb-icon>
           </el-button>
-          <el-radio-group v-model="HermesSetup.skillTab" size="small" class="ml-6">
-            <el-radio-button
-              class="flex-1"
-              :label="I18nT('hermes.installed')"
-              value="installed"
-            ></el-radio-button>
-            <el-radio-button class="flex-1" label="All" value="all"></el-radio-button>
-            <el-radio-button class="flex-1" label="Official" value="official"></el-radio-button>
-            <el-radio-button class="flex-1" label="Skills.sh" value="skills-sh"></el-radio-button>
-            <el-radio-button class="flex-1" label="Well-known" value="well-known"></el-radio-button>
-            <el-radio-button class="flex-1" label="GitHub" value="github"></el-radio-button>
-            <el-radio-button class="flex-1" label="ClawHub" value="clawhub"></el-radio-button>
-            <el-radio-button class="flex-1" label="LobeHub" value="lobehub"></el-radio-button>
-          </el-radio-group>
+          <el-scrollbar class="flex-1">
+            <el-radio-group v-model="HermesSetup.skillTab" size="small" class="ml-6">
+              <el-radio-button
+                class="flex-1"
+                :label="I18nT('hermes.installed')"
+                value="installed"
+              ></el-radio-button>
+              <el-radio-button class="flex-1" label="All" value="all"></el-radio-button>
+              <el-radio-button class="flex-1" label="Official" value="official"></el-radio-button>
+              <el-radio-button class="flex-1" label="Skills.sh" value="skills-sh"></el-radio-button>
+              <el-radio-button
+                class="flex-1"
+                label="Well-known"
+                value="well-known"
+              ></el-radio-button>
+              <el-radio-button class="flex-1" label="GitHub" value="github"></el-radio-button>
+              <el-radio-button class="flex-1" label="ClawHub" value="clawhub"></el-radio-button>
+              <el-radio-button class="flex-1" label="LobeHub" value="lobehub"></el-radio-button>
+            </el-radio-group>
+          </el-scrollbar>
         </div>
         <el-button
           class="button flex-shrink-0"
