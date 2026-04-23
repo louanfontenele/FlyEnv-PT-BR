@@ -20,13 +20,13 @@
               :svg="import('@/svg/http.svg?raw')"
             ></yb-icon>
           </el-button>
-          <el-scrollbar class="flex-1 h-full overflow-hidden">
+          <el-scrollbar class="flex-1 ml-6 h-full overflow-hidden">
             <div class="h-full flex items-center">
               <el-radio-group
                 v-model="HermesSetup.skillTab"
                 style="flex-wrap: nowrap"
                 size="small"
-                class="ml-6 flex-nowrap"
+                class="flex-nowrap"
               >
                 <el-radio-button
                   class="flex-1"
