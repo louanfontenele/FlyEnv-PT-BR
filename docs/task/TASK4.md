@@ -1,15 +1,14 @@
-# Ollama模块 本地大模型适配检测器 相关功能优化
+# Host模块 自动SSL功能问题修复
 
-## 需求描述
-参照 `src/fork/module/Ollama/CROSS_PLATFORM_PLAN.md`
-处理：
-一、pcReport() 与 resourceSnapshot() 跨平台实现
-代码抽离出来作为单独的 export function 到 src/fork/module/Ollama文件夹下的 Windows.ts | macOS.ts | Linux.ts
+## issues
+https://github.com/xpf0000/FlyEnv/issues/639
 
-二、模型适配建议与并发调用策略优化
-1. 取消串行执行逻辑。该为前端传递某个具体的模型， 然后后端执行。同一时间只能执行一个模型。执行完后，前端才能再次提交执行。
-2. benchmarkModel 改为 快速模式。 并使用 预热机制
-3. 相关的方法，抽离出来，放到src/fork/module/Ollama文件夹下的单独的文件
+相关代码:
+  - src/fork/module/Host/SSL.ts
+  - src/fork/module/Host/index.ts
+  - src/render/components/Host/Edit.vue
+
+追踪调用链, 深入研究代码. 找到可能出现此问题的地方. 先不要修改代码.
 
 ## 任务执行原则
 

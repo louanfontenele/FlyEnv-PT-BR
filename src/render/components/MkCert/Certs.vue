@@ -62,7 +62,7 @@
                   <span
                     class="font-mono truncate cursor-pointer hover:text-yellow-500"
                     @click.stop="shell.showItemInFolder(host.ssl?.cert)"
-                    >{{ host.ssl?.cert || '-' }}</span
+                    >{{ host.ssl?.cert || certDefault(host) }}</span
                   >
                 </div>
                 <div class="flex items-center">
@@ -70,7 +70,7 @@
                   <span
                     class="font-mono truncate cursor-pointer hover:text-yellow-500"
                     @click.stop="shell.showItemInFolder(host.ssl?.key)"
-                    >{{ host.ssl?.key || '-' }}</span
+                    >{{ host.ssl?.key || keyDefault(host) }}</span
                   >
                 </div>
               </div>
@@ -102,6 +102,7 @@
   import { BrewStore } from '@/store/brew'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
   import { shell } from '@/util/NodeFn'
+  import { join } from '@/util/path-browserify'
 
   ServiceActionStore.fetchPath()
 
@@ -154,11 +155,18 @@
   }
 
   const sslHosts = computed(() => {
-    return (appStore.hosts as AppHost[]).filter((h) => h.useSSL)
+    return appStore.hosts as AppHost[]
   })
 
+  const certDefault = (host: AppHost) => {
+    return join(window.Server.BaseDir!, 'CA', `${host.id}`, `CA-${host.id}.crt`)
+  }
+
+  const keyDefault = (host: AppHost) => {
+    return join(window.Server.BaseDir!, 'CA', `${host.id}`, `CA-${host.id}.key`)
+  }
+
   const doGenerate = (host: AppHost) => {
-    if (!host.ssl?.cert || !host.ssl?.key) return
     MkCertStore.generateCert(host, xtermDom as any, currentVersion.value.bin)
   }
 </script>

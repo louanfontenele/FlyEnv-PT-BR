@@ -117,6 +117,8 @@ export const Setup = () => {
     } catch {
       hardware.loaded = false
     }
+
+    console.log('hardware: ', hardware)
   }
 
   const getModelSizeColor = (sizeText?: string): 'success' | 'warning' | 'danger' | undefined => {
@@ -127,14 +129,16 @@ export const Setup = () => {
     const vram = hardware.vramGB
     const ram = hardware.ramGB
 
-    if (vram > 0) {
+    // 如果模型能完全放入显存，优先按显存判断（Ollama 会主要用 GPU 运行）
+    if (vram > 0 && sizeGB <= vram) {
       if (sizeGB <= vram * 0.7) return 'success'
-      if (sizeGB <= vram) return 'warning'
-      return 'danger'
+      return 'warning'
     }
 
+    // 模型放不进显存（或没有独立显存），按系统内存评估
+    // Ollama 支持纯 CPU 推理，内存足够即可运行
     if (sizeGB <= ram * 0.15) return 'success'
-    if (sizeGB <= ram * 0.25) return 'warning'
+    if (sizeGB <= ram * 0.3) return 'warning'
     return 'danger'
   }
 

@@ -155,8 +155,6 @@ yarn postinstall                  # Install Electron app dependencies
 | dist | src/main/index.ts | dist/electron/main.mjs | true |
 | devFork | src/fork/index.ts | dist/electron/fork.mjs | false |
 | distFork | src/fork/index.ts | dist/electron/fork.mjs | true |
-| devHelper | src/helper/index.ts | dist/helper/helper.js | true |
-| distHelper | src/helper/index.ts | dist/helper/helper.js | true |
 
 ### Vite Configuration (`/configs/vite.config.ts`)
 

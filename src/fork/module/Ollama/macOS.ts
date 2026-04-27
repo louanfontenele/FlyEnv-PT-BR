@@ -47,15 +47,19 @@ export async function pcReportMacOS(): Promise<any> {
 
     const hardware = json?.SPHardwareDataType?.[0] || {}
     const software = json?.SPSoftwareDataType?.[0] || {}
-    const memory = json?.SPMemoryDataType?.[0] || {}
-    const displays = json?.SPDisplaysDataType?.[0] || {}
 
-    const osCaption = software?.os_version ? `macOS ${software.os_version}` : 'macOS'
-    const buildNumber = `${software?.build_version || ''}`
+    const osVersionStr = `${software?.os_version || ''}`
+    let osCaption = osVersionStr || 'macOS'
+    if (osCaption && !osCaption.toLowerCase().startsWith('macos')) {
+      osCaption = `macOS ${osCaption}`
+    }
+    const buildMatch = osVersionStr.match(/\(([^)]+)\)/)
+    const buildNumber = buildMatch ? buildMatch[1] : ''
 
     const cpuName = hardware?.chip_type || hardware?.cpu_type || 'Unknown'
     const isAppleSilicon = /apple\s*m\d/i.test(`${cpuName}`)
-    const processorCount = parseInt(`${hardware?.number_processors || '1'}`, 10) || 1
+    const processorMatch = `${hardware?.number_processors || ''}`.match(/proc\s+(\d+)/)
+    const processorCount = parseInt(processorMatch?.[1] || '1', 10) || 1
     const speedStr = `${hardware?.current_processor_speed || ''}`
     const speedMHz = parseSpeedToMHz(speedStr)
 
@@ -69,9 +73,9 @@ export async function pcReportMacOS(): Promise<any> {
       }
     ]
 
-    const memItems = memory?._items || []
+    const memItems = json?.SPMemoryDataType || []
     const memoryArr = memItems.map((item: any) => ({
-      Capacity: parseSizeToBytes(`${item?.dimm_size || ''}`),
+      Capacity: parseSizeToBytes(`${item?.SPMemoryDataType || item?.dimm_size || ''}`),
       ConfiguredClockSpeed: parseSpeedToMHz(`${item?.dimm_speed || ''}`),
       Speed: parseSpeedToMHz(`${item?.dimm_speed || ''}`),
       SMBIOSMemoryType: ddrTypeFromString(`${item?.dimm_type || ''}`),
@@ -88,10 +92,10 @@ export async function pcReportMacOS(): Promise<any> {
       }
     ]
 
-    const displayItems = displays?._items || []
+    const displayItems = json?.SPDisplaysDataType || []
     const gpu = displayItems.map((item: any) => {
       const name = `${item?.sppci_model || item?._name || 'Unknown'}`
-      const isAppleGpu = /apple\s*m\d/i.test(name)
+      const isAppleGpu = /apple\s*m\d/i.test(name.toLowerCase())
       let vramBytes = parseSizeToBytes(`${item?.spdisplays_vram || ''}`)
       if (isAppleGpu && vramBytes === 0) {
         vramBytes = totalmem()

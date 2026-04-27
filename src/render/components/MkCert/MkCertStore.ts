@@ -2,11 +2,11 @@ import { reactiveBind } from '@/util/Index'
 import { markRaw, nextTick, Ref } from 'vue'
 import XTerm from '@/util/XTerm'
 import IPC from '@/util/IPC'
-import type { AppHost } from '@/store/app'
+import { AppHost, AppStore } from '@/store/app'
 import type { SoftInstalled } from '@shared/app'
 import { fs } from '@/util/NodeFn'
 import { dirname } from '@/util/path-browserify'
-import { hostAlias } from '@/util/Host'
+import { handleHost, hostAlias, hostDefaultSSLCert } from '@/util/Host'
 
 class MkCertStore {
   mkcertBin: string = 'mkcert'
@@ -16,10 +16,11 @@ class MkCertStore {
   installing: boolean = false
   installEnd: boolean = false
   xterm: XTerm | undefined
+  editHost?: AppHost | null
 
   async installCA(domRef: Ref<HTMLElement>, binPath: string) {
     if (this.installing) return
-
+    this.editHost = null
     this.installEnd = false
     this.installing = true
     await nextTick()
@@ -40,12 +41,10 @@ class MkCertStore {
 
   async generateCert(host: AppHost, domRef: Ref<HTMLElement>, binPath: string) {
     if (this.installing) return
-    const cert = host.ssl.cert
-    const key = host.ssl.key
-
-    if (!cert || !key) {
-      return
-    }
+    this.editHost = host
+    const ssl = hostDefaultSSLCert(host)
+    const cert = host.ssl.cert || ssl.cert
+    const key = host.ssl.key || ssl.key
 
     this.installEnd = false
     this.installing = true
@@ -76,6 +75,19 @@ class MkCertStore {
     this.installEnd = false
     this.xterm?.destroy()
     delete this.xterm
+
+    if (this.editHost) {
+      if (!this.editHost.useSSL || !this.editHost?.ssl?.cert || !this.editHost?.ssl?.key) {
+        const appStore = AppStore()
+        const find = appStore.hosts.find((h) => h.id === this.editHost?.id)
+        if (find) {
+          const old = JSON.parse(JSON.stringify(find))
+          find.useSSL = true
+          find.ssl = hostDefaultSSLCert(find)
+          handleHost(JSON.parse(JSON.stringify(find)), 'edit', old).catch()
+        }
+      }
+    }
   }
 
   taskCancel() {

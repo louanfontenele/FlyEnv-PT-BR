@@ -54,18 +54,12 @@ function buildMainProcess() {
       promise = Promise.all([
         build(config.dev),
         build(config.devFork),
-        build(config.devHelper),
         ElectronKill(electronProcess)
       ])
     } else if (isWindows()) {
       console.log('isWindows !!!')
       const config = (await import('../configs/esbuild.config.win')).default
-      promise = Promise.all([
-        build(config.dev),
-        build(config.devFork),
-        build(config.devHelper),
-        ElectronKillWin()
-      ])
+      promise = Promise.all([build(config.dev), build(config.devFork), ElectronKillWin()])
     }
     if (!promise) {
       building = false

@@ -6,6 +6,7 @@ import { I18nT } from '@lang/index'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { HostStore } from '@/components/Host/store'
 import { shell } from '@/util/NodeFn'
+import { join } from '@/util/path-browserify'
 
 const handleHostEnd = (arr: Array<AppHost>, isAdd?: boolean) => {
   const appStore = AppStore()
@@ -74,4 +75,11 @@ export const hostAlias = (item: AppHost) => {
       })
     : []
   return Array.from(new Set([item.name, ...alias])).sort()
+}
+
+export const hostDefaultSSLCert = (item: AppHost) => {
+  return {
+    cert: join(window.Server.BaseDir!, 'CA', `${item.id}`, `CA-${item.id}.crt`),
+    key: join(window.Server.BaseDir!, 'CA', `${item.id}`, `CA-${item.id}.key`)
+  }
 }

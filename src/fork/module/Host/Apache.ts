@@ -58,7 +58,7 @@ export const makeApacheConf = async (host: AppHost) => {
 
   let atmpl = tmpl.apache
 
-  if (host.useSSL) {
+  if (host.useSSL && host.ssl.cert && host.ssl.key) {
     atmpl = tmpl.apacheSSL
   }
 
@@ -192,7 +192,7 @@ export const updateApacheConf = async (host: AppHost, old: AppHost) => {
 
   if (host.ssl.cert !== old.ssl.cert) {
     hasChanged = true
-    const cert = pathFixedToUnix(host.ssl.cert)
+    const cert = host.ssl.cert ? pathFixedToUnix(host.ssl.cert) : ''
     find.push(`SSLCertificateFile (.*?)\\r\\n`)
     replace.push(`SSLCertificateFile "${cert}"\r\n`)
     find.push(`SSLCertificateFile (.*?)\\n`)
@@ -200,7 +200,7 @@ export const updateApacheConf = async (host: AppHost, old: AppHost) => {
   }
   if (host.ssl.key !== old.ssl.key) {
     hasChanged = true
-    const key = pathFixedToUnix(host.ssl.key)
+    const key = host.ssl.key ? pathFixedToUnix(host.ssl.key) : ''
     find.push(`SSLCertificateKeyFile (.*?)\\r\\n`)
     replace.push(`SSLCertificateKeyFile "${key}"\r\n`)
     find.push(`SSLCertificateKeyFile (.*?)\\n`)

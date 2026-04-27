@@ -7,7 +7,6 @@ import {
   brewInfoJson,
   execPromise,
   serviceStartExec,
-  versionBinVersion,
   versionFilterSame,
   versionFixed,
   versionLocalFetch,
@@ -17,7 +16,8 @@ import {
   mkdirp,
   machineId,
   serviceStartExecWin,
-  moveChildDirToParent
+  moveChildDirToParent,
+  execPromiseWithEnv
 } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
@@ -27,10 +27,11 @@ import http from 'http'
 import https from 'https'
 import { publicDecrypt } from 'crypto'
 import { EOL } from 'os'
-import { isLinux, isMacOS, isWindows } from '@shared/utils'
+import { appDebugLog, isLinux, isMacOS, isWindows } from '@shared/utils'
 import { pcReportMacOS } from './macOS'
 import { pcReportLinux } from './Linux'
 import { pcReportWindows } from './Windows'
+import process from 'node:process'
 
 class Ollama extends Base {
   chats: Record<string, AbortController> = {}
@@ -240,13 +241,54 @@ class Ollama extends Base {
         .then(async (list) => {
           versions = list.flat()
           versions = versionFilterSame(versions)
+
+          const binVersion = (
+            bin: string,
+            command: string
+          ): Promise<{ version?: string; error?: string }> => {
+            return new Promise(async (resolve) => {
+              const handleCatch = (err: any) => {
+                resolve({
+                  error: `${command}\n${err}`,
+                  version: undefined
+                })
+              }
+              const handleThen = (res: any) => {
+                let str = res.stdout + res.stderr
+                str = str.replace(new RegExp(`\r\n`, 'g'), `\n`)
+                let version: string | undefined = ''
+                let reg: RegExp = /(client version is )(.*?)(\n|$)/g
+                try {
+                  version = reg?.exec(str)?.[2]?.trim()
+                } catch {}
+                if (!version) {
+                  reg = /(version is )(.*?)(\n|$)/g
+                  try {
+                    version = reg?.exec(str)?.[2]?.trim()
+                  } catch {}
+                }
+                resolve({
+                  version
+                })
+              }
+              const cwd = dirname(bin)
+              try {
+                process.chdir(cwd)
+                const res = await execPromiseWithEnv(command, {
+                  cwd,
+                  shell: undefined
+                })
+                handleThen(res)
+              } catch (e) {
+                console.log('versionBinVersion err: ', e)
+                appDebugLog('[versionBinVersion][error]', `${e}`).catch()
+                handleCatch(e)
+              }
+            })
+          }
+
           const all = versions.map((item) =>
-            TaskQueue.run(
-              versionBinVersion,
-              item.bin,
-              `"${item.bin}" -v`,
-              /( )(\d+(\.\d+){1,4})(.*?)/g
-            )
+            TaskQueue.run(binVersion, item.bin, `"${item.bin}" --version`)
           )
           return Promise.all(all)
         })

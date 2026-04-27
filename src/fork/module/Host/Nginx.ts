@@ -116,7 +116,7 @@ export const makeNginxConf = async (host: AppHost) => {
   const tmpl = await vhostTmpl()
 
   let ntmpl = tmpl.nginx
-  if (host.useSSL) {
+  if (host.useSSL && host.ssl.cert && host.ssl.key) {
     ntmpl = tmpl.nginxSSL
   }
 
@@ -266,7 +266,7 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
 
   if (host.ssl.cert !== old.ssl.cert) {
     hasChanged = true
-    const cert = pathFixedToUnix(host.ssl.cert)
+    const cert = host.ssl.cert ? pathFixedToUnix(host.ssl.cert) : ''
     find.push(`ssl_certificate (.*?)\\r\\n`)
     replace.push(`ssl_certificate "${cert}";\r\n`)
     find.push(`ssl_certificate (.*?)\\n`)
@@ -274,7 +274,7 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
   }
   if (host.ssl.key !== old.ssl.key) {
     hasChanged = true
-    const key = pathFixedToUnix(host.ssl.key)
+    const key = host.ssl.key ? pathFixedToUnix(host.ssl.key) : ''
     find.push(`ssl_certificate_key (.*?)\\r\\n`)
     replace.push(`ssl_certificate_key "${key}";\r\n`)
     find.push(`ssl_certificate_key (.*?)\\n`)
