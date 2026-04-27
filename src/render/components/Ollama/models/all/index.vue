@@ -5,96 +5,43 @@
     </div>
   </template>
   <template v-else>
-    <el-table
-      row-key="name"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-      :expand-row-keys="expandedRowKeys"
-      :default-expand-all="false"
-      :lazy="!OllamaAllModelsSetup.search.trim()"
-      :load="onLoad"
-      height="100%"
-      :data="tableData"
-      :border="false"
-      style="width: 100%"
-    >
-      <template #empty>
-        <template v-if="fetching">
-          {{ I18nT('base.gettingVersion') }}
-        </template>
-        <template v-else>
-          {{ I18nT('util.noVerionsFoundInLib') }}
-        </template>
-      </template>
-      <el-table-column prop="name">
-        <template #header>
-          <div class="w-full name-cell">
-            <span style="display: inline-flex; align-items: center; padding: 2px 0">{{
-              I18nT('base.Library')
-            }}</span>
-            <el-input
-              v-model.trim="OllamaAllModelsSetup.search"
-              :placeholder="I18nT('base.placeholderSearch')"
-              clearable
-            ></el-input>
-          </div>
-        </template>
-        <template #default="scope">
-          <el-tooltip :content="fetchCommand(scope.row)" :show-after="600" placement="top">
-            <span
-              class="hover:text-yellow-500 cursor-pointer truncate"
-              style="padding: 2px 12px 2px 24px"
-              @click.stop="copyCommand(scope.row)"
-              >{{ scope.row.name }}</span
-            >
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column prop="size" :label="I18nT('ollama.size')" width="150"> </el-table-column>
-      <el-table-column align="center" :label="I18nT('base.isInstalled')" width="120">
-        <template #default="scope">
-          <div class="cell-status">
-            <yb-icon
-              v-if="isInstalled(scope.row)"
-              :svg="import('@/svg/ok.svg?raw')"
-              class="installed"
-            ></yb-icon>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="I18nT('base.action')" width="120">
-        <template #default="scope">
-          <template v-if="!scope.row.isRoot">
-            <template v-if="isInstalled(scope.row)">
-              <el-button
-                :type="runningService ? 'primary' : 'info'"
-                link
-                :disabled="OllamaAllModelsSetup.installing"
-                :icon="Delete"
-                @click="handleBrewVersion(scope.row)"
-              ></el-button>
-            </template>
-            <template v-else>
-              <el-button
-                :type="runningService ? 'primary' : 'info'"
-                link
-                :disabled="OllamaAllModelsSetup.installing"
-                :icon="Download"
-                @click="handleBrewVersion(scope.row)"
-              ></el-button>
-            </template>
+    <el-auto-resizer>
+      <template #default="{ height, width }">
+        <el-table-v2
+          class="app-el-table-v2"
+          :columns="columns"
+          :data="tableData"
+          :width="width"
+          :height="height"
+          :header-height="59"
+          :row-height="59"
+          :row-key="'name'"
+          expand-column-key="name"
+          :expanded-row-keys="expandedRowKeys"
+          @expanded-rows-change="onExpandedRowsChange"
+        >
+          <template #empty>
+            <div class="w-full h-full flex items-center justify-center">
+              <template v-if="fetching">
+                {{ I18nT('base.gettingVersion') }}
+              </template>
+              <template v-else>
+                {{ I18nT('util.noVerionsFoundInLib') }}
+              </template>
+            </div>
           </template>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-table-v2>
+      </template>
+    </el-auto-resizer>
   </template>
 </template>
 
-<script lang="ts" setup>
+<script lang="tsx" setup>
   import { I18nT } from '@lang/index'
   import { OllamaAllModelsSetup, Setup } from './setup'
-  import type { TreeNode } from 'element-plus'
   import { OllamaLocalModelsSetup } from '@/components/Ollama/models/local/setup'
   import { Download, Delete } from '@element-plus/icons-vue'
+  import { type Column, ElButton, ElInput, ElTag, ElTooltip } from 'element-plus'
 
   const {
     xtermDom,
@@ -104,22 +51,131 @@
     handleBrewVersion,
     fetchCommand,
     copyCommand,
-    runningService
+    runningService,
+    onExpandedRowsChange,
+    getModelSizeColor
   } = Setup()
 
   const isInstalled = (row: any) => {
     return OllamaLocalModelsSetup.list.some((l) => l.name === row.name)
   }
 
-  const onLoad = (row: any, treeNode: TreeNode, resolve: (data: any[]) => void) => {
-    const child = row?.children || OllamaAllModelsSetup.list[row.name]
-    resolve(child)
-  }
-</script>
-<style lang="scss">
-  .app-html-block {
-    a {
-      color: #4096ff;
+  const columns: Column<any>[] = [
+    {
+      key: 'name',
+      title: I18nT('base.Library'),
+      dataKey: 'name',
+      class: 'flex-1',
+      headerClass: 'flex-1',
+      width: 0,
+      flexGrow: 1,
+      headerCellRenderer: () => {
+        return (
+          <div class="w-full name-cell">
+            <span style="display: inline-flex; align-items: center; padding: 2px 0">
+              {I18nT('base.Library')}
+            </span>
+            <ElInput
+              v-model={OllamaAllModelsSetup.search}
+              placeholder={I18nT('base.placeholderSearch')}
+              clearable={true}
+            ></ElInput>
+          </div>
+        )
+      },
+      cellRenderer: ({ rowData: row }) => {
+        return (
+          <ElTooltip content={fetchCommand(row)} show-after={600} placement="top">
+            {{
+              default: () => {
+                return (
+                  <span
+                    style="padding: 2px 12px"
+                    class="hover:text-yellow-500 cursor-pointer truncate"
+                    onClick={() => {
+                      copyCommand(row)
+                    }}
+                  >
+                    {row.name}
+                  </span>
+                )
+              }
+            }}
+          </ElTooltip>
+        )
+      }
+    },
+    {
+      key: 'size',
+      title: I18nT('ollama.size'),
+      dataKey: 'size',
+      class: 'flex-shrink-0',
+      headerClass: 'flex-shrink-0',
+      width: 150,
+      cellRenderer: ({ rowData: row }) => {
+        const color = getModelSizeColor(row.size)
+        if (!color) {
+          return <span>{row.size}</span>
+        }
+        return (
+          <ElTag size="small" type={color} effect="plain">
+            {row.size}
+          </ElTag>
+        )
+      }
+    },
+    {
+      key: 'isInstalled',
+      title: I18nT('base.isInstalled'),
+      dataKey: 'isInstalled',
+      class: 'flex-shrink-0',
+      headerClass: 'flex-shrink-0',
+      width: 120,
+      align: 'center',
+      cellRenderer: ({ rowData: row }) => {
+        if (isInstalled(row)) {
+          return <YbIcon class="installed" svg={import('@/svg/ok.svg?raw')}></YbIcon>
+        }
+        return <span></span>
+      }
+    },
+    {
+      key: 'operation',
+      title: I18nT('base.action'),
+      dataKey: 'operation',
+      class: 'flex-shrink-0',
+      headerClass: 'flex-shrink-0',
+      width: 120,
+      align: 'center',
+      cellRenderer: ({ rowData: row }) => {
+        if (row.isRoot) {
+          return <span></span>
+        }
+        if (isInstalled(row)) {
+          return (
+            <ElButton
+              type={runningService.value ? 'primary' : 'info'}
+              link
+              disabled={OllamaAllModelsSetup.installing}
+              icon={Delete}
+              onClick={() => {
+                handleBrewVersion(row)
+              }}
+            ></ElButton>
+          )
+        }
+        return (
+          <ElButton
+            type={runningService.value ? 'primary' : 'info'}
+            link
+            disabled={OllamaAllModelsSetup.installing}
+            icon={Download}
+            onClick={() => {
+              handleBrewVersion(row)
+            }}
+          ></ElButton>
+        )
+      }
     }
-  }
-</style>
+  ]
+</script>

@@ -18,7 +18,6 @@
       <ModelsVM v-if="tab === 2" />
       <Config v-if="tab === 3"></Config>
       <Logs v-if="tab === 4"></Logs>
-      <LLMChecker v-if="tab === 5" />
     </div>
   </div>
 </template>
@@ -31,7 +30,6 @@
   import { AppModuleSetup } from '@/core/Module'
   import { I18nT } from '@lang/index'
   import ModelsVM from './models/index.vue'
-  import LLMChecker from './LLMChecker.vue'
 
   const { tab, checkVersion } = AppModuleSetup('ollama')
   const tabs = [
@@ -39,8 +37,7 @@
     I18nT('base.versionManager'),
     I18nT('ollama.model'),
     I18nT('base.configFile'),
-    I18nT('base.log'),
-    'LLM Checker'
+    I18nT('base.log')
   ]
   checkVersion()
 </script>

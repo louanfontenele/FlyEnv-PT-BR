@@ -1,4 +1,4 @@
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { AppStore } from '@/store/app'
 import XTerm from '@/util/XTerm'
 import IPC from '@/util/IPC'
@@ -9,12 +9,17 @@ import { OllamaLocalModelsSetup } from '@/components/Ollama/models/local/setup'
 import { dirname } from '@/util/path-browserify'
 import { clipboard } from '@/util/NodeFn'
 
+type HardwareProfile = {
+  ramGB: number
+  vramGB: number
+  loaded: boolean
+}
+
 export type OllamaModelItem = {
   isRoot?: boolean
   name: string
   size?: string
   url?: string
-  hasChildren?: boolean
   children?: OllamaModelItem[]
 }
 
@@ -34,6 +39,12 @@ export const OllamaAllModelsSetup = reactive<{
   xterm: undefined,
   reFetch: () => 0,
   list: {}
+})
+
+const hardware = reactive<HardwareProfile>({
+  ramGB: 0,
+  vramGB: 0,
+  loaded: false
 })
 
 export const Setup = () => {
@@ -57,6 +68,75 @@ export const Setup = () => {
   const fetching = computed(() => {
     return OllamaAllModelsSetup.fetching ?? false
   })
+
+  const parseSizeToGB = (sizeText?: string) => {
+    const text = `${sizeText || ''}`.trim().toUpperCase()
+    if (!text) return 0
+    const m = text.match(/(\d+(?:\.\d+)?)\s*(KB|MB|GB|TB)/)
+    if (!m) return 0
+    const value = Number(m[1] || 0)
+    const unit = m[2]
+    if (unit === 'TB') return value * 1024
+    if (unit === 'GB') return value
+    if (unit === 'MB') return value / 1024
+    if (unit === 'KB') return value / 1024 / 1024
+    return 0
+  }
+
+  const fetchHardware = async () => {
+    try {
+      const res: any = await new Promise((resolve, reject) => {
+        IPC.send('app-fork:ollama', 'pcReport').then((key: string, res: any) => {
+          IPC.off(key)
+          if (res?.data) resolve(res.data)
+          else reject(new Error('No data'))
+        })
+      })
+
+      const toArr = (v: any) => (Array.isArray(v) ? v : v ? [v] : [])
+
+      const mods = toArr(res?.memory)
+      const totalRam = mods.reduce((s: number, m: any) => s + Number(m?.Capacity || 0), 0)
+      hardware.ramGB = totalRam ? Math.round((totalRam / 1024 / 1024 / 1024) * 100) / 100 : 0
+
+      let maxVram = 0
+      const nvidia = toArr(res?.nvidia)
+      nvidia.forEach((row: any) => {
+        const gb = Number(row?.MemoryTotalMiB || 0) / 1024
+        if (gb > maxVram) maxVram = gb
+      })
+      if (maxVram === 0) {
+        const gpus = toArr(res?.gpu)
+        gpus.forEach((g: any) => {
+          const gb = Number(g?.AdapterRAM || 0) / 1024 / 1024 / 1024
+          if (gb > maxVram) maxVram = gb
+        })
+      }
+      hardware.vramGB = maxVram ? Math.round(maxVram * 100) / 100 : 0
+      hardware.loaded = true
+    } catch {
+      hardware.loaded = false
+    }
+  }
+
+  const getModelSizeColor = (sizeText?: string): 'success' | 'warning' | 'danger' | undefined => {
+    if (!hardware.loaded) return undefined
+    const sizeGB = parseSizeToGB(sizeText)
+    if (!sizeGB) return undefined
+
+    const vram = hardware.vramGB
+    const ram = hardware.ramGB
+
+    if (vram > 0) {
+      if (sizeGB <= vram * 0.7) return 'success'
+      if (sizeGB <= vram) return 'warning'
+      return 'danger'
+    }
+
+    if (sizeGB <= ram * 0.15) return 'success'
+    if (sizeGB <= ram * 0.25) return 'warning'
+    return 'danger'
+  }
 
   const fetchData = () => {
     if (fetching.value || Object.keys(OllamaAllModelsSetup.list).length > 0) {
@@ -102,11 +182,11 @@ export const Setup = () => {
     const dict = OllamaAllModelsSetup.list
     const baseList: OllamaModelItem[] = []
     for (const type in dict) {
+      const children = dict[type] || []
       baseList.push({
         isRoot: true,
         name: type,
-        hasChildren: true,
-        children: []
+        children: children.length > 0 ? children : undefined
       })
     }
     if (!OllamaAllModelsSetup.search.trim()) {
@@ -116,33 +196,43 @@ export const Setup = () => {
     const matchedRoots: OllamaModelItem[] = []
     for (const item of baseList) {
       const rootMatched = item.name.toLowerCase().includes(search)
-      const children = dict[item.name] || []
+      const children = item.children || []
       const matchedChildren = rootMatched
         ? children
         : children.filter((child) => `${child?.name || ''}`.toLowerCase().includes(search))
       if (rootMatched || matchedChildren.length) {
         matchedRoots.push({
           ...item,
-          hasChildren: false,
-          children: matchedChildren
+          children: matchedChildren.length > 0 ? matchedChildren : undefined
         })
       }
     }
     return matchedRoots
   })
 
-  const expandedRowKeys = computed(() => {
-    if (!OllamaAllModelsSetup.search.trim()) {
-      return []
-    }
-    const search = OllamaAllModelsSetup.search.trim().toLowerCase()
-    return tableData.value
-      .filter((item) => {
-        const children = item.children || []
-        return children.some((child) => `${child?.name || ''}`.toLowerCase().includes(search))
-      })
-      .map((item) => item.name)
-  })
+  const expandedRowKeys = ref<string[]>([])
+
+  watch(
+    tableData,
+    (data) => {
+      if (!OllamaAllModelsSetup.search.trim()) {
+        expandedRowKeys.value = []
+      } else {
+        const search = OllamaAllModelsSetup.search.trim().toLowerCase()
+        expandedRowKeys.value = data
+          .filter((item) => {
+            const children = item.children || []
+            return children.some((child) => `${child?.name || ''}`.toLowerCase().includes(search))
+          })
+          .map((item) => item.name)
+      }
+    },
+    { immediate: true }
+  )
+
+  const onExpandedRowsChange = (keys: string[]) => {
+    expandedRowKeys.value = keys
+  }
 
   const fetchCommand = (row: any) => {
     if (!runningService.value) {
@@ -218,6 +308,7 @@ export const Setup = () => {
   })
 
   fetchData()
+  fetchHardware()
 
   return {
     handleBrewVersion,
@@ -228,6 +319,8 @@ export const Setup = () => {
     copyCommand,
     tableData,
     expandedRowKeys,
-    runningService
+    onExpandedRowsChange,
+    runningService,
+    getModelSizeColor
   }
 }

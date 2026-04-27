@@ -114,6 +114,7 @@ export class Project {
           const item = reactiveBind(new ProjectItem(res))
           this.project.unshift(item)
           this.saveProject()
+          this.setDirEnv(item).catch()
         }
       })
     })
