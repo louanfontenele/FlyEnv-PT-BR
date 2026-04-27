@@ -425,5 +425,219 @@ class Ollama extends Base {
         })
     })
   }
+
+  pcReport() {
+    return new ForkPromise(async (resolve) => {
+      if (isWindows()) {
+        const command = `powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $os=Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber,OSArchitecture; $cpu=Get-CimInstance Win32_Processor | Select-Object Name,Manufacturer,NumberOfCores,NumberOfLogicalProcessors,MaxClockSpeed; $mem=Get-CimInstance Win32_PhysicalMemory | Select-Object Capacity,ConfiguredClockSpeed,Speed,SMBIOSMemoryType,MemoryType,Manufacturer,PartNumber,BankLabel,DeviceLocator; $memArray=Get-CimInstance Win32_PhysicalMemoryArray | Select-Object MemoryDevices; $gpu=Get-CimInstance Win32_VideoController | Select-Object Name,AdapterCompatibility,DriverVersion,AdapterRAM,CurrentHorizontalResolution,CurrentVerticalResolution,VideoProcessor,PNPDeviceID,VideoMemoryType; $computer=Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer,Model,SystemType,TotalPhysicalMemory; $nvidia=@(); if (Get-Command nvidia-smi -ErrorAction SilentlyContinue) { try { $raw = & nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader,nounits 2>$null; foreach ($line in $raw) { $parts = $line -split ',' | ForEach-Object { $_.Trim() }; if ($parts.Length -ge 3) { $nvidia += [PSCustomObject]@{ Name=$parts[0]; MemoryTotalMiB=[int]$parts[1]; DriverVersion=$parts[2] } } } } catch {} }; [PSCustomObject]@{ os=$os; cpu=$cpu; memory=$mem; memoryArray=$memArray; gpu=$gpu; computer=$computer; nvidia=$nvidia } | ConvertTo-Json -Depth 8 -Compress"`
+        try {
+          const res = await execPromise(command)
+          const stdout = `${res?.stdout ?? ''}`.trim()
+          if (!stdout) {
+            resolve({})
+            return
+          }
+          const json = JSON.parse(stdout)
+          resolve(json)
+          return
+        } catch {
+          resolve({})
+          return
+        }
+      }
+
+      resolve({
+        os: {
+          Caption: process.platform,
+          Version: process.version,
+          BuildNumber: '',
+          OSArchitecture: process.arch
+        },
+        cpu: [],
+        memory: [],
+        memoryArray: [],
+        gpu: [],
+        computer: {},
+        nvidia: []
+      })
+    })
+  }
+
+  benchmarkModel(model: string, baseUrl = 'http://127.0.0.1:11434') {
+    return new ForkPromise(async (resolve) => {
+      const prompt = 'Write a short paragraph about clean code best practices in 80 words.'
+      const startedAt = Date.now()
+      try {
+        const res = await axios({
+          url: `${baseUrl}/api/generate`,
+          method: 'post',
+          timeout: 120000,
+          data: {
+            model,
+            prompt,
+            stream: false,
+            options: {
+              temperature: 0.2,
+              num_predict: 128
+            }
+          },
+          httpAgent: new http.Agent({ keepAlive: false }),
+          httpsAgent: new https.Agent({ keepAlive: false }),
+          proxy: this.getAxiosProxy()
+        })
+
+        const data = res?.data ?? {}
+        const evalCount = Number(data?.eval_count || 0)
+        const evalDurationNs = Number(data?.eval_duration || 0)
+        const totalDurationNs = Number(data?.total_duration || 0)
+        const promptEvalCount = Number(data?.prompt_eval_count || 0)
+
+        let tokPerSec = 0
+        if (evalCount > 0 && evalDurationNs > 0) {
+          tokPerSec = evalCount / (evalDurationNs / 1e9)
+        }
+
+        const firstTokenSec =
+          promptEvalCount > 0 && data?.prompt_eval_duration
+            ? Number(data.prompt_eval_duration) / 1e9
+            : totalDurationNs > 0
+              ? (totalDurationNs / 1e9) * 0.15
+              : 0
+
+        resolve({
+          ok: true,
+          model,
+          tokPerSec: tokPerSec ? Math.round(tokPerSec * 100) / 100 : 0,
+          firstTokenSec: firstTokenSec ? Math.round(firstTokenSec * 100) / 100 : 0,
+          elapsedSec: Math.round(((Date.now() - startedAt) / 1000) * 100) / 100,
+          evalCount,
+          promptEvalCount,
+          done: !!data?.done
+        })
+      } catch (e: any) {
+        resolve({
+          ok: false,
+          model,
+          error: `${e?.message || e}`
+        })
+      }
+    })
+  }
+
+  quickGenerate(model: string, prompt: string, baseUrl = 'http://127.0.0.1:11434') {
+    return new ForkPromise(async (resolve) => {
+      const startedAt = Date.now()
+      try {
+        const res = await axios({
+          url: `${baseUrl}/api/generate`,
+          method: 'post',
+          timeout: 120000,
+          data: {
+            model,
+            prompt,
+            stream: false,
+            options: {
+              temperature: 0.2,
+              num_predict: 220
+            }
+          },
+          httpAgent: new http.Agent({ keepAlive: false }),
+          httpsAgent: new https.Agent({ keepAlive: false }),
+          proxy: this.getAxiosProxy()
+        })
+        const data = res?.data ?? {}
+        const evalCount = Number(data?.eval_count || 0)
+        const evalDurationNs = Number(data?.eval_duration || 0)
+        const tokPerSec = evalCount > 0 && evalDurationNs > 0 ? evalCount / (evalDurationNs / 1e9) : 0
+        resolve({
+          ok: true,
+          model,
+          response: `${data?.response || ''}`,
+          tokPerSec: tokPerSec ? Math.round(tokPerSec * 100) / 100 : 0,
+          elapsedSec: Math.round(((Date.now() - startedAt) / 1000) * 100) / 100
+        })
+      } catch (e: any) {
+        resolve({
+          ok: false,
+          model,
+          response: '',
+          tokPerSec: 0,
+          elapsedSec: 0,
+          error: `${e?.message || e}`
+        })
+      }
+    })
+  }
+
+  resourceSnapshot() {
+    return new ForkPromise(async (resolve) => {
+      if (isWindows()) {
+        const command = `powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $cpu=(Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average; $os=Get-CimInstance Win32_OperatingSystem; $total=[math]::Round($os.TotalVisibleMemorySize/1024/1024,2); $free=[math]::Round($os.FreePhysicalMemory/1024/1024,2); $used=[math]::Round($total-$free,2); $g=@(); if (Get-Command nvidia-smi -ErrorAction SilentlyContinue) { try { $raw = & nvidia-smi --query-gpu=name,utilization.gpu,memory.used,memory.total,temperature.gpu --format=csv,noheader,nounits 2>$null; foreach ($line in $raw) { $p=$line -split ',' | ForEach-Object { $_.Trim() }; if ($p.Length -ge 5) { $g += [PSCustomObject]@{ Name=$p[0]; Utilization=[double]$p[1]; MemoryUsedMiB=[double]$p[2]; MemoryTotalMiB=[double]$p[3]; TemperatureC=[double]$p[4] } } } } catch {} }; [PSCustomObject]@{ cpu=[math]::Round([double]$cpu,2); ram=[PSCustomObject]@{ totalGB=$total; usedGB=$used; freeGB=$free }; gpu=$g } | ConvertTo-Json -Depth 6 -Compress"`
+        try {
+          const res = await execPromise(command)
+          const stdout = `${res?.stdout ?? ''}`.trim()
+          if (!stdout) {
+            resolve({ cpu: 0, ram: { totalGB: 0, usedGB: 0, freeGB: 0 }, gpu: [] })
+            return
+          }
+          resolve(JSON.parse(stdout))
+          return
+        } catch {
+          resolve({ cpu: 0, ram: { totalGB: 0, usedGB: 0, freeGB: 0 }, gpu: [] })
+          return
+        }
+      }
+
+      resolve({ cpu: 0, ram: { totalGB: 0, usedGB: 0, freeGB: 0 }, gpu: [] })
+    })
+  }
+
+  runtimeStatus(version: SoftInstalled) {
+    return new ForkPromise(async (resolve) => {
+      let command = ''
+      if (isWindows()) {
+        command = `ollama.exe ps`
+      } else {
+        command = `cd "${dirname(version.bin)}" && ./ollama ps`
+      }
+
+      try {
+        const res = await execPromise(command, {
+          cwd: dirname(version.bin)
+        })
+        const stdout = `${res?.stdout ?? ''}`
+        const lines = stdout
+          .split('\n')
+          .map((s) => s.trim())
+          .filter((s) => !!s)
+
+        let mode: 'gpu' | 'cpu' | 'none' | 'unknown' = 'none'
+        const dataLines = lines.slice(1)
+        if (dataLines.length > 0) {
+          const all = dataLines.join(' ').toLowerCase()
+          if (all.includes('gpu')) {
+            mode = 'gpu'
+          } else if (all.includes('cpu')) {
+            mode = 'cpu'
+          } else {
+            mode = 'unknown'
+          }
+        }
+
+        resolve({
+          mode,
+          lines,
+          raw: stdout
+        })
+      } catch (e: any) {
+        resolve({
+          mode: 'unknown',
+          lines: [],
+          raw: '',
+          error: `${e}`
+        })
+      }
+    })
+  }
 }
 export default new Ollama()

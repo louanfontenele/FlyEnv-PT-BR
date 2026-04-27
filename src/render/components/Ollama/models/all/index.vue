@@ -7,8 +7,10 @@
   <template v-else>
     <el-table
       row-key="name"
-      :tree-props="{ children: 'children', hasChildren: 'children' }"
-      lazy
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      :expand-row-keys="expandedRowKeys"
+      :default-expand-all="false"
+      :lazy="!OllamaAllModelsSetup.search.trim()"
       :load="onLoad"
       height="100%"
       :data="tableData"
@@ -98,6 +100,7 @@
     xtermDom,
     fetching,
     tableData,
+    expandedRowKeys,
     handleBrewVersion,
     fetchCommand,
     copyCommand,
@@ -109,8 +112,7 @@
   }
 
   const onLoad = (row: any, treeNode: TreeNode, resolve: (data: any[]) => void) => {
-    const child = OllamaAllModelsSetup.list[row.name]
-    console.log('onLoad: ', row, child)
+    const child = row?.children || OllamaAllModelsSetup.list[row.name]
     resolve(child)
   }
 </script>

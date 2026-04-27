@@ -100,10 +100,9 @@ export const Setup = () => {
 
   const tableData = computed(() => {
     const dict = OllamaAllModelsSetup.list
-    const list: OllamaModelItem[] = []
+    const baseList: OllamaModelItem[] = []
     for (const type in dict) {
-      // const arr = dict[type]
-      list.push({
+      baseList.push({
         isRoot: true,
         name: type,
         hasChildren: true,
@@ -111,10 +110,38 @@ export const Setup = () => {
       })
     }
     if (!OllamaAllModelsSetup.search.trim()) {
-      return list
+      return baseList
     }
     const search = OllamaAllModelsSetup.search.trim().toLowerCase()
-    return list.filter((item) => item.name.includes(search) || search.includes(item.name))
+    const matchedRoots: OllamaModelItem[] = []
+    for (const item of baseList) {
+      const rootMatched = item.name.toLowerCase().includes(search)
+      const children = dict[item.name] || []
+      const matchedChildren = rootMatched
+        ? children
+        : children.filter((child) => `${child?.name || ''}`.toLowerCase().includes(search))
+      if (rootMatched || matchedChildren.length) {
+        matchedRoots.push({
+          ...item,
+          hasChildren: false,
+          children: matchedChildren
+        })
+      }
+    }
+    return matchedRoots
+  })
+
+  const expandedRowKeys = computed(() => {
+    if (!OllamaAllModelsSetup.search.trim()) {
+      return []
+    }
+    const search = OllamaAllModelsSetup.search.trim().toLowerCase()
+    return tableData.value
+      .filter((item) => {
+        const children = item.children || []
+        return children.some((child) => `${child?.name || ''}`.toLowerCase().includes(search))
+      })
+      .map((item) => item.name)
   })
 
   const fetchCommand = (row: any) => {
@@ -200,6 +227,7 @@ export const Setup = () => {
     fetchCommand,
     copyCommand,
     tableData,
+    expandedRowKeys,
     runningService
   }
 }
