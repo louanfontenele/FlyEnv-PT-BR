@@ -62,6 +62,7 @@ class BaseManager {
   MkCert: any
   Sdkman: any
   LanguageProject: any
+  CliProxyAPI: any
 
   modules: Set<string> = new Set()
 
@@ -490,6 +491,12 @@ class BaseManager {
         this.LanguageProject = res.default
       }
       doRun(this.LanguageProject)
+    } else if (module === 'cliproxyapi') {
+      if (!this.CliProxyAPI) {
+        const res = await import('./module/CliProxyAPI')
+        this.CliProxyAPI = res.default
+      }
+      doRun(this.CliProxyAPI)
     } else {
       ProcessSendError(ipcCommandKey, 'No Found Module')
     }

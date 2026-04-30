@@ -83,7 +83,8 @@ export enum AppModuleEnum {
   hermes = 'hermes',
   n8n = 'n8n',
   rustfs = 'rustfs',
-  mkcert = 'mkcert'
+  mkcert = 'mkcert',
+  cliproxyapi = 'cliproxyapi'
 }
 
 export type AllAppModule = keyof typeof AppModuleEnum

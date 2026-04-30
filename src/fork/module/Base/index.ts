@@ -171,7 +171,8 @@ export class Base {
         tomcat: 'org.apache.catalina.startup.Bootstrap',
         rabbitmq: 'rabbit',
         elasticsearch: 'org.elasticsearch.server/org.elasticsearch.bootstrap.Elasticsearch',
-        ollama: 'ollama'
+        ollama: 'ollama',
+        cliproxyapi: 'cli-proxy-api'
       }
       const serverName = dis?.[this.type]
       if (serverName) {
