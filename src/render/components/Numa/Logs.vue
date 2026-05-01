@@ -17,11 +17,9 @@
   import ToolVM from '@/components/Log/tool.vue'
   import { join } from '@/util/path-browserify'
   import { BrewStore } from '@/store/brew'
-  import { I18nT } from '@lang/index'
 
   const log = ref()
   const brewStore = BrewStore()
-  const logType = ref<'out' | 'error'>('out')
 
   const currentVersion = computed(() => {
     return brewStore.currentVersion('numa')
