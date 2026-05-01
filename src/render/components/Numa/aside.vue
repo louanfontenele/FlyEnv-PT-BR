@@ -1,19 +1,14 @@
 <template>
   <li
     v-if="showItem !== false"
-    :class="'non-draggable' + (currentPage === '/cliproxyapi' ? ' active' : '')"
+    :class="'non-draggable' + (currentPage === '/numa' ? ' active' : '')"
     @click="nav"
   >
     <div class="left">
       <div class="icon-block" :class="{ run: serviceRunning }">
-        <yb-icon
-          :svg="import('@/svg/cliproxyapi.svg?raw')"
-          style="padding: 3px"
-          width="28"
-          height="28"
-        />
+        <yb-icon :svg="import('@/svg/numa.svg?raw')" style="padding: 0" width="28" height="28" />
       </div>
-      <span class="title">CLIProxyAPI</span>
+      <span class="title">Numa</span>
     </div>
 
     <el-switch
@@ -39,9 +34,9 @@
     switchChange,
     nav,
     stopNav
-  } = AsideSetup('cliproxyapi')
+  } = AsideSetup('numa')
 
-  AppServiceModule.cliproxyapi = {
+  AppServiceModule.numa = {
     groupDo,
     switchChange,
     serviceRunning,

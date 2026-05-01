@@ -225,6 +225,7 @@ export class Base {
             case 'rabbitmq':
             case 'elasticsearch':
             case 'etcd':
+            case 'numa':
               sig = '-TERM'
               break
             default:

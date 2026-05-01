@@ -2,12 +2,11 @@
   <Conf
     ref="conf"
     :type-flag="'cliproxyapi'"
-    :default-conf="defaultConf"
     :file="file"
-    :file-ext="'yaml'"
-    :config-language="'yaml'"
+    :file-ext="'env'"
+    :config-language="'ini'"
     :show-commond="false"
-    url="https://help.router-for.me/configuration/basic.html"
+    url="https://help.router-for.me/configuration/storage/git.html"
   >
   </Conf>
 </template>
@@ -19,18 +18,8 @@
   import { fs } from '@/util/NodeFn'
   import IPC from '@/util/IPC'
 
-  const defaultConf = ref('')
   const conf = ref()
-  const file = join(window.Server.BaseDir!, 'cliproxyapi/config.yaml')
-
-  const isZh = window.Server.Lang === 'zh'
-  const tmpl = join(
-    window.Server.Static!,
-    isZh ? 'tmpl/cliproxyapi.zh.yaml' : 'tmpl/cliproxyapi.yaml'
-  )
-  fs.readFile(tmpl).then((content: string) => {
-    defaultConf.value = content
-  })
+  const file = join(window.Server.BaseDir!, 'cliproxyapi/cliproxyapi.env')
 
   fs.existsSync(file).then((e) => {
     if (!e) {

@@ -63,6 +63,7 @@ class BaseManager {
   Sdkman: any
   LanguageProject: any
   CliProxyAPI: any
+  Numa: any
 
   modules: Set<string> = new Set()
 
@@ -497,6 +498,12 @@ class BaseManager {
         this.CliProxyAPI = res.default
       }
       doRun(this.CliProxyAPI)
+    } else if (module === 'numa') {
+      if (!this.Numa) {
+        const res = await import('./module/Numa')
+        this.Numa = res.default
+      }
+      doRun(this.Numa)
     } else {
       ProcessSendError(ipcCommandKey, 'No Found Module')
     }

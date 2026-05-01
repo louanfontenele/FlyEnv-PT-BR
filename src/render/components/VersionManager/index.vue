@@ -18,6 +18,12 @@
                 <el-radio-button value="sdkman">SDKMAN</el-radio-button>
               </template>
             </el-radio-group>
+            <el-button v-if="url" class="button" link @click="openURL(url)">
+              <yb-icon
+                style="width: 20px; height: 20px; margin-left: 10px"
+                :svg="import('@/svg/http.svg?raw')"
+              ></yb-icon>
+            </el-button>
           </template>
           <template v-else-if="isWindows">
             <span> {{ title }} </span>

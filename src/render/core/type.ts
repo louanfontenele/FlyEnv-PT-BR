@@ -84,12 +84,13 @@ export enum AppModuleEnum {
   n8n = 'n8n',
   rustfs = 'rustfs',
   mkcert = 'mkcert',
-  cliproxyapi = 'cliproxyapi'
+  cliproxyapi = 'cliproxyapi',
+  numa = 'numa'
 }
 
 export type AllAppModule = keyof typeof AppModuleEnum
 
-export const AppWithRoot = ['apache', 'nginx', 'caddy', 'pure-ftpd', 'ftp-srv', 'tomcat', 'consul']
+export const AppWithRoot = ['apache', 'nginx', 'caddy', 'pure-ftpd', 'ftp-srv', 'tomcat', 'consul', 'numa']
 
 type LabelFn = () => string
 

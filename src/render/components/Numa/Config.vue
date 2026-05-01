@@ -1,13 +1,13 @@
 <template>
   <Conf
     ref="conf"
-    :type-flag="'cliproxyapi'"
+    :type-flag="'numa'"
     :default-conf="defaultConf"
     :file="file"
-    :file-ext="'yaml'"
-    :config-language="'yaml'"
+    :file-ext="'toml'"
+    :config-language="'ini'"
     :show-commond="false"
-    url="https://help.router-for.me/configuration/basic.html"
+    url="https://numa.rs/"
   >
   </Conf>
 </template>
@@ -21,12 +21,12 @@
 
   const defaultConf = ref('')
   const conf = ref()
-  const file = join(window.Server.BaseDir!, 'cliproxyapi/config.yaml')
+  const file = join(window.Server.BaseDir!, 'numa/numa.toml')
 
   const isZh = window.Server.Lang === 'zh'
   const tmpl = join(
     window.Server.Static!,
-    isZh ? 'tmpl/cliproxyapi.zh.yaml' : 'tmpl/cliproxyapi.yaml'
+    isZh ? 'tmpl/numa.zh.toml' : 'tmpl/numa.toml'
   )
   fs.readFile(tmpl).then((content: string) => {
     defaultConf.value = content
@@ -34,7 +34,7 @@
 
   fs.existsSync(file).then((e) => {
     if (!e) {
-      IPC.send('app-fork:cliproxyapi', 'initConfig').then((key: string) => {
+      IPC.send('app-fork:numa', 'initConfig').then((key: string) => {
         IPC.off(key)
         conf?.value?.update()
       })

@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
+
 import { Base } from '../Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
@@ -13,9 +14,9 @@ import {
   readFile,
   writeFile,
   mkdirp,
-  serviceStartExec,
-  serviceStartExecWin
+  readdir
 } from '../../Fn'
+import { serviceStartSpawn } from '../../util/ServiceStart'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../../TaskQueue'
@@ -53,6 +54,34 @@ class CliProxyAPI extends Base {
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: configFile }))
         })
       }
+      const envFile = join(baseDir, 'cliproxyapi.env')
+      if (!existsSync(envFile)) {
+        const envContent = `# CLIProxyAPI Environment Variables
+# Uncomment the lines you want to enable
+
+# === Git-backed Configuration ===
+# MANAGEMENT_PASSWORD=
+# GITSTORE_GIT_URL=
+# GITSTORE_LOCAL_PATH=
+# GITSTORE_GIT_USERNAME=
+# GITSTORE_GIT_TOKEN=
+
+# === PostgreSQL-backed Configuration ===
+# MANAGEMENT_PASSWORD=
+# PGSTORE_DSN=
+# PGSTORE_SCHEMA=
+# PGSTORE_LOCAL_PATH=
+
+# === Object Storage-backed Configuration ===
+# MANAGEMENT_PASSWORD=
+# OBJECTSTORE_ENDPOINT=
+# OBJECTSTORE_BUCKET=
+# OBJECTSTORE_ACCESS_KEY=
+# OBJECTSTORE_SECRET_KEY=
+# OBJECTSTORE_LOCAL_PATH=
+`
+        await writeFile(envFile, envContent)
+      }
       resolve(configFile)
     })
   }
@@ -70,45 +99,41 @@ class CliProxyAPI extends Base {
       const baseDir = join(global.Server.BaseDir!, 'cliproxyapi')
       await mkdirp(baseDir)
 
-      if (isWindows()) {
-        const execArgs = `-config "${configFile}"`
-        const execEnv = ``
-        try {
-          const res = await serviceStartExecWin({
-            version,
-            pidPath: this.pidPath,
-            baseDir,
-            bin,
-            execArgs,
-            execEnv,
-            on,
-            checkPidFile: false
-          })
-          resolve(res)
-        } catch (e: any) {
-          console.log('cliproxyapi start err: ', e)
-          reject(e)
-          return
-        }
-      } else {
-        const execArgs = `-config "${configFile}"`
-        try {
-          const res = await serviceStartExec({
-            version,
-            pidPath: this.pidPath,
-            baseDir,
-            bin,
-            execArgs,
-            on,
-            timeToWait: 1000,
-            checkPidFile: false
-          })
-          resolve(res)
-        } catch (e: any) {
-          console.log('cliproxyapi start err: ', e)
-          reject(e)
-          return
-        }
+      const envFile = join(baseDir, 'cliproxyapi.env')
+      const execEnv: Record<string, string> = {}
+      if (existsSync(envFile)) {
+        const envContent = await readFile(envFile, 'utf-8')
+        const envLines = envContent
+          .split('\n')
+          .map((s) => s.trim())
+          .filter((s) => !!s && !s.startsWith('#'))
+        envLines.forEach((line) => {
+          const idx = line.indexOf('=')
+          if (idx > 0) {
+            const k = line.substring(0, idx)
+            const v = line.substring(idx + 1)
+            execEnv[k] = v
+          }
+        })
+      }
+
+      const execArgs = ['-config', configFile]
+      try {
+        const res = await serviceStartSpawn({
+          version,
+          pidPath: this.pidPath,
+          baseDir,
+          bin,
+          execArgs,
+          execEnv,
+          waitTime: 500,
+          on
+        })
+        resolve(res)
+      } catch (e: any) {
+        console.log('cliproxyapi start err: ', e)
+        reject(e)
+        return
       }
     })
   }
@@ -150,14 +175,17 @@ class CliProxyAPI extends Base {
       if (isWindows()) {
         all = [versionLocalFetch(setup?.cliproxyapi?.dirs ?? [], 'cli-proxy-api.exe')]
       } else {
-        all = [versionLocalFetch(setup?.cliproxyapi?.dirs ?? [], 'cli-proxy-api', 'cli-proxy-api')]
+        all = [
+          versionLocalFetch(setup?.cliproxyapi?.dirs ?? [], 'cli-proxy-api', 'cliproxyapi'),
+          versionLocalFetch(setup?.cliproxyapi?.dirs ?? [], 'cliproxyapi', 'cliproxyapi')
+        ]
       }
       Promise.all(all)
         .then(async (list) => {
           versions = list.flat()
           versions = versionFilterSame(versions)
           const all = versions.map((item) => {
-            const command = `"${item.bin}" --version`
+            const command = `"${item.bin}" --help`
             const reg = /(Version: )(\d+(\.\d+){1,4})(.*?)/g
             return TaskQueue.run(versionBinVersion, item.bin, command, reg)
           })
@@ -181,6 +209,29 @@ class CliProxyAPI extends Base {
         .catch(() => {
           resolve([])
         })
+    })
+  }
+
+  getLogFiles() {
+    return new ForkPromise(async (resolve) => {
+      const baseDir = join(global.Server.BaseDir!, 'cliproxyapi')
+      const files: Array<{ name: string; path: string }> = []
+      try {
+        if (existsSync(baseDir)) {
+          const list = await readdir(baseDir)
+          list.forEach((name) => {
+            if (name.startsWith('cliproxyapi-') && name.endsWith('.log')) {
+              files.push({
+                name: name.replace('.log', ''),
+                path: join(baseDir, name)
+              })
+            }
+          })
+        }
+      } catch (e) {
+        console.log('cliproxyapi getLogFiles error: ', e)
+      }
+      resolve(files)
     })
   }
 

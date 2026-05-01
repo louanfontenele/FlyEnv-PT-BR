@@ -46,6 +46,7 @@ export type ServiceStartSpawnParams = {
   execArgs?: string[]
   execEnv?: Record<string, string>
   on: (...args: any) => void
+  waitTime?: number
 }
 
 export async function serviceStartExec(
@@ -423,7 +424,7 @@ export async function serviceStartSpawn(
           cp.unref() // 让子进程独立运行，不挂钩主进程
           resolve({ 'APP-Service-Start-PID': pid })
         }
-      }, 2000)
+      }, param?.waitTime ?? 2000)
     })
   }
 

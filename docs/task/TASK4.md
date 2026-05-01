@@ -1,64 +1,52 @@
-# 添加 CLIProxyAPI 模块
+# 任务：在 FlyEnv 中集成 Numa 模块
 
-## 需求描述
-用户需求描述：
-```markdown
-## 🚀 Feature Request
-Add CLIProxyAPI (https://github.com/router-for-me/CLIProxyAPI) as a module in FlyEnv.
+## 1. 背景与目标
+我们需要在 FlyEnv 中集成 [Numa](https://numa.rs/) 模块，以进一步增强本地开发环境的体验。
+- 特性需求与讨论参考：https://github.com/xpf0000/FlyEnv/issues/616
+- Numa 官方文档：https://numa.rs/
+- Numa GitHub：https://raw.githubusercontent.com/razvandimescu/numa/refs/heads/main/README.md
 
-## 💡 Why
-CLIProxyAPI provides an OpenAI-compatible API for multiple AI providers (OpenAI, Claude, Gemini, etc.) using OAuth instead of API keys.
+## 2. 执行阶段与交付物
 
-Integrating it into FlyEnv would:
-- Enable local AI proxy for development
-- Simplify multi-provider AI usage
-- Fit well with FlyEnv’s modular system
+本任务分为两个阶段。**必须在阶段一获得我的明确确认后，才能开始阶段二的编码。**
 
-## 🧩 Proposal
-- Add CLIProxyAPI as a managed service (start/stop, config)
-- Optional: integrate via Go SDK for deeper embedding
+### 阶段一：技术调研与方案设计 (Design Phase)
+1. **深入理解 Numa：** 读取并理解 Numa 的核心能力、依赖项以及其命令行工作方式。
 
-## 🔍 Use Cases
-- Use AI tools (Cursor, VSCode extensions) via local proxy
-- Manage multiple AI providers in one place
-```
-相关文档：
-  - https://help.router-for.me/cn/introduction/what-is-cliproxyapi.html
-  - https://help.router-for.me/cn/introduction/quick-start.html
-  - https://help.router-for.me/cn/configuration/basic.html
-  - https://help.router-for.me/cn/configuration/options.html
-  - https://help.router-for.me/cn/configuration/storage/git.html
-  - https://help.router-for.me/cn/configuration/storage/pgsql.html
-  - https://help.router-for.me/cn/configuration/storage/s3.html
+2. **分析 FlyEnv 架构：** 分析 FlyEnv 现有的模块化工作流。并考虑Numa 模块如何集成
+可参考:
+  - CliProxyAPI 模块. 典型的FlyEnv服务模块. 包含版本管理,服务管理,配置文件初始化/读写,日志查看
+  - Hermes 模块. 包含很多 NodePTY + XTerm 的工作流
+  - DNS 模块. 基础的DNS功能
 
-先完整读取以上信息。深入了解CLIProxyAPI的作用，功能，特性。
-然后考虑CLIProxyAPI模块跟目前系统已有的哪个模块比较像。功能可以参照哪个模块进行开发。都包含哪些功能
-最后完成CLIProxyAPI模块的开发
+3. **输出《Numa 集成方案》：** 方案需包含以下内容：
+  - **前端界面 (UI/UX)：** Numa 模块的入口、配置项及状态展示逻辑。
+  - **后端逻辑 (Backend IPC/Services)：** Numa 进程的启停控制、健康检查以及与 FlyEnv 主进程的通信机制。
+  - **用户执行逻辑：** 用户从安装、配置到启动该模块的完整交互链路。
 
-## 备注
-1. 版本管理返回内容格式。需要你自行请求接口获取。
-2. 版本解压内容你可以自行下载解压查看
-3. 系统代理：$env:http_proxy="http://127.0.0.1:17891"; $env:https_proxy="http://127.0.0.1:17891"; $env:all_proxy="http://127.0.0.1:17891"
+### 阶段二：编码实现 (Implementation Phase)
+*(⚠️ 阻断：必须等待我对《Numa 集成方案》回复“确认”后，方可执行本阶段)*
+- 严格按照确认后的方案，实施 Numa 模块的前后端代码集成。
 
-## 任务执行原则
+---
 
-**请认真读取并深刻理解下面的原则。并严格按照下面的原则执行任务**
+## 3. 任务执行原则（核心红线）
 
-### 编码前先思考。
-1. 不确定时必须停下来问，不能猜。
-2. 存在多种理解时列出选项让用户选，而不是替用户做决定。
-3. 发现有更简单的方案时，主动说出来，该推回来就推回来。
+**请严格遵守以下开发纪律。这决定了你的代码是否会被采纳：**
 
-### 简约至上。
-1. 没被要求的功能不写。
-2. 只用一次的代码不建抽象层。
-3. 没人要求的「灵活性」和「可配置」不加。
-4. 不可能发生的异常场景不做错误处理。
+### 3.1 编码前先思考
+- **禁止猜测：** 遇到不确定的需求、API 或边缘场景，必须停下来问我。
+- **提供选择：** 存在多种技术实现路径时，列出各选项的优缺点让我选，绝不要替我做架构决策。
+- **主动推翻：** 如果你发现有比我预期更简单、更原生的方案，请主动提出来，该推翻就推翻。
 
-### 精确编辑。
-1. 只动你被要求动的部分。
-2. 匹配项目已有的代码风格，哪怕你觉得自己写得更好。
-3. 看到不相关的问题，提一嘴就行，别动手。
-4. 如果你的改动导致某些代码不再被使用，清理掉，那是你的责任。但之前就存在的问题，没人让你改就不要碰。
+### 3.2 简约至上 (KISS 原则)
+- **拒绝镀金：** 没被明确要求的功能，坚决不写。
+- **拒绝过度抽象：** 只在一个地方用到的代码，不要建抽象层。
+- **拒绝伪需求：** 没人要求的「灵活性」和「可配置项」坚决不加。
+- **拒绝防御性编程泛滥：** 不可能发生、或极其罕见的异常场景，不做复杂的错误处理。
 
-
+### 3.3 精确编辑 (Surgical Edits)
+- **最小作用域：** 只修改为了完成当前任务必须动的部分。
+- **风格一致：** 严格匹配 FlyEnv 已有的代码和命名风格，哪怕你觉得自己有一套“更优雅”的写法。
+- **管好手：** 看到项目中不相关的代码问题（如拼写错误、历史遗留格式），提一嘴即可，绝对不要在本次任务中顺手修改。**严禁使用git回滚代码**.
+- **负责到底：** 如果你的改动导致某些旧代码变成了 Dead Code，你必须负责清理掉；但原来就存在且没人让你改的问题，不要碰。**严禁使用git回滚代码**.
