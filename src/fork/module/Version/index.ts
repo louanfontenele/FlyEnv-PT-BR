@@ -47,6 +47,7 @@ class Manager extends Base {
   MkCert: any
   CliProxyAPI: any
   Numa: any
+  Rnacos: any
 
   constructor() {
     super()
@@ -321,6 +322,12 @@ class Manager extends Base {
             this.Numa = res.default
           }
           versions.numa = this.Numa.allInstalledVersions(setup)
+        } else if (type === 'rnacos') {
+          if (!this.Rnacos) {
+            const res = await import('../Rnacos')
+            this.Rnacos = res.default
+          }
+          versions.rnacos = this.Rnacos.allInstalledVersions(setup)
         }
       }
       const keys: string[] = []

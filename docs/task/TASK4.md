@@ -1,32 +1,34 @@
-# 任务：在 FlyEnv 中集成 Numa 模块
+# 任务：在 FlyEnv 中集成 r-nacos 模块
 
 ## 1. 背景与目标
-我们需要在 FlyEnv 中集成 [Numa](https://numa.rs/) 模块，以进一步增强本地开发环境的体验。
-- 特性需求与讨论参考：https://github.com/xpf0000/FlyEnv/issues/616
-- Numa 官方文档：https://numa.rs/
-- Numa GitHub：https://raw.githubusercontent.com/razvandimescu/numa/refs/heads/main/README.md
+我们需要在 FlyEnv 中集成 [r-nacos](https://github.com/nacos-group/r-nacos) 模块，以进一步增强本地开发环境的体验。
+- 特性需求与讨论参考：https://github.com/xpf0000/FlyEnv/issues/641
+- r-nacos 官方文档：https://r-nacos.github.io/docs/intro/
+- https://r-nacos.github.io/docs/quick_started/
+- https://r-nacos.github.io/docs/env_config/
+- r-nacos GitHub：https://raw.githubusercontent.com/nacos-group/r-nacos/refs/heads/master/README.md
 
 ## 2. 执行阶段与交付物
 
 本任务分为两个阶段。**必须在阶段一获得我的明确确认后，才能开始阶段二的编码。**
 
 ### 阶段一：技术调研与方案设计 (Design Phase)
-1. **深入理解 Numa：** 读取并理解 Numa 的核心能力、依赖项以及其命令行工作方式。
+1. **深入理解 r-nacos：** 读取并理解 r-nacos 的核心能力、依赖项以及其命令行工作方式。
 
-2. **分析 FlyEnv 架构：** 分析 FlyEnv 现有的模块化工作流。并考虑Numa 模块如何集成
+2. **分析 FlyEnv 架构：** 分析 FlyEnv 现有的模块化工作流。并考虑r-nacos 模块如何集成
 可参考:
   - CliProxyAPI 模块. 典型的FlyEnv服务模块. 包含版本管理,服务管理,配置文件初始化/读写,日志查看
   - Hermes 模块. 包含很多 NodePTY + XTerm 的工作流
   - DNS 模块. 基础的DNS功能
 
-3. **输出《Numa 集成方案》：** 方案需包含以下内容：
-  - **前端界面 (UI/UX)：** Numa 模块的入口、配置项及状态展示逻辑。
-  - **后端逻辑 (Backend IPC/Services)：** Numa 进程的启停控制、健康检查以及与 FlyEnv 主进程的通信机制。
+3. **输出《r-nacos 集成方案》：** 方案需包含以下内容：
+  - **前端界面 (UI/UX)：** r-nacos 模块的入口、配置项及状态展示逻辑。
+  - **后端逻辑 (Backend IPC/Services)：** r-nacos 进程的启停控制、健康检查以及与 FlyEnv 主进程的通信机制。
   - **用户执行逻辑：** 用户从安装、配置到启动该模块的完整交互链路。
 
 ### 阶段二：编码实现 (Implementation Phase)
-*(⚠️ 阻断：必须等待我对《Numa 集成方案》回复“确认”后，方可执行本阶段)*
-- 严格按照确认后的方案，实施 Numa 模块的前后端代码集成。
+*(⚠️ 阻断：必须等待我对《r-nacos 集成方案》回复“确认”后，方可执行本阶段)*
+- 严格按照确认后的方案，实施 r-nacos 模块的前后端代码集成。
 
 ---
 
@@ -49,4 +51,4 @@
 - **最小作用域：** 只修改为了完成当前任务必须动的部分。
 - **风格一致：** 严格匹配 FlyEnv 已有的代码和命名风格，哪怕你觉得自己有一套“更优雅”的写法。
 - **管好手：** 看到项目中不相关的代码问题（如拼写错误、历史遗留格式），提一嘴即可，绝对不要在本次任务中顺手修改。**严禁使用git回滚代码**.
-- **负责到底：** 如果你的改动导致某些旧代码变成了 Dead Code，你必须负责清理掉；但原来就存在且没人让你改的问题，不要碰。**严禁使用git回滚代码**.
+- **负责到底：** 如果你的改动导致某些旧代码变成了 Dead Code，你必须负责清理掉。但原来就存在且没人让你改的问题，不要碰。**严禁使用git回滚代码**.

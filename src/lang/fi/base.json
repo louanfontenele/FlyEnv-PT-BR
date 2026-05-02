@@ -117,5 +117,6 @@
   "needInstallHelperTips": "Jotkin toiminnot epäonnistuivat, koska järjestelmänvalvojan oikeudet vaaditaan. Tähän kuuluu Hosts-tiedoston muuttaminen, prosessiluettelon avaaminen, alle 1024 sijaitseviin satamiin sitominen tai järjestelmän ympäristömuuttujien hallinta.\nAsenna FlyEnv Helper myöntääksesi tarvittavat oikeudet näihin tehtäviin. Klikkaa \"OK\" jatkaaksesi asennusta.",
   "targetPlatforms": "Kohdealustat",
   "baseInfo": "Perustiedot",
-  "selectVersion": "Valitse Versio"
+  "selectVersion": "Valitse Versio",
+  "openConsole": "Open Console"
 }

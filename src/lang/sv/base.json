@@ -117,5 +117,6 @@
   "needInstallHelperTips": "Vissa operationer misslyckades eftersom administratörsprivilegier krävs. Detta inkluderar att ändra Hosts-filen, komma åt processlistan, binda till portar under 1024, eller hantera systemmiljövariabler.\nInstallera FlyEnv Helper för att bevilja nödvändiga behörigheter för dessa uppgifter. Klicka på \"OK\" för att fortsätta med installationen.",
   "targetPlatforms": "Mål Plattformar",
   "baseInfo": "Grundläggande information",
-  "selectVersion": "Välj version"
+  "selectVersion": "Välj version",
+  "openConsole": "Open Console"
 }

@@ -38,7 +38,6 @@ import type hermes from './zh/hermes.json'
 import type n8n from './zh/n8n.json'
 import type rustfs from './zh/rustfs.json'
 import type mkcert from './zh/mkcert.json'
-
 import AR from './ar/index'
 import AZ from './az/index'
 import BG from './bg/index'

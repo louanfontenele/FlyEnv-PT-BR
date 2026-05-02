@@ -9,11 +9,8 @@
       <Service v-if="tab === 0" title="Numa" type-flag="numa">
         <template #tool-left>
           <template v-if="isRunning">
-            <el-button style="color: #01cc74" class="button" link @click.stop="openURL">
-              <yb-icon
-                style="width: 20px; height: 20px; margin-left: 10px"
-                :svg="import('@/svg/http.svg?raw')"
-              ></yb-icon>
+            <el-button style="color: #01cc74" class="button ml-[10px]" link @click.stop="openURL">
+              <yb-icon class="w-[20px] h-[20px]" :svg="import('@/svg/http.svg?raw')"></yb-icon>
             </el-button>
           </template>
         </template>

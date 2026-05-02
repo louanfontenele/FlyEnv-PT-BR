@@ -172,7 +172,8 @@ export class Base {
         rabbitmq: 'rabbit',
         elasticsearch: 'org.elasticsearch.server/org.elasticsearch.bootstrap.Elasticsearch',
         ollama: 'ollama',
-        cliproxyapi: 'cli-proxy-api'
+        cliproxyapi: 'cli-proxy-api',
+        rnacos: 'rnacos'
       }
       const serverName = dis?.[this.type]
       if (serverName) {

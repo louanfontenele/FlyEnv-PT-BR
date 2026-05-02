@@ -64,6 +64,7 @@ class BaseManager {
   LanguageProject: any
   CliProxyAPI: any
   Numa: any
+  Rnacos: any
 
   modules: Set<string> = new Set()
 
@@ -504,6 +505,12 @@ class BaseManager {
         this.Numa = res.default
       }
       doRun(this.Numa)
+    } else if (module === 'rnacos') {
+      if (!this.Rnacos) {
+        const res = await import('./module/Rnacos')
+        this.Rnacos = res.default
+      }
+      doRun(this.Rnacos)
     } else {
       ProcessSendError(ipcCommandKey, 'No Found Module')
     }
