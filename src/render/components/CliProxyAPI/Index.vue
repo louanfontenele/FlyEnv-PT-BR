@@ -45,7 +45,7 @@
   import { join } from '@/util/path-browserify'
   import YAML from 'yamljs'
 
-  const { tab } = AppModuleSetup('cliproxyapi')
+  const { tab, checkVersion } = AppModuleSetup('cliproxyapi')
   const tabs = [
     I18nT('base.service'),
     I18nT('base.versionManager'),
@@ -53,7 +53,7 @@
     I18nT('service.env'),
     I18nT('base.log')
   ]
-
+  checkVersion()
   const brewStore = BrewStore()
 
   const isRunning = computed(() => {

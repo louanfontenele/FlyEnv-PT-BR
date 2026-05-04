@@ -1094,7 +1094,7 @@ export class ImageCompressTask implements TaskItem {
     } catch (error: any) {
       this.errorMessage = `处理图片时发生未知错误: ${error.message}`
       this.hasError = true
-      return false
+      throw error
     }
   }
 

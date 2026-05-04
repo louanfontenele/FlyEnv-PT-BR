@@ -387,7 +387,7 @@ class ImageBatchProcess {
   }
 
   selectDir(type?: 'file' | 'folder') {
-    let properties = ['openFile', 'openDirectory', 'showHiddenFiles', 'multiSelections']
+    let properties: any = ['openFile', 'openDirectory', 'showHiddenFiles', 'multiSelections']
     let filters: any = []
     if (type === 'file') {
       properties = ['openFile', 'showHiddenFiles', 'multiSelections']

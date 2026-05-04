@@ -174,7 +174,7 @@ class FrankenPHP extends Base {
     command: string
   ): Promise<{ version?: string; php?: string; caddy?: string; error?: string }> => {
     return new Promise(async (resolve) => {
-      const reg = /(FrankenPHP v)(.*?)( PHP )(.*?)( Caddy v)(.*?)( )/g
+      const reg = /(FrankenPHP )(.*?)( PHP )(.*?)( Caddy )(.*?)( )/g
       const handleCatch = (err: any) => {
         resolve({
           error: `${command}\n${err}`,
@@ -189,9 +189,9 @@ class FrankenPHP extends Base {
         let caddy: string | undefined = ''
         try {
           const arr = reg?.exec(str)
-          version = arr?.[2]?.replace('(Homebrew)', '')?.trim()
-          php = arr?.[4]?.trim()
-          caddy = arr?.[6]?.trim()
+          version = arr?.[2]?.replace('(Homebrew)', '')?.replace('v', '')?.trim()
+          php = arr?.[4]?.replace('v', '')?.trim()
+          caddy = arr?.[6]?.replace('v', '')?.trim()
           reg!.lastIndex = 0
         } catch {}
         resolve({

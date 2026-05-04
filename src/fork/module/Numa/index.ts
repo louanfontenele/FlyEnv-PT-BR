@@ -15,12 +15,13 @@ import {
   readFile,
   writeFile,
   mkdirp,
-  readdir
+  readdir,
+  serviceStartExecCMD
 } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../../TaskQueue'
-import { isLinux, isWindows } from '@shared/utils'
+import { isLinux, isMacOS, isWindows } from '@shared/utils'
 import { serviceStartSpawn } from '../../util/ServiceStart'
 
 class Numa extends Base {
@@ -84,7 +85,7 @@ class Numa extends Base {
             on,
             checkPidFile: false
           })
-        } else {
+        } else if (isMacOS()) {
           res = await serviceStartSpawn({
             version,
             pidPath: this.pidPath,
@@ -93,6 +94,16 @@ class Numa extends Base {
             execArgs: [configFile],
             waitTime: 500,
             on
+          })
+        } else {
+          res = await serviceStartExecCMD({
+            version,
+            pidPath: this.pidPath,
+            baseDir,
+            bin,
+            execArgs,
+            on,
+            checkPidFile: false
           })
         }
         resolve(res)

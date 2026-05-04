@@ -42,14 +42,14 @@
   import { computed } from 'vue'
   import { join } from '@/util/path-browserify'
 
-  const { tab } = AppModuleSetup('numa')
+  const { tab, checkVersion } = AppModuleSetup('numa')
   const tabs = [
     I18nT('base.service'),
     I18nT('base.versionManager'),
     I18nT('base.configFile'),
     I18nT('base.log')
   ]
-
+  checkVersion()
   const brewStore = BrewStore()
 
   const isRunning = computed(() => {
