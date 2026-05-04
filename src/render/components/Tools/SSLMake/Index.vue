@@ -103,7 +103,7 @@
   )
 
   const chooseRoot = async (flag: 'root' | 'save', choosefile = false) => {
-    let opt = ['openDirectory', 'createDirectory']
+    let opt: any = ['openDirectory', 'createDirectory']
     const filters = []
     if (choosefile) {
       opt = ['openFile']
@@ -167,7 +167,7 @@
 
       caFile = caFile.replace('.crt', '')
       caFileName = caFileName.replace('.crt', '')
-      const opt = { cwd: item.value.savePath }
+      const opt: any = { cwd: item.value.savePath }
 
       let exists = await fs.existsSync(caFile + '.crt')
       if (!exists) {
@@ -191,7 +191,7 @@ subjectAltName=@alt_names
       await fs.writeFile(join(item.value.savePath, `${saveName}.ext`), ext)
 
       let command = `openssl req -new -newkey rsa:2048 -nodes -keyout "${saveName}.key" -out "${saveName}.csr" -sha256 -subj "/CN=${saveName}";`
-      command += `openssl x509 -req -in "${saveName}.csr" -out "${saveName}.crt" -extfile "${saveName}.ext" -CA "${caFile}.crt" -CAkey "${caFile}.key" -CAcreateserial -sha256 -days 3650;`
+      command += `openssl x509 -req -in "${saveName}.csr" -out "${saveName}.crt" -extfile "${saveName}.ext" -CA "${caFile}.crt" -CAkey "${caFile}.key" -CAcreateserial -CAserial "${caFile}.srl" -sha256 -days 3650;`
       await exec.exec(command, opt)
 
       exists = await fs.existsSync(join(item.value.savePath, `${saveName}.crt`))

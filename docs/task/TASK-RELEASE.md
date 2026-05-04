@@ -1,8 +1,30 @@
-# FlyEnv新版本4.14.2更新日志
+# FlyEnv新版本4.15.0更新日志
 
 本次更新内容：
-1. 添加 Hermes Agent 模块.
-2. 修复Windows版本托盘退出无效的问题
+1. 添加 CliProxyAPI 模块.
+   https://github.com/xpf0000/FlyEnv/issues/640
+   感谢 @xxx 提出的此特性需求.
+2. 添加 Numa 模块.
+   https://github.com/xpf0000/FlyEnv/issues/616
+   感谢 @xxx 提出的此特性需求.
+3. 添加 Rnacos 模块.
+   https://github.com/xpf0000/FlyEnv/issues/641
+   感谢 @xxx 提出的此特性需求.
+4. 添加 FrankenPHP 模块
+   https://github.com/xpf0000/FlyEnv/issues/642
+   感谢 @xxx 提出的此特性需求.
+5. Ollama线上模型,新增可用性检测. 根据本机硬件, 显示红黄绿三色, 提示用户可用性.
+   https://github.com/xpf0000/FlyEnv/pull/635
+   感谢 @xxx 提出的此PR.
+6. 工具箱新增JWT encoding and decoding tool
+   https://github.com/xpf0000/FlyEnv/pull/643
+   感谢 @xxx 提出的此PR.
+7. 工具箱新增Cron expression parsing and runtime calculation
+   https://github.com/xpf0000/FlyEnv/pull/645
+   感谢 @xxx 提出的此PR.
+8. 修复自动HTTPS功能在当前用户名有 . 字符时, 无法生成证书的问题.
+   https://github.com/xpf0000/FlyEnv/issues/639
+   感谢 @xxx 提出的此issues.
 
 参照：
 ```
@@ -70,5 +92,18 @@
 
 ## 备注
 
-如果你不清楚 Hermes Agent 是什么. 可以先浏览 https://hermes-agent.nousresearch.com/docs/
-项目里 Hermes 模块在 src/fork/module/Hermes 和 src/render/components/Hermes. 可以先浏览下看看都有哪些功能.
+CLIProxyAPI相关信息:
+  - https://github.com/router-for-me/CLIProxyAPI
+  - https://help.router-for.me/cn/introduction/what-is-cliproxyapi.html
+
+Numa相关信息:
+  - https://numa.rs/
+  - https://raw.githubusercontent.com/razvandimescu/numa/refs/heads/main/README.md
+
+Rnacos相关信息:
+  - https://r-nacos.github.io/docs/intro/
+  - https://raw.githubusercontent.com/nacos-group/r-nacos/refs/heads/master/README.md
+
+FrankenPHP相关信息:
+  - https://raw.githubusercontent.com/php/frankenphp/refs/heads/main/README.md
+  - https://github.com/xpf0000/FlyEnv/issues/642

@@ -156,7 +156,7 @@ subjectAltName=@alt_names
       await execPromise(command)
 
       process.chdir(dirname(openssl))
-      command = `${basename(openssl)} x509 -req -in "${saveCSR}" -out "${saveCrt}" -extfile "${saveExt}" -CA "${caFile}.crt" -CAkey "${caFile}.key" -CAcreateserial -sha256 -days 3650`
+      command = `${basename(openssl)} x509 -req -in "${saveCSR}" -out "${saveCrt}" -extfile "${saveExt}" -CA "${caFile}.crt" -CAkey "${caFile}.key" -CAcreateserial -CAserial "${caFile}.srl" -sha256 -days 3650`
       await execPromise(command)
 
       const crtFile = join(param.savePath, `${saveName}.crt`)
