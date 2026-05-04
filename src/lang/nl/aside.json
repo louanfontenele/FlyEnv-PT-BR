@@ -4,7 +4,6 @@
   "dataBaseServer": "Database Server",
   "emailServer": "E-mail server",
   "language": "Taal & Runtime",
-  "dataQueue": "Cache & geheugen opslag",
   "searchEngine": "Motor zoeken",
   "dnsServer": "DNS Server",
   "ftpServer": "FTP server",
@@ -15,5 +14,7 @@
   "objectStorage": "Object Opslag",
   "appExit": "Stop alle actieve services en verlaat FlyEnv",
   "groupStart": "Start met één klik alle beschikbare services die worden weergegeven op het paneel",
-  "networkTunnel": "Netwerktunnel"
+  "networkTunnel": "Netwerktunnel",
+  "cacheAndQueue": "Cache & Berichtenwachtrij",
+  "serviceGovernance": "Service Governance"
 }

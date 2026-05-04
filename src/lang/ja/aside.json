@@ -4,7 +4,6 @@
   "dataBaseServer": "データベースサーバー",
   "emailServer": "メールサーバー",
   "language": "言語 & 実行時環境",
-  "dataQueue": "データキュー & キャッシュ",
   "searchEngine": "検索エンジン",
   "dnsServer": "DNSサーバー",
   "ftpServer": "FTPサーバー",
@@ -15,5 +14,7 @@
   "objectStorage": "オブジェクトストレージ",
   "appExit": "起動中のすべてのサービスを停止してFlyEnvを終了します",
   "groupStart": "パネルに表示されている利用可能なすべてのサービスをワンクリックで起動",
-  "networkTunnel": "ネットワークトンネル"
+  "networkTunnel": "ネットワークトンネル",
+  "cacheAndQueue": "キャッシュ＆メッセージキュー",
+  "serviceGovernance": "サービスガバナンス"
 }

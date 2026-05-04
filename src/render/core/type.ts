@@ -4,7 +4,8 @@ export enum AppModuleTypeEnum {
   dataBaseServer = 'dataBaseServer',
   emailServer = 'emailServer',
   language = 'language',
-  dataQueue = 'dataQueue',
+  cacheAndQueue = 'cacheAndQueue',
+  serviceGovernance = 'serviceGovernance',
   searchEngine = 'searchEngine',
   dnsServer = 'dnsServer',
   ftpServer = 'ftpServer',
@@ -25,7 +26,8 @@ export const AppModuleTypeList: AllAppModuleType[] = [
   'webServer',
   'language',
   'dataBaseServer',
-  'dataQueue',
+  'cacheAndQueue',
+  'serviceGovernance',
   'emailServer',
   'dnsServer',
   'ftpServer',
@@ -86,12 +88,13 @@ export enum AppModuleEnum {
   mkcert = 'mkcert',
   cliproxyapi = 'cliproxyapi',
   numa = 'numa',
-  rnacos = 'rnacos'
+  rnacos = 'rnacos',
+  frankenphp = 'frankenphp'
 }
 
 export type AllAppModule = keyof typeof AppModuleEnum
 
-export const AppWithRoot = ['apache', 'nginx', 'caddy', 'pure-ftpd', 'ftp-srv', 'tomcat', 'consul', 'numa']
+export const AppWithRoot = ['apache', 'nginx', 'caddy', 'pure-ftpd', 'ftp-srv', 'tomcat', 'consul', 'numa', 'frankenphp']
 
 type LabelFn = () => string
 

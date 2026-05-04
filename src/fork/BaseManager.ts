@@ -65,6 +65,7 @@ class BaseManager {
   CliProxyAPI: any
   Numa: any
   Rnacos: any
+  FrankenPHP: any
 
   modules: Set<string> = new Set()
 
@@ -511,6 +512,12 @@ class BaseManager {
         this.Rnacos = res.default
       }
       doRun(this.Rnacos)
+    } else if (module === 'frankenphp') {
+      if (!this.FrankenPHP) {
+        const res = await import('./module/FrankenPHP')
+        this.FrankenPHP = res.default
+      }
+      doRun(this.FrankenPHP)
     } else {
       ProcessSendError(ipcCommandKey, 'No Found Module')
     }

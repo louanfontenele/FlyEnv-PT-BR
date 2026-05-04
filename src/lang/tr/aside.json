@@ -4,7 +4,6 @@
   "dataBaseServer": "Veritabanı Sunucusu",
   "emailServer": "E-posta Sunucusu",
   "language": "Dil ve Çalışma Zamanı",
-  "dataQueue": "Veri Kuyruğu ve Önbellek",
   "searchEngine": "Arama Motoru",
   "dnsServer": "DNS Sunucusu",
   "ftpServer": "FTP Sunucusu",
@@ -15,5 +14,7 @@
   "objectStorage": "Nesne Depolama",
   "appExit": "Başlatılan tüm hizmetleri durdur ve FlyEnv'ten çık",
   "groupStart": "Panoda görünen kullanılabilir tüm hizmetleri tek tıkla başlat",
-  "networkTunnel": "Ağ Tüneli"
+  "networkTunnel": "Ağ Tüneli",
+  "cacheAndQueue": "Önbellek ve Mesaj Kuyruğu",
+  "serviceGovernance": "Servis Yönetimi"
 }

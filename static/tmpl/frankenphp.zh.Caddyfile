@@ -1,0 +1,52 @@
+{
+	frankenphp {
+		# PHP 线程数,默认 2x CPU 核心数
+		# num_threads <线程数>
+
+		# 运行时额外可启动的 PHP 线程上限
+		# 默认等于 num_threads,可设为 auto
+		# max_threads <线程数>
+
+		# 请求等待空闲 PHP 线程的最大超时时间
+		# 默认:不限制
+		# max_wait_time <时长>
+
+		# 自动扩展的线程在空闲多久后被关闭
+		# 默认:5s
+		# max_idle_time <时长>
+
+		# 单个 PHP 线程处理多少请求后重启
+		# 用于缓解内存泄漏,默认 0(不限制)
+		# max_requests <数量>
+
+		# 设置 php.ini 配置项,可多次使用
+		# php_ini <键> <值>
+
+		# 也可以使用块形式同时设置多个配置项:
+		# php_ini {
+		# 	 memory_limit 256M
+		# 	 max_execution_time 15
+		# }
+
+		# Worker 配置(将应用常驻内存,提升性能)
+		# 可以使用长格式块,也可以使用单行简写:
+		# worker <脚本路径> <线程数>
+		# worker {
+		# 	 file <脚本路径>
+		# 	 num <线程数>
+		# 	 env <键> <值>
+		# 	 watch <监控路径>
+		# 	 name <名称>
+		# 	 max_consecutive_failures <次数>
+		# }
+	}
+	log {
+		output file ##LOG_FILE## {
+			roll_size 100mb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
+}
+
+import ##VHOST-DIR##/*

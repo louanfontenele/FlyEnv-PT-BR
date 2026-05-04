@@ -4,7 +4,6 @@
   "dataBaseServer": "Máy chủ cơ sở dữ liệu",
   "emailServer": "Máy chủ Email",
   "language": "Ngôn ngữ & môi trường thực thi",
-  "dataQueue": "Bộ nhớ đệm & lưu trữ trong bộ nhớ",
   "searchEngine": "Tìm kiếm",
   "dnsServer": "Máy chủ DNS",
   "ftpServer": "Máy chủ FTP",
@@ -15,5 +14,7 @@
   "objectStorage": "Lưu trữ đối tượng",
   "appExit": "Dừng tất cả các dịch vụ đang chạy và thoát FlyEnv",
   "groupStart": "Khởi động tất cả các dịch vụ khả dụng hiển thị trên bảng điều khiển bằng một cú nhấp chuột",
-  "networkTunnel": "Xuyên mạng nội bộ"
+  "networkTunnel": "Xuyên mạng nội bộ",
+  "cacheAndQueue": "Bộ Nhớ Đệm & Hàng Đợi Tin Nhắn",
+  "serviceGovernance": "Quản Trị Dịch Vụ"
 }

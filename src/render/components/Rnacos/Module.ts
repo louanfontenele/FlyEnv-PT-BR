@@ -2,7 +2,7 @@ import { defineAsyncComponent } from 'vue'
 import type { AppModuleItem } from '@/core/type'
 
 const module: AppModuleItem = {
-  moduleType: 'dataQueue',
+  moduleType: 'serviceGovernance',
   typeFlag: 'rnacos',
   label: 'R-Nacos',
   icon: import('@/svg/rnacos.svg?raw'),

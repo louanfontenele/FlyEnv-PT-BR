@@ -79,6 +79,7 @@
           </template>
         </template>
       </el-table-column>
+      <slot name="column"></slot>
       <el-table-column :label="I18nT('php.quickStart')" :prop="null" width="100px" align="center">
         <template #header>
           <span class="truncate">{{ I18nT('php.quickStart') }}</span>

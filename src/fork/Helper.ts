@@ -1,6 +1,5 @@
 import { createConnection } from 'net'
 import { uuid } from './Fn'
-import type { TaskItem } from '../helper/type'
 import { AppHelperCheck, AppHelperSocketPathGet } from '@shared/AppHelperCheck'
 import type { AppHelper } from '../main/core/AppHelper'
 import JSON5 from 'json5'
@@ -73,7 +72,7 @@ class Helper {
       const client = createConnection(AppHelperSocketPathGet())
       const buffer: Buffer[] = []
       client.on('connect', () => {
-        const param: TaskItem = {
+        const param = {
           key,
           module,
           function: fn,

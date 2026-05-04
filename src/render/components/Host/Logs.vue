@@ -20,11 +20,13 @@
 
 <script lang="ts" setup>
   import { fs } from '@/util/NodeFn'
-  import { ref, watch, nextTick } from 'vue'
+  import { ref, watch, nextTick, computed } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import { join } from '@/util/path-browserify'
+  import { AppStore } from '@/store/app'
+  import { BrewStore } from '@/store/brew'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
@@ -43,29 +45,6 @@
   const logfile = ref({})
   const log = ref()
 
-  const types = ref([
-    {
-      value: 'caddy',
-      label: 'Caddy'
-    },
-    {
-      value: 'nginx-access',
-      label: 'Nginx-Access'
-    },
-    {
-      value: 'nginx-error',
-      label: 'Nginx-Error'
-    },
-    {
-      value: 'apache-access',
-      label: 'Apache-Access'
-    },
-    {
-      value: 'apache-error',
-      label: 'Apache-Error'
-    }
-  ])
-
   const init = () => {
     const logpath = join(window.Server.BaseDir!, 'vhost/logs')
     const accesslogng = join(logpath, `${props.name}.log`)
@@ -73,14 +52,80 @@
     const accesslogap = join(logpath, `${props.name}-access_log`)
     const errorlogap = join(logpath, `${props.name}-error_log`)
     const caddyLog = join(logpath, `${props.name}.caddy.log`)
+    const frankenphpLog = join(logpath, `${props.name}.frankenphp.log`)
     logfile.value = {
       'nginx-access': accesslogng,
       'nginx-error': errorlogng,
       'apache-access': accesslogap,
       'apache-error': errorlogap,
-      caddy: caddyLog
+      caddy: caddyLog,
+      frankenphp: frankenphpLog
     }
   }
+  const appStore = AppStore()
+  const brewStore = BrewStore()
+  const apacheEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.apache !== false &&
+      brewStore.module('apache').installed.length > 0
+    )
+  })
+
+  const nginxEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.nginx !== false &&
+      brewStore.module('nginx').installed.length > 0
+    )
+  })
+
+  const caddyEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.caddy !== false &&
+      brewStore.module('caddy').installed.length > 0
+    )
+  })
+
+  const frankenphpEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.frankenphp !== false &&
+      brewStore.module('frankenphp').installed.length > 0
+    )
+  })
+
+  const types = computed(() => {
+    return [
+      {
+        value: 'caddy',
+        label: 'Caddy',
+        show: caddyEnable.value
+      },
+      {
+        value: 'frankenphp',
+        label: 'FrankenPHP',
+        show: frankenphpEnable.value
+      },
+      {
+        value: 'nginx-access',
+        label: 'Nginx-Access',
+        show: nginxEnable.value
+      },
+      {
+        value: 'nginx-error',
+        label: 'Nginx-Error',
+        show: nginxEnable.value
+      },
+      {
+        value: 'apache-access',
+        label: 'Apache-Access',
+        show: apacheEnable.value
+      },
+      {
+        value: 'apache-error',
+        label: 'Apache-Error',
+        show: apacheEnable.value
+      }
+    ]
+  })
 
   const doRefresh = async () => {
     await nextTick()
@@ -100,7 +145,15 @@
 
   init()
   const saveType = localStorage.getItem('FlyEnv-Host-Log-Type') ?? 'nginx-access'
-  initType(saveType)
+  const find = types.value.find((t) => t.value === saveType && t.show)
+  if (find) {
+    initType(saveType)
+  } else {
+    const find = types.value.find((t) => t.show)
+    if (find) {
+      initType(find.value)
+    }
+  }
 
   watch(type, (v) => {
     initType(v)

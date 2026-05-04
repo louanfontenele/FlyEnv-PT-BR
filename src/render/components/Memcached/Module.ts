@@ -2,7 +2,7 @@ import { defineAsyncComponent } from 'vue'
 import type { AppModuleItem } from '@/core/type'
 
 const module: AppModuleItem = {
-  moduleType: 'dataQueue',
+  moduleType: 'cacheAndQueue',
   typeFlag: 'memcached',
   label: 'Memcached',
   icon: import('@/svg/memcached.svg?raw'),

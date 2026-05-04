@@ -48,6 +48,7 @@ class Manager extends Base {
   CliProxyAPI: any
   Numa: any
   Rnacos: any
+  FrankenPHP: any
 
   constructor() {
     super()
@@ -328,6 +329,12 @@ class Manager extends Base {
             this.Rnacos = res.default
           }
           versions.rnacos = this.Rnacos.allInstalledVersions(setup)
+        } else if (type === 'frankenphp') {
+          if (!this.FrankenPHP) {
+            const res = await import('../FrankenPHP')
+            this.FrankenPHP = res.default
+          }
+          versions.frankenphp = this.FrankenPHP.allInstalledVersions(setup)
         }
       }
       const keys: string[] = []

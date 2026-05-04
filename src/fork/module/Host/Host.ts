@@ -13,6 +13,8 @@ type VhostTmplType = {
   apacheSSL: string
   caddy: string
   caddySSL: string
+  frankenphp: string
+  frankenphpSSL: string
 }
 
 let _tmpl: VhostTmplType | undefined
@@ -56,12 +58,26 @@ export const vhostTmpl = async () => {
     caddySSLtmpl = custom
   }
 
+  let frankenphptmpl = join(global.Server.Static!, 'tmpl/FrankenphpVhost')
+  custom = join(global.Server.BaseDir!, 'VhostTemplate/frankenphp.vhost')
+  if (existsSync(custom)) {
+    frankenphptmpl = custom
+  }
+
+  let frankenphpSSLtmpl = join(global.Server.Static!, 'tmpl/FrankenphpVhostSSL')
+  custom = join(global.Server.BaseDir!, 'VhostTemplate/frankenphpSSL.vhost')
+  if (existsSync(custom)) {
+    frankenphpSSLtmpl = custom
+  }
+
   const nginx = await readFile(nginxtmpl, 'utf-8')
   const apache = await readFile(apachetmpl, 'utf-8')
   const nginxSSL = await readFile(nginxSSLtmpl, 'utf-8')
   const apacheSSL = await readFile(apacheSSLtmpl, 'utf-8')
   const caddy = await readFile(caddytmpl, 'utf-8')
   const caddySSL = await readFile(caddySSLtmpl, 'utf-8')
+  const frankenphp = await readFile(frankenphptmpl, 'utf-8')
+  const frankenphpSSL = await readFile(frankenphpSSLtmpl, 'utf-8')
 
   _tmpl = {
     nginx,
@@ -69,7 +85,9 @@ export const vhostTmpl = async () => {
     nginxSSL,
     apacheSSL,
     caddy,
-    caddySSL
+    caddySSL,
+    frankenphp,
+    frankenphpSSL
   }
   return _tmpl
 }

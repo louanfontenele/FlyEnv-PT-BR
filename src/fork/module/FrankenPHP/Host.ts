@@ -10,10 +10,11 @@ import {
   removeByRoot,
   readFileByRoot
 } from '../../Fn'
-import { vhostTmpl } from './Host'
 import { existsSync } from 'fs'
 import { isEqual } from 'lodash-es'
 import { pathFixedToUnix } from '@shared/utils'
+import { vhostTmpl } from '../Host/Host'
+import { fetchHostList } from '../Host/HostFile'
 
 const handleReverseProxy = (host: AppHost, content: string) => {
   let x: any = content.match(/(#PWS-REVERSE-PROXY-BEGIN#)([\s\S]*?)(#PWS-REVERSE-PROXY-END#)/g)
@@ -34,16 +35,16 @@ const handleReverseProxy = (host: AppHost, content: string) => {
     }`)
     })
     arr.push('#PWS-REVERSE-PROXY-END#')
-    arr.push('    file_server')
+    arr.push('    php_server')
     const replace = arr.join('\n')
-    content = content.replace('file_server', `\n${replace}`)
+    content = content.replace('php_server', `\n${replace}`)
   }
   return content
 }
 
-export const makeCaddyConf = async (host: AppHost) => {
-  const caddyvpath = join(global.Server.BaseDir!, 'vhost/caddy')
-  await mkdirp(caddyvpath)
+export const makeFrankenPHPConf = async (host: AppHost) => {
+  const frankenphpvpath = join(global.Server.BaseDir!, 'vhost/frankenphp')
+  await mkdirp(frankenphpvpath)
   const httpNames: string[] = []
   const httpsNames: string[] = []
   hostAlias(host).forEach((h) => {
@@ -57,62 +58,51 @@ export const makeCaddyConf = async (host: AppHost) => {
     }
   })
 
-  const tmpl = await vhostTmpl()
-
   const contentList: string[] = []
 
   const hostName = host.name
   const root = host.root
-  const phpv = host.phpVersion
-  const logFile = join(global.Server.BaseDir!, `vhost/logs/${hostName}.caddy.log`)
+  const logFile = join(global.Server.BaseDir!, `vhost/logs/${hostName}.frankenphp.log`)
+
+  const tmpl = await vhostTmpl()
 
   const httpHostNameAll = httpNames.join(',\n')
-  let content = tmpl.caddy
+  let content = tmpl.frankenphp
     .replace('##HOST-ALL##', httpHostNameAll)
     .replace('##LOG-PATH##', pathFixedToUnix(logFile))
     .replace('##ROOT##', pathFixedToUnix(root))
-  if (phpv) {
-    content = content.replace('##PHP-VERSION##', `${phpv}`)
-  } else {
-    content = content.replace('import enable-php-select ##PHP-VERSION##', `##Static Site Caddy##`)
-  }
   content = handleReverseProxy(host, content)
   contentList.push(content)
 
   if (host.useSSL) {
     let tls = 'internal'
     if (host.ssl.cert && host.ssl.key) {
-      tls = `"${pathFixedToUnix(host.ssl.cert)}" "${pathFixedToUnix(host.ssl.key)}"`
+      tls = `${pathFixedToUnix(host.ssl.cert)} ${pathFixedToUnix(host.ssl.key)}`
     }
     const httpHostNameAll = httpsNames.join(',\n')
-    let content = tmpl.caddySSL
+    let content = tmpl.frankenphpSSL
       .replace('##HOST-ALL##', httpHostNameAll)
       .replace('##LOG-PATH##', pathFixedToUnix(logFile))
       .replace('##SSL##', tls)
       .replace('##ROOT##', pathFixedToUnix(root))
-    if (phpv) {
-      content = content.replace('##PHP-VERSION##', `${phpv}`)
-    } else {
-      content = content.replace('import enable-php-select ##PHP-VERSION##', `##Static Site Caddy##`)
-    }
     content = handleReverseProxy(host, content)
     contentList.push(content)
   }
 
-  const confFile = join(caddyvpath, `${host.name}.conf`)
+  const confFile = join(frankenphpvpath, `${host.name}.conf`)
   await writeFile(confFile, contentList.join('\n'))
 }
 
-export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
+export const updateFrankenPHPConf = async (host: AppHost, old: AppHost) => {
   const logpath = join(global.Server.BaseDir!, 'vhost/logs')
-  const caddyvpath = join(global.Server.BaseDir!, 'vhost/caddy')
-  await mkdirp(caddyvpath)
+  const frankenphpvpath = join(global.Server.BaseDir!, 'vhost/frankenphp')
+  await mkdirp(frankenphpvpath)
   await mkdirp(logpath)
 
   if (host.name !== old.name) {
     const cvhost = {
-      oldFile: join(caddyvpath, `${old.name}.conf`),
-      newFile: join(caddyvpath, `${host.name}.conf`)
+      oldFile: join(frankenphpvpath, `${old.name}.conf`),
+      newFile: join(frankenphpvpath, `${host.name}.conf`)
     }
     const arr = [cvhost]
     for (const f of arr) {
@@ -136,21 +126,21 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
       }
     }
   }
-  const caddyConfPath = join(caddyvpath, `${host.name}.conf`)
+  const frankenphpConfPath = join(frankenphpvpath, `${host.name}.conf`)
   let hasChanged = false
 
-  if (!existsSync(caddyConfPath)) {
-    await makeCaddyConf(host)
+  if (!existsSync(frankenphpConfPath)) {
+    await makeFrankenPHPConf(host)
   }
 
-  let contentCaddyConf = await readFile(caddyConfPath, 'utf-8')
+  let contentFrankenPHPConf = await readFile(frankenphpConfPath, 'utf-8')
 
   const find: Array<string> = []
   const replace: Array<string> = []
   if (host.name !== old.name) {
     hasChanged = true
-    find.push(...[join(logpath, `${old.name}.caddy.log`)])
-    replace.push(...[join(logpath, `${host.name}.caddy.log`)])
+    find.push(...[join(logpath, `${old.name}.frankenphp.log`)])
+    replace.push(...[join(logpath, `${host.name}.frankenphp.log`)])
   }
   const oldAliasArr = hostAlias(old)
   const newAliasArr = hostAlias(host)
@@ -199,48 +189,92 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
   }
   if (host.root !== old.root) {
     hasChanged = true
-    find.push(`root * (.*?)\\n`)
+    find.push(`root \* (.*?)\\n`)
     replace.push(`root * "${host.root}"\n`)
-  }
-  if (host.phpVersion !== old.phpVersion) {
-    hasChanged = true
-    if (old.phpVersion) {
-      find.push(...[`import(\\s+)enable-php-select(.*?)\\r\\n`])
-      find.push(...[`import(\\s+)enable-php-select(.*?)\\n`])
-    } else {
-      find.push(...[`import(\\s+)enable-php-select(.*?)\\r\\n`])
-      find.push(...[`import(\\s+)enable-php-select(.*?)\\n`])
-      find.push(...['##Static Site Caddy##'])
-    }
-    if (host.phpVersion) {
-      if (old.phpVersion) {
-        replace.push(...[`import enable-php-select ${host.phpVersion}\r\n`])
-        replace.push(...[`import enable-php-select ${host.phpVersion}\n`])
-      } else {
-        replace.push(...[`import enable-php-select ${host.phpVersion}\r\n`])
-        replace.push(...[`import enable-php-select ${host.phpVersion}\n`])
-        replace.push(...[`import enable-php-select ${host.phpVersion}`])
-      }
-    } else {
-      if (old.phpVersion) {
-        replace.push(...['##Static Site Caddy##\r\n'])
-        replace.push(...['##Static Site Caddy##\n'])
-      } else {
-        replace.push(...['##Static Site Caddy##\r\n'])
-        replace.push(...['##Static Site Caddy##\n'])
-        replace.push(...['##Static Site Caddy##'])
-      }
-    }
   }
   if (!isEqual(host?.reverseProxy, old?.reverseProxy)) {
     hasChanged = true
   }
   if (hasChanged) {
     find.forEach((s, i) => {
-      contentCaddyConf = contentCaddyConf.replace(new RegExp(s, 'g'), replace[i])
-      contentCaddyConf = contentCaddyConf.replace(s, replace[i])
+      contentFrankenPHPConf = contentFrankenPHPConf.replace(new RegExp(s, 'g'), replace[i])
+      contentFrankenPHPConf = contentFrankenPHPConf.replace(s, replace[i])
     })
-    contentCaddyConf = handleReverseProxy(host, contentCaddyConf)
-    await writeFile(caddyConfPath, contentCaddyConf)
+    contentFrankenPHPConf = handleReverseProxy(host, contentFrankenPHPConf)
+    await writeFile(frankenphpConfPath, contentFrankenPHPConf)
+  }
+}
+
+export const delVhost = async (host: AppHost) => {
+  const frankenphpvpath = join(global.Server.BaseDir!, 'vhost/frankenphp')
+  const logpath = join(global.Server.BaseDir!, 'vhost/logs')
+  const hostname = host.name
+  const fvhost = join(frankenphpvpath, `${hostname}.conf`)
+  const frankenphplog = join(logpath, `${hostname}.frankenphp.log`)
+  const arr = [fvhost, frankenphplog]
+  for (const f of arr) {
+    if (existsSync(f)) {
+      try {
+        await removeByRoot(f)
+      } catch {}
+    }
+  }
+}
+
+export const fixVHost = async () => {
+  let hostAll: Array<AppHost> = []
+  const vhostDir = join(global.Server.BaseDir!, 'vhost/frankenphp')
+  try {
+    hostAll = await fetchHostList()
+  } catch {}
+  hostAll = hostAll.filter((h) => !h.type || h.type === 'php')
+  await mkdirp(vhostDir)
+  const tmpl = await vhostTmpl()
+  for (const host of hostAll) {
+    const name = host.name
+    const confFile = join(vhostDir, `${name}.conf`)
+    if (existsSync(confFile)) {
+      continue
+    }
+    const httpNames: string[] = []
+    const httpsNames: string[] = []
+    hostAlias(host).forEach((h) => {
+      if (!host?.port?.caddy || host.port.caddy === 80) {
+        httpNames.push(`http://${h}`)
+      } else {
+        httpNames.push(`http://${h}:${host.port.caddy}`)
+      }
+      if (host.useSSL) {
+        httpsNames.push(`https://${h}:${host?.port?.caddy_ssl ?? 443}`)
+      }
+    })
+
+    const contentList: string[] = []
+
+    const hostName = host.name
+    const root = host.root
+    const logFile = join(global.Server.BaseDir!, `vhost/logs/${hostName}.frankenphp.log`)
+
+    const httpHostNameAll = httpNames.join(',\n')
+    const content = tmpl.frankenphp
+      .replace('##HOST-ALL##', httpHostNameAll)
+      .replace('##LOG-PATH##', pathFixedToUnix(logFile))
+      .replace('##ROOT##', pathFixedToUnix(root))
+    contentList.push(content)
+
+    if (host.useSSL) {
+      let tls = 'internal'
+      if (host.ssl.cert && host.ssl.key) {
+        tls = `${pathFixedToUnix(host.ssl.cert)} ${pathFixedToUnix(host.ssl.key)}`
+      }
+      const httpHostNameAll = httpsNames.join(',\n')
+      const content = tmpl.frankenphpSSL
+        .replace('##HOST-ALL##', httpHostNameAll)
+        .replace('##LOG-PATH##', pathFixedToUnix(logFile))
+        .replace('##SSL##', tls)
+        .replace('##ROOT##', pathFixedToUnix(root))
+      contentList.push(content)
+    }
+    await writeFile(confFile, contentList.join('\n'))
   }
 }

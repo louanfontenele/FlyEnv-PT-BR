@@ -15,6 +15,20 @@ if [ -f "$SERVICE_PATH" ]; then
   sudo rm -f "$SERVICE_PATH"
 fi
 
+if [ -e "/tmp/flyenv-helper.sock" ]; then
+  sudo chown "$2" "/tmp/flyenv-helper.sock"
+fi
+
+if [ -e "/tmp/flyenv.role" ]; then
+  sudo chown "$2" "/tmp/flyenv.role"
+  echo "$2" > "/tmp/flyenv.role"
+fi
+
+if [ -e "/usr/local/share/FlyEnv/flyenv.role" ]; then
+  sudo chown "$2" "/usr/local/share/FlyEnv/flyenv.role"
+  echo "$2" > "/usr/local/share/FlyEnv/flyenv.role"
+fi
+
 # Copy the binary
 echo "Installing binary..."
 sudo mkdir -p "/usr/local/bin"

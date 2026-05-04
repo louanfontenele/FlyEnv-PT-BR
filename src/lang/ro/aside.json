@@ -4,7 +4,6 @@
   "dataBaseServer": "Server de baze de date",
   "emailServer": "Server de e-mail",
   "language": "Limba & timpul petrecut",
-  "dataQueue": "Stocare cache & memorie",
   "searchEngine": "Motor de Căutare",
   "dnsServer": "Server DNS",
   "ftpServer": "Server FTP",
@@ -15,5 +14,7 @@
   "objectStorage": "Stocare obiect",
   "appExit": "Opriți toate serviciile care rulează și ieșiți din FlyEnv",
   "groupStart": "Pornire cu un singur clic a tuturor serviciilor disponibile afișate pe panou",
-  "networkTunnel": "Tunel Rețea"
+  "networkTunnel": "Tunel Rețea",
+  "cacheAndQueue": "Cache și Coadă de Mesaje",
+  "serviceGovernance": "Guvernanța Serviciilor"
 }

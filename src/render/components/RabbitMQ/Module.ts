@@ -2,7 +2,7 @@ import { defineAsyncComponent } from 'vue'
 import type { AppModuleItem } from '@/core/type'
 
 const module: AppModuleItem = {
-  moduleType: 'dataQueue',
+  moduleType: 'cacheAndQueue',
   typeFlag: 'rabbitmq',
   label: 'RabbitMQ',
   icon: import('@/svg/rabbitmq.svg?raw'),

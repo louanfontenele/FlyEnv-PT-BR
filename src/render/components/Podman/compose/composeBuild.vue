@@ -252,8 +252,12 @@
       sub: ['MariaDB', 'MongoDB', 'MySQL', 'PostgreSQL']
     },
     {
-      cate: 'dataQueue',
-      sub: ['etcd', 'Memcached', 'RabbitMQ', 'Redis']
+      cate: 'cacheAndQueue',
+      sub: ['Memcached', 'RabbitMQ', 'Redis']
+    },
+    {
+      cate: 'serviceGovernance',
+      sub: ['etcd']
     },
     {
       cate: 'emailServer',

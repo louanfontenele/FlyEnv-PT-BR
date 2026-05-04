@@ -90,8 +90,12 @@
         children: ['mariadb', 'mongodb', 'mysql', 'postgresql']
       },
       {
-        label: I18nT(`aside.dataQueue`),
-        children: ['etcd', 'memcached', 'rabbitmq', 'redis']
+        label: I18nT(`aside.cacheAndQueue`),
+        children: ['memcached', 'rabbitmq', 'redis']
+      },
+      {
+        label: I18nT(`aside.serviceGovernance`),
+        children: ['etcd']
       },
       {
         label: I18nT(`aside.emailServer`),

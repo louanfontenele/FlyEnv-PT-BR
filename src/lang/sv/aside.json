@@ -4,7 +4,6 @@
   "dataBaseServer": "Databasserver",
   "emailServer": "E-postserver",
   "language": "Språk & Körning",
-  "dataQueue": "Datakö & Cache",
   "searchEngine": "Sökmotor",
   "dnsServer": "DNS-server",
   "ftpServer": "FTP-server",
@@ -15,5 +14,7 @@
   "objectStorage": "Objektlagring",
   "appExit": "Stoppa alla startade tjänster och avsluta FlyEnv",
   "groupStart": "Starta enkelt alla tillgängliga tjänster som visas på panelen",
-  "networkTunnel": "Nätverkstunnel"
+  "networkTunnel": "Nätverkstunnel",
+  "cacheAndQueue": "Cache & Meddelandekö",
+  "serviceGovernance": "Service Governance"
 }

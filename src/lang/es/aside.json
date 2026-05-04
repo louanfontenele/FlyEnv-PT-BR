@@ -4,7 +4,6 @@
   "dataBaseServer": "Servidor de Base de Datos",
   "emailServer": "Servidor de Correo",
   "language": "Lenguajes y Entornos de Ejecución",
-  "dataQueue": "Almacenamiento Cache & Memoria ",
   "searchEngine": "Motor de Búsqueda",
   "dnsServer": "Servidor DNS",
   "ftpServer": "Servidor FTP",
@@ -15,5 +14,7 @@
   "objectStorage": "Almacenamiento de Objetos",
   "appExit": "Detener todos los servicios en ejecución y salir de FlyEnv",
   "groupStart": "Iniciar con un solo clic todos los servicios disponibles mostrados en el panel",
-  "networkTunnel": "Túnel de red"
+  "networkTunnel": "Túnel de red",
+  "cacheAndQueue": "Caché y Cola de Mensajes",
+  "serviceGovernance": "Gobernanza de Servicios"
 }

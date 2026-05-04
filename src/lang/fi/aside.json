@@ -4,7 +4,6 @@
   "dataBaseServer": "Tietokannan Palvelin",
   "emailServer": "Sähköpostin Palvelin",
   "language": "Kieli Ja Runtime",
-  "dataQueue": "Välimuisti Ja Muistin Tallennustila",
   "searchEngine": "Hakukone",
   "dnsServer": "DNS Palvelin",
   "ftpServer": "Ftp Palvelin",
@@ -15,5 +14,7 @@
   "objectStorage": "Objektin Tallennustila",
   "networkTunnel": "Verkkotunneli",
   "appExit": "Pysäytä kaikki käynnissä olevat palvelut ja poistu FlyEnv",
-  "groupStart": "Yhdellä napsautuksella käynnistetään kaikki paneelissa näytettävät palvelut"
+  "groupStart": "Yhdellä napsautuksella käynnistetään kaikki paneelissa näytettävät palvelut",
+  "cacheAndQueue": "Välimuisti ja Viestijono",
+  "serviceGovernance": "Palvelun Hallinta"
 }

@@ -10,7 +10,7 @@ import {
   readFileByRoot,
   removeByRoot
 } from '../../Fn'
-import { vhostTmpl } from './Host'
+import { vhostTmpl } from '../Host/Host'
 import { existsSync } from 'fs'
 import { isEqual } from 'lodash-es'
 import { isWindows, pathFixedToUnix } from '@shared/utils'
@@ -327,5 +327,24 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
   if (host.nginx.rewrite.trim() !== old.nginx.rewrite.trim()) {
     const nginxRewriteConfPath = join(rewritepath, `${host.name}.conf`)
     await writeFile(nginxRewriteConfPath, host.nginx.rewrite.trim())
+  }
+}
+
+export const delVhost = async (host: AppHost) => {
+  const nginxvpath = join(global.Server.BaseDir!, 'vhost/nginx')
+  const rewritepath = join(global.Server.BaseDir!, 'vhost/rewrite')
+  const logpath = join(global.Server.BaseDir!, 'vhost/logs')
+  const hostname = host.name
+  const nvhost = join(nginxvpath, `${hostname}.conf`)
+  const rewritep = join(rewritepath, `${hostname}.conf`)
+  const accesslogng = join(logpath, `${hostname}.log`)
+  const errorlogng = join(logpath, `${hostname}.error.log`)
+  const arr = [nvhost, rewritep, accesslogng, errorlogng]
+  for (const f of arr) {
+    if (existsSync(f)) {
+      try {
+        await removeByRoot(f)
+      } catch {}
+    }
   }
 }

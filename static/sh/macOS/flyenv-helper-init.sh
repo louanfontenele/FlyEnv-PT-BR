@@ -20,6 +20,20 @@ if [ -f "$PLIST_PATH" ]; then
   fi
 fi
 
+if [ -e "/tmp/flyenv-helper.sock" ]; then
+  sudo chown "$3" "/tmp/flyenv-helper.sock"
+fi
+
+if [ -e "/tmp/flyenv.role" ]; then
+  sudo chown "$3" "/tmp/flyenv.role"
+  echo "$3" > "/tmp/flyenv.role"
+fi
+
+if [ -e "/usr/local/share/FlyEnv/flyenv.role" ]; then
+  sudo chown "$3" "/usr/local/share/FlyEnv/flyenv.role"
+  echo "$3" > "/usr/local/share/FlyEnv/flyenv.role"
+fi
+
 # Copy the new plist file
 echo "Copying new plist file..."
 sudo rm -rf "$PLIST_PATH" 2>/dev/null

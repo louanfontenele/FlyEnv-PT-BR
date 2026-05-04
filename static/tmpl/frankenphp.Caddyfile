@@ -1,0 +1,52 @@
+{
+	frankenphp {
+		# Number of PHP threads to start. Default: 2x the number of available CPUs.
+		# num_threads <num_threads>
+
+		# Limits the number of additional PHP threads that can be started at runtime.
+		# Default: num_threads. Can be set to 'auto'.
+		# max_threads <num_threads>
+
+		# Maximum time a request may wait for a free PHP thread before timing out.
+		# Default: disabled.
+		# max_wait_time <duration>
+
+		# Maximum time an autoscaled thread may be idle before being deactivated.
+		# Default: 5s.
+		# max_idle_time <duration>
+
+		# Maximum number of requests a PHP thread will handle before being restarted.
+		# Useful for mitigating memory leaks. Default: 0 (unlimited).
+		# max_requests <num>
+
+		# Set a php.ini directive. Can be used several times.
+		# php_ini <key> <value>
+
+		# Alternatively, set multiple php.ini directives using a block:
+		# php_ini {
+		# 	 memory_limit 256M
+		# 	 max_execution_time 15
+		# }
+
+		# Worker configuration (keeps your app booted in memory).
+		# Use either the long form below or the one-line short form:
+		# worker <file> <num>
+		# worker {
+		# 	 file <path>
+		# 	 num <num>
+		# 	 env <key> <value>
+		# 	 watch <path>
+		# 	 name <name>
+		# 	 max_consecutive_failures <num>
+		# }
+	}
+	log {
+		output file ##LOG_FILE## {
+			roll_size 100mb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
+}
+
+import ##VHOST-DIR##/*

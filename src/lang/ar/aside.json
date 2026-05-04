@@ -4,7 +4,6 @@
   "dataBaseServer": "خادم قاعدة البيانات",
   "emailServer": "خادم البريد الإلكتروني",
   "language": "اللغة وبيئة التشغيل",
-  "dataQueue": "التخزين المؤقت والذاكرة",
   "searchEngine": "محرك البحث",
   "dnsServer": "خادم DNS",
   "ftpServer": "خادم FTP",
@@ -15,5 +14,7 @@
   "objectStorage": "تخزين الكائنات",
   "appExit": "إيقاف جميع الخدمات قيد التشغيل والخروج من FlyEnv",
   "groupStart": "تشغيل جميع الخدمات المتوفرة على اللوحة بنقرة واحدة",
-  "networkTunnel": "النفق الشبكي"
+  "networkTunnel": "النفق الشبكي",
+  "cacheAndQueue": "التخزين المؤقت وقائمة الانتظار",
+  "serviceGovernance": "الحوكمة الخدمية"
 }

@@ -230,6 +230,8 @@ export class ForkManager {
   }
 
   destroy() {
+    this?.dnsFork?.destroy()
+    this?.ftpsrvFork?.destroy()
     this?.serviceFork?.destroy()
     this?.ollamaChatFork?.destroy()
     this.forks.forEach((fork) => {

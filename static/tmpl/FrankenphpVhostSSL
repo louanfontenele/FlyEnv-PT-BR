@@ -1,0 +1,26 @@
+##HOST-ALL## {
+    encode zstd br gzip
+
+    log {
+        output file ##LOG-PATH## {
+            roll_size 100mb
+            roll_keep 5
+            roll_keep_for 720h
+        }
+    }
+
+    @canonicalPath {
+        file {
+          try_files {path}/index.php
+        }
+        not path */
+    }
+
+    redir @canonicalPath {path}/ 308
+
+    tls ##SSL##
+
+    root * "##ROOT##"
+
+    php_server
+}

@@ -173,7 +173,8 @@ export class Base {
         elasticsearch: 'org.elasticsearch.server/org.elasticsearch.bootstrap.Elasticsearch',
         ollama: 'ollama',
         cliproxyapi: 'cli-proxy-api',
-        rnacos: 'rnacos'
+        rnacos: 'rnacos',
+        frankenphp: 'frankenphp'
       }
       const serverName = dis?.[this.type]
       if (serverName) {

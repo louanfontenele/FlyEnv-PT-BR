@@ -4,7 +4,6 @@
   "dataBaseServer": "Database Server",
   "emailServer": "Email Server",
   "language": "Language & Runtime",
-  "dataQueue": "Cache & Memory Storage",
   "searchEngine": "Search Engine",
   "dnsServer": "DNS Server",
   "ftpServer": "FTP Server",
@@ -15,6 +14,7 @@
   "objectStorage": "Object Storage",
   "appExit": "Stop all running services and exit FlyEnv",
   "groupStart": "One-click start all available services displayed on the panel",
-
-  "networkTunnel": "Network Tunnel"
+  "networkTunnel": "Network Tunnel",
+  "cacheAndQueue": "Кеш и опашка за съобщения",
+  "serviceGovernance": "Управление на услуги"
 }

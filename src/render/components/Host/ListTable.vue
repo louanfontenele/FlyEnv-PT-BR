@@ -142,17 +142,33 @@
                       <yb-icon :svg="import('@/svg/link.svg?raw')" width="13" height="13" />
                       <span class="ml-3">{{ I18nT('base.links') }}</span>
                     </li>
-                    <li @click.stop="showConfig({ flag: 'nginx', item: scope.row })">
+                    <li
+                      v-if="nginxEnable"
+                      @click.stop="showConfig({ flag: 'nginx', item: scope.row })"
+                    >
                       <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
                       <span class="ml-3">{{ I18nT('base.configFile') }} - Nginx</span>
                     </li>
-                    <li @click.stop="showConfig({ flag: 'caddy', item: scope.row })">
+                    <li
+                      v-if="caddyEnable"
+                      @click.stop="showConfig({ flag: 'caddy', item: scope.row })"
+                    >
                       <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
                       <span class="ml-3">{{ I18nT('base.configFile') }} - Caddy</span>
                     </li>
-                    <li @click.stop="showConfig({ flag: 'apache', item: scope.row })">
+                    <li
+                      v-if="apacheEnable"
+                      @click.stop="showConfig({ flag: 'apache', item: scope.row })"
+                    >
                       <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
                       <span class="ml-3">{{ I18nT('base.configFile') }} - Apache</span>
+                    </li>
+                    <li
+                      v-if="frankenphpEnable"
+                      @click.stop="showConfig({ flag: 'frankenphp', item: scope.row })"
+                    >
+                      <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
+                      <span class="ml-3">{{ I18nT('base.configFile') }} - FrankenPHP</span>
                     </li>
                     <li @click.stop="action(scope.row, scope.$index, 'log')">
                       <yb-icon :svg="import('@/svg/log.svg?raw')" width="13" height="13" />
@@ -211,6 +227,34 @@
   const brewStore = BrewStore()
   const task_index = ref(0)
   const search = ref('')
+
+  const apacheEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.apache !== false &&
+      brewStore.module('apache').installed.length > 0
+    )
+  })
+
+  const nginxEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.nginx !== false &&
+      brewStore.module('nginx').installed.length > 0
+    )
+  })
+
+  const caddyEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.caddy !== false &&
+      brewStore.module('caddy').installed.length > 0
+    )
+  })
+
+  const frankenphpEnable = computed(() => {
+    return (
+      appStore.config.setup.common.showItem?.frankenphp !== false &&
+      brewStore.module('frankenphp').installed.length > 0
+    )
+  })
 
   const php = computed(() => {
     return brewStore.module('php')
@@ -313,7 +357,8 @@
     const apacheRunning = brewStore.module('apache').installed.find((a) => a.run)
     const nginxRunning = brewStore.module('nginx').installed.find((a) => a.run)
     const caddyRunning = brewStore.module('caddy').installed.find((a) => a.run)
-    return writeHosts.value && (apacheRunning || nginxRunning || caddyRunning)
+    const frankenphpRunning = brewStore.module('frankenphp').installed.find((a) => a.run)
+    return writeHosts.value && (apacheRunning || nginxRunning || caddyRunning || frankenphpRunning)
   })
 
   const tableRowClassName = ({ row }: { row: AppHost }) => {

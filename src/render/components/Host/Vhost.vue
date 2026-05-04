@@ -101,7 +101,7 @@
         return
       }
       monacoInstance = EditorCreate(input.value, await EditorConfigMake(config.value, false, 'off'))
-      monacoInstance.addAction({
+      monacoInstance?.addAction({
         id: 'save',
         label: 'save',
         keybindings: [KeyMod.CtrlCmd | KeyCode.KeyS],

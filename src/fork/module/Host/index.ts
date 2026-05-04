@@ -15,9 +15,19 @@ import {
   writeFileByRoot
 } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { makeCaddyConf, updateCaddyConf } from './Caddy'
-import { makeApacheConf, updateApacheConf } from './Apache'
-import { autoFillNginxRewrite, makeNginxConf, updateNginxConf } from './Nginx'
+import { makeCaddyConf, updateCaddyConf, delVhost as delCaddyVhost } from '../Caddy/Host'
+import {
+  makeFrankenPHPConf,
+  updateFrankenPHPConf,
+  delVhost as delFrankenPHPVhost
+} from '../FrankenPHP/Host'
+import { makeApacheConf, updateApacheConf, delVhost as delApacheVhost } from '../Apache/Host'
+import {
+  autoFillNginxRewrite,
+  makeNginxConf,
+  updateNginxConf,
+  delVhost as delNginxVhost
+} from '../Nginx/Host'
 import { setDirRole, updateAutoSSL, updateRootRule } from './Host'
 import { TaskAddPhpMyAdminSite, TaskAddRandomSite } from './Task'
 import { publicDecrypt } from 'crypto'
@@ -206,9 +216,15 @@ export class Host extends Base {
               'vhost/apache/',
               `${old?.name}.conf`
             )
+            const frankenphpConfPath = join(
+              global.Server.BaseDir!,
+              'vhost/frankenphp/',
+              `${old?.name}.conf`
+            )
             if (
               !existsSync(nginxConfPath) ||
               !existsSync(apacheConfPath) ||
+              !existsSync(frankenphpConfPath) ||
               host.useSSL !== old?.useSSL
             ) {
               await this._delVhost(old!)
@@ -234,40 +250,15 @@ export class Host extends Base {
 
   _delVhost(host: AppHost) {
     return new ForkPromise(async (resolve) => {
-      const nginxvpath = join(global.Server.BaseDir!, 'vhost/nginx')
-      const apachevpath = join(global.Server.BaseDir!, 'vhost/apache')
-      const rewritepath = join(global.Server.BaseDir!, 'vhost/rewrite')
-      const caddyvpath = join(global.Server.BaseDir!, 'vhost/caddy')
-      const logpath = join(global.Server.BaseDir!, 'vhost/logs')
-      const hostname = host.name
-      const nvhost = join(nginxvpath, `${hostname}.conf`)
-      const avhost = join(apachevpath, `${hostname}.conf`)
-      const cvhost = join(caddyvpath, `${hostname}.conf`)
-      const rewritep = join(rewritepath, `${hostname}.conf`)
-      const accesslogng = join(logpath, `${hostname}.log`)
-      const errorlogng = join(logpath, `${hostname}.error.log`)
-      const accesslogap = join(logpath, `${hostname}-access_log`)
-      const errorlogap = join(logpath, `${hostname}-error_log`)
-      const caddylog = join(logpath, `${hostname}.caddy.log`)
+      await delNginxVhost(host)
+      await delApacheVhost(host)
+      await delCaddyVhost(host)
+      await delFrankenPHPVhost(host)
       const autoCA = join(global.Server.BaseDir!, `CA/${host.id}`)
-      const arr = [
-        nvhost,
-        avhost,
-        cvhost,
-        rewritep,
-        accesslogng,
-        errorlogng,
-        accesslogap,
-        errorlogap,
-        caddylog,
-        autoCA
-      ]
-      for (const f of arr) {
-        if (existsSync(f)) {
-          try {
-            await removeByRoot(f)
-          } catch {}
-        }
+      if (existsSync(autoCA)) {
+        try {
+          await removeByRoot(autoCA)
+        } catch {}
       }
       resolve(true)
     })
@@ -278,10 +269,12 @@ export class Host extends Base {
       const nginxvpath = join(global.Server.BaseDir!, 'vhost/nginx')
       const apachevpath = join(global.Server.BaseDir!, 'vhost/apache')
       const caddyvpath = join(global.Server.BaseDir!, 'vhost/caddy')
+      const frankenphpvpath = join(global.Server.BaseDir!, 'vhost/frankenphp')
 
       const nginxConfPath = join(nginxvpath, `${host.name}.conf`)
       const apacheConfPath = join(apachevpath, `${host.name}.conf`)
       const caddyConfPath = join(caddyvpath, `${host.name}.conf`)
+      const frankenphpConfPath = join(frankenphpvpath, `${host.name}.conf`)
 
       if (!existsSync(nginxConfPath)) {
         await makeNginxConf(host)
@@ -291,6 +284,9 @@ export class Host extends Base {
       }
       if (!existsSync(caddyConfPath)) {
         await makeCaddyConf(host)
+      }
+      if (!existsSync(frankenphpConfPath)) {
+        await makeFrankenPHPConf(host)
       }
 
       resolve(true)
@@ -312,6 +308,7 @@ export class Host extends Base {
       await updateApacheConf(host, old)
       await updateNginxConf(host, old)
       await updateCaddyConf(host, old)
+      await updateFrankenPHPConf(host, old)
       resolve(true)
     })
   }
@@ -326,6 +323,7 @@ export class Host extends Base {
         await updateAutoSSL(host, {} as any)
 
         await makeCaddyConf(host)
+        await makeFrankenPHPConf(host)
         await makeNginxConf(host)
         await makeApacheConf(host)
         if (chmod) {

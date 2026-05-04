@@ -3,7 +3,7 @@ import { join, resolve as PathResolve, basename, dirname } from 'node:path'
 import is from 'electron-is'
 import { appDebugLog, isLinux, isMacOS, isWindows } from '@shared/utils'
 import { AppHelperCheck } from '@shared/AppHelperCheck'
-import { tmpdir } from 'node:os'
+import { tmpdir, userInfo } from 'node:os'
 import { uuid } from '../utils'
 import { copyFile, chmod, mkdirp, readFile, writeFile } from '@shared/fs-extra'
 import type { CallbackFn } from '@shared/app'
@@ -36,6 +36,8 @@ export class AppHelper {
     await chmod(tmpDir, '0755')
     if (is.production()) {
       if (isMacOS()) {
+        const uinfo = userInfo()
+        const role = `${uinfo.uid}:${uinfo.gid}`
         const binDir = PathResolve(global.Server.Static!, '../../../../')
         const plist = join(binDir, 'plist/com.flyenv.helper.plist')
         const bin = join(binDir, 'helper/flyenv-helper')
@@ -54,9 +56,11 @@ export class AppHelper {
         await copyFile(bin, tmpBin)
         await chmod(tmpBin, '0755')
 
-        command = `cd "${tmpDir}" && sudo /bin/zsh ./${basename(tmpFile)} "${tmpPlist}" "${tmpBin}" && sudo rm -rf "${tmpDir}"`
+        command = `cd "${tmpDir}" && sudo /bin/zsh ./${basename(tmpFile)} "${tmpPlist}" "${tmpBin}" "${role}" && sudo rm -rf "${tmpDir}"`
         icns = join(binDir, 'icon.icns')
       } else if (isLinux()) {
+        const uinfo = userInfo()
+        const role = `${uinfo.uid}:${uinfo.gid}`
         const binDir = PathResolve(global.Server.Static!, '../../../../')
         const bin = join(binDir, 'helper/flyenv-helper')
         const shDir = join(binDir, 'helper')
@@ -70,7 +74,7 @@ export class AppHelper {
         await copyFile(bin, tmpBin)
         await chmod(tmpBin, '0755')
 
-        command = `cd "${tmpDir}" && sudo /bin/bash ./${basename(tmpFile)} "${tmpBin}" && sudo rm -rf "${tmpDir}"`
+        command = `cd "${tmpDir}" && sudo /bin/bash ./${basename(tmpFile)} "${tmpBin}" "${role}" && sudo rm -rf "${tmpDir}"`
         icns = join(binDir, 'Icon@256x256.icns')
       } else if (isWindows()) {
         const binDir = PathResolve(global.Server.Static!, '../../../../')
@@ -92,6 +96,8 @@ export class AppHelper {
       }
     } else {
       if (isMacOS()) {
+        const uinfo = userInfo()
+        const role = `${uinfo.uid}:${uinfo.gid}`
         const helperFile = global.Server.isArmArch
           ? 'flyenv-helper-darwin-arm64'
           : 'flyenv-helper-darwin-amd64'
@@ -113,9 +119,11 @@ export class AppHelper {
         await copyFile(bin, tmpBin)
         await chmod(tmpBin, '0755')
 
-        command = `cd "${tmpDir}" && sudo /bin/zsh ./${basename(tmpFile)} "${tmpPlist}" "${tmpBin}" && sudo rm -rf "${tmpDir}"`
+        command = `cd "${tmpDir}" && sudo /bin/zsh ./${basename(tmpFile)} "${tmpPlist}" "${tmpBin}" "${role}" && sudo rm -rf "${tmpDir}"`
         icns = join(binDir, 'icon.icns')
       } else if (isLinux()) {
+        const uinfo = userInfo()
+        const role = `${uinfo.uid}:${uinfo.gid}`
         const helperFile = global.Server.isArmArch
           ? 'flyenv-helper-linux-arm64'
           : 'flyenv-helper-linux-amd64-v1'
@@ -132,7 +140,7 @@ export class AppHelper {
         await copyFile(bin, tmpBin)
         await chmod(tmpBin, '0755')
 
-        command = `cd "${tmpDir}" && sudo /bin/bash ./${basename(tmpFile)} "${tmpBin}" && sudo rm -rf "${tmpDir}"`
+        command = `cd "${tmpDir}" && sudo /bin/bash ./${basename(tmpFile)} "${tmpBin}" "${role}" && sudo rm -rf "${tmpDir}"`
         icns = join(binDir, 'Icon@256x256.icns')
       } else if (isWindows()) {
         const helperFile = 'flyenv-helper-windows-amd64-v1.exe'

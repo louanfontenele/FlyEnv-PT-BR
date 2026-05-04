@@ -4,7 +4,6 @@
   "dataBaseServer": "Server Basis Data",
   "emailServer": "Server Surel",
   "language": "Bahasa & Runtime",
-  "dataQueue": "Antrian Data & Cache",
   "searchEngine": "Mesin Pencari",
   "dnsServer": "Server DNS",
   "ftpServer": "Server FTP",
@@ -15,5 +14,7 @@
   "objectStorage": "Penyimpanan Objek",
   "appExit": "Hentikan semua layanan yang telah dimulai dan keluar dari FlyEnv",
   "groupStart": "Mulai sekaligus semua layanan yang tersedia yang ditampilkan di panel",
-  "networkTunnel": "Tunnel Jaringan"
+  "networkTunnel": "Tunnel Jaringan",
+  "cacheAndQueue": "Cache & Antrian Pesan",
+  "serviceGovernance": "Tata Kelola Layanan"
 }

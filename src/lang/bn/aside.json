@@ -4,7 +4,6 @@
   "dataBaseServer": "ডেটাবেস সার্ভার",
   "emailServer": "ইমেইল সার্ভার",
   "language": "ভাষা ও রানটাইম",
-  "dataQueue": "ক্যাশ ও মেমরি স্টোরেজ",
   "searchEngine": "সার্চ ইঞ্জিন",
   "dnsServer": "DNS সার্ভার",
   "ftpServer": "FTP সার্ভার",
@@ -15,5 +14,7 @@
   "objectStorage": "অবজেক্ট স্টোরেজ",
   "appExit": "সব চলমান সার্ভিস বন্ধ করুন এবং FlyEnv থেকে বের হন",
   "groupStart": "প্যানেলে প্রদর্শিত সব উপলব্ধ সার্ভিস এক-ক্লিকে শুরু করুন",
-  "networkTunnel": "নেটওয়ার্ক টানেল"
+  "networkTunnel": "নেটওয়ার্ক টানেল",
+  "cacheAndQueue": "ক্যাশ এবং বার্তা কিউ",
+  "serviceGovernance": "পরিষেবা গভর্নেন্স"
 }

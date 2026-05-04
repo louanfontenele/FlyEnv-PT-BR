@@ -10,7 +10,7 @@ import {
   readFileByRoot,
   removeByRoot
 } from '../../Fn'
-import { vhostTmpl } from './Host'
+import { vhostTmpl } from '../Host/Host'
 import { existsSync } from 'fs'
 import { isEqual } from 'lodash-es'
 import { isWindows, pathFixedToUnix } from '@shared/utils'
@@ -268,5 +268,22 @@ export const updateApacheConf = async (host: AppHost, old: AppHost) => {
     })
     contentApacheConf = handleReverseProxy(host, contentApacheConf)
     await writeFile(apacheConfPath, contentApacheConf)
+  }
+}
+
+export const delVhost = async (host: AppHost) => {
+  const apachevpath = join(global.Server.BaseDir!, 'vhost/apache')
+  const logpath = join(global.Server.BaseDir!, 'vhost/logs')
+  const hostname = host.name
+  const avhost = join(apachevpath, `${hostname}.conf`)
+  const accesslogap = join(logpath, `${hostname}-access_log`)
+  const errorlogap = join(logpath, `${hostname}-error_log`)
+  const arr = [avhost, accesslogap, errorlogap]
+  for (const f of arr) {
+    if (existsSync(f)) {
+      try {
+        await removeByRoot(f)
+      } catch {}
+    }
   }
 }
