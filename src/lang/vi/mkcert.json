@@ -1,6 +1,6 @@
 ﻿{
   "checking": "Đang kiểm tra cài đặt...",
-  "isInstalled": "đã cài đặt",
+  "isInstalled": "Đã cài đặt",
   "notInstalled": "mkcert chưa được cài đặt",
   "install": "Cài đặt mkcert",
   "checkAgain": "Kiểm tra lại",
@@ -9,5 +9,5 @@
   "carootLabel": "Đường dẫn CA Root",
   "certificates": "Chứng chỉ",
   "generate": "Tạo",
-  "noSSLHosts": "Không có máy chủ nào được bật SSL. Vui lòng bật SSL trên một máy chủ trước."
+  "noSSLHosts": "Không có host nào được bật SSL. Vui lòng bật SSL trên một host trước."
 }
