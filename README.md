@@ -87,14 +87,15 @@ Most dev tools are either too heavy (Docker Desktop) or too limited (NVM/Homebre
 
 FlyEnv allows you to install **only what you need** from a vast library of supported software:
 
-* **AI Integration**: Hermes Agent, OpenClaw, n8n, Ollama, kimi2.5, Chatbox
+* **AI Integration**: Hermes Agent, OpenClaw, n8n, Ollama, CliProxyAPI
 * **Containers**: Podman.
 * **Network Tunnel**: Cloudflared, Cloudflare Tunnel.
-* **Web Servers**: Apache, Nginx, Caddy, Tomcat, Consul.
+* **Web Servers**: FrankenPHP, Apache, Nginx, Caddy, Tomcat.
 * **Databases**: MySQL, MariaDB, PostgreSQL, MongoDB, Qdrant.
 * **Email Server**: Mailpit.
 * **Programming Languages**: PHP (Composer), Java (Maven, Gradle, SDKMAN), Node.js, Python, Go, Erlang, Ruby, Rust (Rustup), Bun, Deno, Zig.
-* **Data Queue & Cache**: Redis, Memcached, RabbitMQ, etcd.
+* **Cache & Message Queue**: Redis, Memcached, RabbitMQ.
+* **Service Governance**: Consul, Etcd, R-Nacos
 * **Search Engine**: Elasticsearch, Meilisearch, Typesense
 * **Object Storage**: RustFS, Minio.
 * **Utilities**: DNS Server, FTP Server, Static HTTP Server.
@@ -122,14 +123,14 @@ FlyEnv allows you to install **only what you need** from a vast library of suppo
 
 Finally, a fast, native environment for Windows developers.
 
-* **Installer:** [FlyEnv-Setup-4.14.2.exe](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-Setup-4.14.2.exe)
-* **Portable:** [FlyEnv-Portable-4.14.2.exe](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-Portable-4.14.2.exe)
+* **Installer:** [FlyEnv-Setup-4.15.0.exe](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-Setup-4.15.0.exe)
+* **Portable:** [FlyEnv-Portable-4.15.0.exe](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-Portable-4.15.0.exe)
 
 ### macOS
 
 * **Homebrew:** `brew install flyenv`
-* **DMG (Intel):** [FlyEnv-4.14.2.dmg](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-4.14.2.dmg)
-* **DMG (Apple Silicon):** [FlyEnv-4.14.2-arm64.dmg](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-4.14.2-arm64.dmg)
+* **DMG (Intel):** [FlyEnv-4.15.0.dmg](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-4.15.0.dmg)
+* **DMG (Apple Silicon):** [FlyEnv-4.15.0-arm64.dmg](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-4.15.0-arm64.dmg)
 
 ### Linux
 
@@ -137,13 +138,13 @@ Supports Debian/Ubuntu (.deb) and RedHat/CentOS (.rpm).
 
 #### Debian / Ubuntu
 
-- **x86_64**: [FlyEnv-4.14.2-x64.deb](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-4.14.2-x64.deb)
-- **ARM64**: [FlyEnv-4.14.2-arm64.deb](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-4.14.2-arm64.deb)
+- **x86_64**: [FlyEnv-4.15.0-x64.deb](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-4.15.0-x64.deb)
+- **ARM64**: [FlyEnv-4.15.0-arm64.deb](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-4.15.0-arm64.deb)
 
 #### Red Hat / Fedora / SUSE / CentOS
 
-- **x86_64**: [FlyEnv-4.14.2-x64.rpm](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-4.14.2-x64.rpm)
-- **ARM64**: [FlyEnv-4.14.2-arm64.rpm](https://github.com/xpf0000/FlyEnv/releases/download/v4.14.2/FlyEnv-4.14.2-arm64.rpm)
+- **x86_64**: [FlyEnv-4.15.0-x64.rpm](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-4.15.0-x64.rpm)
+- **ARM64**: [FlyEnv-4.15.0-arm64.rpm](https://github.com/xpf0000/FlyEnv/releases/download/v4.15.0/FlyEnv-4.15.0-arm64.rpm)
 
 ---
 
