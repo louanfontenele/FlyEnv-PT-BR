@@ -64,6 +64,7 @@ import RU from './ru/index'
 import SV from './sv/index'
 import TR from './tr/index'
 import UK from './uk/index'
+import HR from './hr/index'
 import VI from './vi/index'
 import ZH from './zh/index'
 import ZHHant from './zh-hant/index'
@@ -131,6 +132,7 @@ export const AppAllLang: Record<string, string> = {
   el: 'Ελληνικά',
   en: 'English',
   es: 'Español',
+  hr: 'Hrvatski',
   fi: 'Suomi',
   fr: 'Français',
   id: 'Bahasa Indonesia',
@@ -164,6 +166,7 @@ const lang = {
   ...ES,
   ...FI,
   ...FR,
+  ...HR,
   ...ID,
   ...IT,
   ...JA,
