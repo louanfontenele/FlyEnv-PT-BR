@@ -6,11 +6,7 @@
   >
     <div class="left">
       <div class="icon-block">
-        <yb-icon
-          :svg="import('@/svg/flutter.svg?raw')"
-          width="30"
-          height="30"
-        />
+        <yb-icon :svg="import('@/svg/flutter.svg?raw')" width="30" height="30" />
       </div>
       <span class="title">Flutter</span>
     </div>

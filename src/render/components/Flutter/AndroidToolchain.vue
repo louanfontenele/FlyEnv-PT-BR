@@ -6,13 +6,19 @@
           <span>Android Toolchain</span>
           <span class="ml-3 text-sm opacity-70">{{ summaryText }}</span>
         </div>
-        <el-button link :disabled="loading" @click="fetchReadiness">{{ I18nT('base.refresh') }}</el-button>
+        <el-button link :disabled="loading" @click="fetchReadiness">{{
+          I18nT('base.refresh')
+        }}</el-button>
       </div>
     </template>
 
     <el-descriptions :column="1" border class="mb-4" size="small">
-      <el-descriptions-item label="ANDROID_HOME">{{ env.ANDROID_HOME || '-' }}</el-descriptions-item>
-      <el-descriptions-item label="ANDROID_SDK_ROOT">{{ env.ANDROID_SDK_ROOT || '-' }}</el-descriptions-item>
+      <el-descriptions-item label="ANDROID_HOME">{{
+        env.ANDROID_HOME || '-'
+      }}</el-descriptions-item>
+      <el-descriptions-item label="ANDROID_SDK_ROOT">{{
+        env.ANDROID_SDK_ROOT || '-'
+      }}</el-descriptions-item>
       <el-descriptions-item label="JAVA_HOME">{{ env.JAVA_HOME || '-' }}</el-descriptions-item>
     </el-descriptions>
 
@@ -88,7 +94,10 @@
           <template #default="scope">
             <div class="flex items-center gap-2">
               <span>{{ scope.row.id }}</span>
-              <el-tag v-if="targetDevice && targetDevice === scope.row.id" type="success" size="small"
+              <el-tag
+                v-if="targetDevice && targetDevice === scope.row.id"
+                type="success"
+                size="small"
                 >Target</el-tag
               >
             </div>
@@ -112,7 +121,11 @@
                 @click="runDeviceAction('set-target', scope.row)"
                 >Set as Target</el-button
               >
-              <el-button size="small" link type="warning" @click="runDeviceAction('disconnect', scope.row)"
+              <el-button
+                size="small"
+                link
+                type="warning"
+                @click="runDeviceAction('disconnect', scope.row)"
                 >Disconnect</el-button
               >
               <el-button size="small" link @click="runDeviceAction('info', scope.row)"
@@ -131,7 +144,9 @@
             <span>Flutter Doctor</span>
             <span class="ml-3 text-sm opacity-70">{{ doctorSummaryText }}</span>
           </div>
-          <el-button link :loading="doctorLoading" @click="fetchDoctor">{{ I18nT('base.refresh') }}</el-button>
+          <el-button link :loading="doctorLoading" @click="fetchDoctor">{{
+            I18nT('base.refresh')
+          }}</el-button>
           <el-button class="button" :disabled="!doctorRaw" link @click="copyDoctorReport"
             >Copy Report</el-button
           >
@@ -162,7 +177,9 @@
       </template>
       <el-table v-else :data="doctorDisplayItems" show-overflow-tooltip>
         <template #empty>
-          <span class="text-xs opacity-70">No parsed doctor checks. Use Copy Report for full output.</span>
+          <span class="text-xs opacity-70"
+            >No parsed doctor checks. Use Copy Report for full output.</span
+          >
         </template>
         <el-table-column label="Status" width="140" align="center">
           <template #default="scope">
@@ -206,7 +223,11 @@
       </div>
 
       <div class="mb-3 flex flex-wrap gap-2">
-        <el-button size="small" type="primary" :loading="quickRunning" @click="runQuickAction('run')"
+        <el-button
+          size="small"
+          type="primary"
+          :loading="quickRunning"
+          @click="runQuickAction('run')"
           >flutter run</el-button
         >
         <el-button size="small" :loading="quickRunning" @click="runQuickAction('build-apk')"
@@ -428,37 +449,39 @@
       return
     }
 
-    IPC.send('app-fork:flutter', 'androidDeviceAction', action, id).then((key: string, res: any) => {
-      IPC.off(key)
-      if (res?.code !== 0) {
-        MessageError(res?.msg ?? 'Device action failed')
-        return
-      }
+    IPC.send('app-fork:flutter', 'androidDeviceAction', action, id).then(
+      (key: string, res: any) => {
+        IPC.off(key)
+        if (res?.code !== 0) {
+          MessageError(res?.msg ?? 'Device action failed')
+          return
+        }
 
-      const data = res?.data ?? {}
-      const ok = !!data?.ok
-      const msg = `${data?.message ?? ''}`.trim()
-      if (!ok) {
-        MessageError(msg || 'Device action failed')
-        return
-      }
+        const data = res?.data ?? {}
+        const ok = !!data?.ok
+        const msg = `${data?.message ?? ''}`.trim()
+        if (!ok) {
+          MessageError(msg || 'Device action failed')
+          return
+        }
 
-      if (data?.targetDevice) {
-        targetDevice.value = data.targetDevice
-      }
+        if (data?.targetDevice) {
+          targetDevice.value = data.targetDevice
+        }
 
-      if (action === 'info') {
-        const state = `${data?.state ?? '-'}`
-        const details = `${data?.details ?? '-'}`
-        const content = `State: ${state}\n\n${details}`
-        ElMessageBox.alert(content, `Device Info - ${id}`, {
-          confirmButtonText: 'OK'
-        })
-      } else {
-        MessageSuccess(msg || 'Device action completed')
-        fetchDevices()
+        if (action === 'info') {
+          const state = `${data?.state ?? '-'}`
+          const details = `${data?.details ?? '-'}`
+          const content = `State: ${state}\n\n${details}`
+          ElMessageBox.alert(content, `Device Info - ${id}`, {
+            confirmButtonText: 'OK'
+          })
+        } else {
+          MessageSuccess(msg || 'Device action completed')
+          fetchDevices()
+        }
       }
-    })
+    )
   }
 
   const fetchDoctor = () => {
@@ -531,7 +554,8 @@
 
       const data = res?.data ?? {}
       const ok = !!data?.ok
-      const baseMsg = data?.message ?? (ok ? 'Auto-fix completed' : 'Auto-fix completed with issues')
+      const baseMsg =
+        data?.message ?? (ok ? 'Auto-fix completed' : 'Auto-fix completed with issues')
       if (ok) {
         MessageSuccess(baseMsg)
       } else {

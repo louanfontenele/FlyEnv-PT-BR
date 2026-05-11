@@ -14,8 +14,15 @@
           <yb-icon :svg="import('@/svg/delete.svg?raw')" class="top-back-icon" />
           <span class="ml-3">{{ I18nT('flutter.flutterProjectSettings') }}</span>
         </div>
-        <el-button :disabled="saving || !projectPath" @click="showPreview = true">{{ I18nT('flutter.preview') }}</el-button>
-        <el-button type="primary" :loading="saving" :disabled="saving || !projectPath" @click="doSave">
+        <el-button :disabled="saving || !projectPath" @click="showPreview = true">{{
+          I18nT('flutter.preview')
+        }}</el-button>
+        <el-button
+          type="primary"
+          :loading="saving"
+          :disabled="saving || !projectPath"
+          @click="doSave"
+        >
           {{ I18nT('flutter.save') }}
         </el-button>
       </div>
@@ -31,7 +38,9 @@
 
       <el-scrollbar class="flex-1">
         <div class="main-wapper p-3">
-          <div class="plant-title" style="padding-top: 6px">{{ I18nT('flutter.projectTarget') }}</div>
+          <div class="plant-title" style="padding-top: 6px">{{
+            I18nT('flutter.projectTarget')
+          }}</div>
           <div class="main p-5">
             <input v-model.trim="projectPath" type="text" class="input" readonly />
           </div>
@@ -39,18 +48,37 @@
           <div class="plant-title">{{ I18nT('flutter.projectIdentity') }}</div>
           <div class="main p-5">
             <div class="mb-3">
-              <label class="block text-xs opacity-60 mb-1">{{ I18nT('flutter.projectName') }}</label>
-              <input v-model.trim="form.projectName" type="text" class="input" placeholder="my_flutter_app" @input="sanitizeName" />
+              <label class="block text-xs opacity-60 mb-1">{{
+                I18nT('flutter.projectName')
+              }}</label>
+              <input
+                v-model.trim="form.projectName"
+                type="text"
+                class="input"
+                placeholder="my_flutter_app"
+                @input="sanitizeName"
+              />
             </div>
             <div>
-              <label class="block text-xs opacity-60 mb-1">{{ I18nT('flutter.organizationOptional') }}</label>
-              <input v-model.trim="form.orgName" type="text" class="input" placeholder="com.example" />
+              <label class="block text-xs opacity-60 mb-1">{{
+                I18nT('flutter.organizationOptional')
+              }}</label>
+              <input
+                v-model.trim="form.orgName"
+                type="text"
+                class="input"
+                placeholder="com.example"
+              />
             </div>
           </div>
 
           <div class="plant-title">{{ I18nT('flutter.flutterVersion') }}</div>
           <div class="main p-5">
-            <el-select v-model="form.flutterBin" class="w-full" :placeholder="I18nT('flutter.noVersionUsePath')">
+            <el-select
+              v-model="form.flutterBin"
+              class="w-full"
+              :placeholder="I18nT('flutter.noVersionUsePath')"
+            >
               <el-option value="" :label="I18nT('flutter.noVersionUsePath')" />
               <el-option
                 v-for="v in installedVersions"
@@ -64,53 +92,104 @@
           <div class="plant-title">{{ I18nT('flutter.packageNames') }}</div>
           <div class="main p-5">
             <div class="mb-3">
-              <label class="block text-xs opacity-60 mb-1">{{ I18nT('flutter.androidPackage') }}</label>
-              <input v-model.trim="form.packageNames.android" type="text" class="input" placeholder="com.example.my_app" />
+              <label class="block text-xs opacity-60 mb-1">{{
+                I18nT('flutter.androidPackage')
+              }}</label>
+              <input
+                v-model.trim="form.packageNames.android"
+                type="text"
+                class="input"
+                placeholder="com.example.my_app"
+              />
             </div>
             <div class="mb-3">
-              <label class="block text-xs opacity-60 mb-1">{{ I18nT('flutter.iosBundleId') }}</label>
-              <input v-model.trim="form.packageNames.ios" type="text" class="input" placeholder="com.example.my_app" />
+              <label class="block text-xs opacity-60 mb-1">{{
+                I18nT('flutter.iosBundleId')
+              }}</label>
+              <input
+                v-model.trim="form.packageNames.ios"
+                type="text"
+                class="input"
+                placeholder="com.example.my_app"
+              />
             </div>
             <div class="mb-3">
               <label class="block text-xs opacity-60 mb-1">{{ I18nT('flutter.webAppName') }}</label>
-              <input v-model.trim="form.packageNames.web" type="text" class="input" placeholder="my_app_web" />
+              <input
+                v-model.trim="form.packageNames.web"
+                type="text"
+                class="input"
+                placeholder="my_app_web"
+              />
             </div>
             <div>
-              <label class="block text-xs opacity-60 mb-1">{{ I18nT('flutter.desktopBundleId') }}</label>
-              <input v-model.trim="form.packageNames.desktop" type="text" class="input" placeholder="com.example.my_app" />
+              <label class="block text-xs opacity-60 mb-1">{{
+                I18nT('flutter.desktopBundleId')
+              }}</label>
+              <input
+                v-model.trim="form.packageNames.desktop"
+                type="text"
+                class="input"
+                placeholder="com.example.my_app"
+              />
             </div>
           </div>
 
           <div class="plant-title">{{ I18nT('flutter.packagesPubdev') }}</div>
           <div class="main p-5">
             <div class="flex items-center gap-2 mb-3">
-              <el-input v-model.trim="packageSearch" :placeholder="I18nT('flutter.searchPackagePlaceholder')" />
-              <el-button :loading="packageSearching" @click="searchPackages">{{ I18nT('flutter.search') }}</el-button>
-              <el-button :loading="loadingPackages" @click="refreshPackages">{{ I18nT('flutter.refreshInstalled') }}</el-button>
+              <el-input
+                v-model.trim="packageSearch"
+                :placeholder="I18nT('flutter.searchPackagePlaceholder')"
+              />
+              <el-button :loading="packageSearching" @click="searchPackages">{{
+                I18nT('flutter.search')
+              }}</el-button>
+              <el-button :loading="loadingPackages" @click="refreshPackages">{{
+                I18nT('flutter.refreshInstalled')
+              }}</el-button>
             </div>
 
             <div v-if="packageResults.length" class="fp-packages-list">
               <div v-for="pkg in packageResults" :key="pkg.name" class="fp-package-row">
                 <div class="flex-1 min-w-0">
                   <div class="font-medium truncate">{{ pkg.name }}</div>
-                  <div class="text-xs opacity-60">{{ I18nT('flutter.latest') }}: {{ pkg.latest || 'unknown' }}</div>
-                  <div class="text-xs opacity-50 truncate">{{ pkg.description || I18nT('flutter.noDescription') }}</div>
+                  <div class="text-xs opacity-60"
+                    >{{ I18nT('flutter.latest') }}: {{ pkg.latest || 'unknown' }}</div
+                  >
+                  <div class="text-xs opacity-50 truncate">{{
+                    pkg.description || I18nT('flutter.noDescription')
+                  }}</div>
                 </div>
-                <el-button size="small" @click="addDependency(pkg, false)">{{ I18nT('flutter.add') }}</el-button>
-                <el-button size="small" type="warning" @click="addDependency(pkg, true)">{{ I18nT('flutter.addDev') }}</el-button>
+                <el-button size="small" @click="addDependency(pkg, false)">{{
+                  I18nT('flutter.add')
+                }}</el-button>
+                <el-button size="small" type="warning" @click="addDependency(pkg, true)">{{
+                  I18nT('flutter.addDev')
+                }}</el-button>
               </div>
             </div>
 
-            <div class="text-xs opacity-60 mb-2 mt-3">{{ I18nT('flutter.selectedDependencies') }}</div>
-            <div v-if="!form.dependencies.length" class="text-xs opacity-50">{{ I18nT('flutter.noPackagesInPubspec') }}</div>
+            <div class="text-xs opacity-60 mb-2 mt-3">{{
+              I18nT('flutter.selectedDependencies')
+            }}</div>
+            <div v-if="!form.dependencies.length" class="text-xs opacity-50">{{
+              I18nT('flutter.noPackagesInPubspec')
+            }}</div>
             <div v-else class="flex flex-col gap-2">
-              <div v-for="(dep, i) in form.dependencies" :key="`${dep.name}-${i}`" class="fp-selected-row">
+              <div
+                v-for="(dep, i) in form.dependencies"
+                :key="`${dep.name}-${i}`"
+                class="fp-selected-row"
+              >
                 <div class="w-[170px] truncate">{{ dep.name }}</div>
                 <el-select v-model="dep.version" filterable class="flex-1" placeholder="version">
                   <el-option v-for="v in dep.versions" :key="v" :value="v" :label="v" />
                 </el-select>
                 <el-switch v-model="dep.isDev" active-text="dev" inactive-text="prod" />
-                <el-button link type="danger" @click="removeDependency(i)">{{ I18nT('flutter.remove') }}</el-button>
+                <el-button link type="danger" @click="removeDependency(i)">{{
+                  I18nT('flutter.remove')
+                }}</el-button>
               </div>
             </div>
 
@@ -120,12 +199,18 @@
             </div>
 
             <template v-if="outdated.length">
-              <div class="text-xs opacity-60 mt-4 mb-2">{{ I18nT('flutter.outdatedPackages') }}</div>
+              <div class="text-xs opacity-60 mt-4 mb-2">{{
+                I18nT('flutter.outdatedPackages')
+              }}</div>
               <el-table :data="outdated" size="small" style="width: 100%">
                 <el-table-column prop="package" :label="I18nT('flutter.package')" min-width="120" />
                 <el-table-column prop="current" :label="I18nT('flutter.current')" width="110" />
                 <el-table-column prop="latest" :label="I18nT('flutter.latest')" width="110" />
-                <el-table-column prop="upgradable" :label="I18nT('flutter.upgradable')" width="110" />
+                <el-table-column
+                  prop="upgradable"
+                  :label="I18nT('flutter.upgradable')"
+                  width="110"
+                />
               </el-table>
             </template>
           </div>
@@ -133,9 +218,20 @@
           <div class="plant-title">{{ I18nT('flutter.firebaseFilesByPlatform') }}</div>
           <div class="main p-5">
             <div v-for="k in firebaseKeys" :key="k" class="path-choose mb-3">
-              <input v-model.trim="form.firebaseFiles[k]" type="text" class="input" :placeholder="I18nT('flutter.firebaseFileFor') + ' ' + k" readonly />
+              <input
+                v-model.trim="form.firebaseFiles[k]"
+                type="text"
+                class="input"
+                :placeholder="I18nT('flutter.firebaseFileFor') + ' ' + k"
+                readonly
+              />
               <div class="icon-block" @click="chooseFile(form.firebaseFiles, k)">
-                <yb-icon :svg="import('@/svg/folder.svg?raw')" class="choose" width="18" height="18" />
+                <yb-icon
+                  :svg="import('@/svg/folder.svg?raw')"
+                  class="choose"
+                  width="18"
+                  height="18"
+                />
               </div>
             </div>
           </div>
@@ -143,9 +239,20 @@
           <div class="plant-title">{{ I18nT('flutter.appIconsByPlatform') }}</div>
           <div class="main p-5">
             <div v-for="k in iconKeys" :key="k" class="path-choose mb-3">
-              <input v-model.trim="form.appIcons[k]" type="text" class="input" :placeholder="I18nT('flutter.iconFileFor') + ' ' + k" readonly />
+              <input
+                v-model.trim="form.appIcons[k]"
+                type="text"
+                class="input"
+                :placeholder="I18nT('flutter.iconFileFor') + ' ' + k"
+                readonly
+              />
               <div class="icon-block" @click="chooseFile(form.appIcons, k)">
-                <yb-icon :svg="import('@/svg/folder.svg?raw')" class="choose" width="18" height="18" />
+                <yb-icon
+                  :svg="import('@/svg/folder.svg?raw')"
+                  class="choose"
+                  width="18"
+                  height="18"
+                />
               </div>
             </div>
           </div>
@@ -184,7 +291,9 @@
   const brewStore = BrewStore()
 
   const installedVersions = computed(() =>
-    brewStore.module('flutter').installed.map((p) => ({ bin: p.bin, version: p.version, path: p.path }))
+    brewStore
+      .module('flutter')
+      .installed.map((p) => ({ bin: p.bin, version: p.version, path: p.path }))
   )
 
   const projectPath = ref('')
@@ -205,7 +314,12 @@
       web: '',
       desktop: ''
     },
-    dependencies: [] as Array<{ name: string; version: string; isDev: boolean; versions: string[] }>,
+    dependencies: [] as Array<{
+      name: string
+      version: string
+      isDev: boolean
+      versions: string[]
+    }>,
     checkOutdated: true,
     firebaseFiles: {
       android: '',
@@ -225,7 +339,9 @@
     } as Record<string, string>
   })
 
-  const outdated = ref<Array<{ package: string; current: string; latest: string; upgradable: string }>>([])
+  const outdated = ref<
+    Array<{ package: string; current: string; latest: string; upgradable: string }>
+  >([])
 
   const packageSearch = ref('')
   const packageSearching = ref(false)
@@ -313,8 +429,18 @@
       const deps = Array.isArray(res?.dependencies) ? res.dependencies : []
       const devDeps = Array.isArray(res?.devDependencies) ? res.devDependencies : []
       form.dependencies = [
-        ...deps.map((d: any) => ({ name: d.name, version: d.version, isDev: false, versions: [d.version].filter(Boolean) })),
-        ...devDeps.map((d: any) => ({ name: d.name, version: d.version, isDev: true, versions: [d.version].filter(Boolean) }))
+        ...deps.map((d: any) => ({
+          name: d.name,
+          version: d.version,
+          isDev: false,
+          versions: [d.version].filter(Boolean)
+        })),
+        ...devDeps.map((d: any) => ({
+          name: d.name,
+          version: d.version,
+          isDev: true,
+          versions: [d.version].filter(Boolean)
+        }))
       ]
       outdated.value = Array.isArray(res?.outdated) ? res.outdated : []
     } finally {
@@ -348,8 +474,18 @@
     const deps = Array.isArray(res?.dependencies) ? res.dependencies : []
     const devDeps = Array.isArray(res?.devDependencies) ? res.devDependencies : []
     form.dependencies = [
-      ...deps.map((d: any) => ({ name: d.name, version: d.version, isDev: false, versions: [d.version].filter(Boolean) })),
-      ...devDeps.map((d: any) => ({ name: d.name, version: d.version, isDev: true, versions: [d.version].filter(Boolean) }))
+      ...deps.map((d: any) => ({
+        name: d.name,
+        version: d.version,
+        isDev: false,
+        versions: [d.version].filter(Boolean)
+      })),
+      ...devDeps.map((d: any) => ({
+        name: d.name,
+        version: d.version,
+        isDev: true,
+        versions: [d.version].filter(Boolean)
+      }))
     ]
     outdated.value = Array.isArray(res?.outdated) ? res.outdated : []
   }
@@ -426,7 +562,9 @@
           isDev: d.isDev
         })),
         checkOutdated: form.checkOutdated,
-        firebaseFiles: Object.fromEntries(Object.entries(form.firebaseFiles).filter(([, v]) => !!v)),
+        firebaseFiles: Object.fromEntries(
+          Object.entries(form.firebaseFiles).filter(([, v]) => !!v)
+        ),
         appIcons: Object.fromEntries(Object.entries(form.appIcons).filter(([, v]) => !!v))
       },
       null,

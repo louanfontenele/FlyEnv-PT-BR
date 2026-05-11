@@ -10,7 +10,13 @@
       >
         <div
           class="fg-sc-icon"
-          :class="card.ok === true ? 'fg-sc-icon--ok' : card.ok === false ? 'fg-sc-icon--err' : 'fg-sc-icon--warn'"
+          :class="
+            card.ok === true
+              ? 'fg-sc-icon--ok'
+              : card.ok === false
+                ? 'fg-sc-icon--err'
+                : 'fg-sc-icon--warn'
+          "
         >
           <span v-if="card.ok === true">✓</span>
           <span v-else-if="card.ok === false">✗</span>
@@ -22,7 +28,13 @@
         </div>
         <div
           class="fg-sc-bar"
-          :class="card.ok === true ? 'fg-sc-bar--ok' : card.ok === false ? 'fg-sc-bar--err' : 'fg-sc-bar--warn'"
+          :class="
+            card.ok === true
+              ? 'fg-sc-bar--ok'
+              : card.ok === false
+                ? 'fg-sc-bar--err'
+                : 'fg-sc-bar--warn'
+          "
         ></div>
       </div>
     </div>
@@ -118,7 +130,9 @@
         <!-- Environment Variables -->
         <el-card shadow="never" class="fg-card fg-mt">
           <template #header>
-            <div class="fg-card-hd"><span>{{ I18nT('flutter.environment') }}</span></div>
+            <div class="fg-card-hd"
+              ><span>{{ I18nT('flutter.environment') }}</span></div
+            >
           </template>
           <div v-for="(val, key) in envVars" :key="key" class="fg-row">
             <span class="fg-k fg-k--env">{{ key }}</span>
@@ -138,7 +152,9 @@
           </template>
           <el-skeleton v-if="doctorLoading" :rows="5" animated />
           <template v-else>
-            <div v-if="!doctorItems.length" class="fg-empty">{{ I18nT('flutter.doctorClickRefresh') }}</div>
+            <div v-if="!doctorItems.length" class="fg-empty">{{
+              I18nT('flutter.doctorClickRefresh')
+            }}</div>
             <template v-else>
               <div class="fg-doc-badges">
                 <el-tag size="small" type="success">
@@ -189,7 +205,12 @@
               <div class="fg-tab-pane">
                 <p class="fg-tab-desc">Upgrade Flutter and manage channels.</p>
                 <div class="fg-btn-row">
-                  <el-button size="small" type="primary" :loading="running" @click="runCmd('upgrade', '')">
+                  <el-button
+                    size="small"
+                    type="primary"
+                    :loading="running"
+                    @click="runCmd('upgrade', '')"
+                  >
                     flutter upgrade
                   </el-button>
                   <el-button size="small" :loading="running" @click="runCmd('channel-list', '')">
@@ -198,9 +219,24 @@
                 </div>
                 <div class="fg-sep-label">Switch channel:</div>
                 <div class="fg-btn-row">
-                  <el-button size="small" :loading="running" @click="runCmd('channel-switch', 'stable')">stable</el-button>
-                  <el-button size="small" :loading="running" @click="runCmd('channel-switch', 'beta')">beta</el-button>
-                  <el-button size="small" :loading="running" @click="runCmd('channel-switch', 'master')">master</el-button>
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    @click="runCmd('channel-switch', 'stable')"
+                    >stable</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    @click="runCmd('channel-switch', 'beta')"
+                    >beta</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    @click="runCmd('channel-switch', 'master')"
+                    >master</el-button
+                  >
                 </div>
               </div>
             </el-tab-pane>
@@ -210,17 +246,47 @@
               <div class="fg-tab-pane">
                 <p class="fg-tab-desc">Manage dependencies for your Flutter project.</p>
                 <div class="fg-dir-row">
-                  <el-input v-model="projectDir" size="small" placeholder="Flutter project directory" readonly>
+                  <el-input
+                    v-model="projectDir"
+                    size="small"
+                    placeholder="Flutter project directory"
+                    readonly
+                  >
                     <template #append>
                       <el-button size="small" @click="chooseDir">Browse</el-button>
                     </template>
                   </el-input>
                 </div>
                 <div class="fg-btn-row fg-mt-sm">
-                  <el-button size="small" type="primary" :loading="running" :disabled="!projectDir" @click="runCmd('pub-get', projectDir)">pub get</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('pub-upgrade', projectDir)">pub upgrade</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('pub-outdated', projectDir)">pub outdated</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('pub-deps', projectDir)">pub deps</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('pub-get', projectDir)"
+                    >pub get</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('pub-upgrade', projectDir)"
+                    >pub upgrade</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('pub-outdated', projectDir)"
+                    >pub outdated</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('pub-deps', projectDir)"
+                    >pub deps</el-button
+                  >
                 </div>
               </div>
             </el-tab-pane>
@@ -230,18 +296,54 @@
               <div class="fg-tab-pane">
                 <p class="fg-tab-desc">Build Flutter app for different targets.</p>
                 <div class="fg-dir-row">
-                  <el-input v-model="projectDir" size="small" placeholder="Flutter project directory" readonly>
+                  <el-input
+                    v-model="projectDir"
+                    size="small"
+                    placeholder="Flutter project directory"
+                    readonly
+                  >
                     <template #append>
                       <el-button size="small" @click="chooseDir">Browse</el-button>
                     </template>
                   </el-input>
                 </div>
                 <div class="fg-btn-row fg-mt-sm">
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('build-apk', projectDir)">APK debug</el-button>
-                  <el-button size="small" type="primary" :loading="running" :disabled="!projectDir" @click="runCmd('build-apk-release', projectDir)">APK release</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('build-web', projectDir)">Web</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('build-windows', projectDir)">Windows</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('clean', projectDir)">Clean</el-button>
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('build-apk', projectDir)"
+                    >APK debug</el-button
+                  >
+                  <el-button
+                    size="small"
+                    type="primary"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('build-apk-release', projectDir)"
+                    >APK release</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('build-web', projectDir)"
+                    >Web</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('build-windows', projectDir)"
+                    >Windows</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('clean', projectDir)"
+                    >Clean</el-button
+                  >
                 </div>
               </div>
             </el-tab-pane>
@@ -251,16 +353,39 @@
               <div class="fg-tab-pane">
                 <p class="fg-tab-desc">Code analysis, formatting, and testing.</p>
                 <div class="fg-dir-row">
-                  <el-input v-model="projectDir" size="small" placeholder="Flutter project directory" readonly>
+                  <el-input
+                    v-model="projectDir"
+                    size="small"
+                    placeholder="Flutter project directory"
+                    readonly
+                  >
                     <template #append>
                       <el-button size="small" @click="chooseDir">Browse</el-button>
                     </template>
                   </el-input>
                 </div>
                 <div class="fg-btn-row fg-mt-sm">
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('analyze', projectDir)">flutter analyze</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('test', projectDir)">flutter test</el-button>
-                  <el-button size="small" :loading="running" :disabled="!projectDir" @click="runCmd('format', projectDir)">dart format</el-button>
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('analyze', projectDir)"
+                    >flutter analyze</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('test', projectDir)"
+                    >flutter test</el-button
+                  >
+                  <el-button
+                    size="small"
+                    :loading="running"
+                    :disabled="!projectDir"
+                    @click="runCmd('format', projectDir)"
+                    >dart format</el-button
+                  >
                 </div>
               </div>
             </el-tab-pane>
@@ -270,7 +395,12 @@
               <div class="fg-tab-pane">
                 <p class="fg-tab-desc">Run full verbose Flutter doctor diagnostic.</p>
                 <div class="fg-btn-row">
-                  <el-button size="small" type="primary" :loading="running" @click="runCmd('doctor', '')">
+                  <el-button
+                    size="small"
+                    type="primary"
+                    :loading="running"
+                    @click="runCmd('doctor', '')"
+                  >
                     flutter doctor -v
                   </el-button>
                 </div>
@@ -284,11 +414,17 @@
           <div class="fg-console-hd">
             <div class="fg-console-title">
               <span class="fg-dot" :class="running ? 'fg-dot--run' : 'fg-dot--idle'"></span>
-              <span>{{ activeCmd ? `$ flutter ${activeCmd}` : I18nT('flutter.consoleOutput') }}</span>
+              <span>{{
+                activeCmd ? `$ flutter ${activeCmd}` : I18nT('flutter.consoleOutput')
+              }}</span>
             </div>
             <div class="fg-console-acts">
-              <el-button link size="small" :disabled="!output" @click="copyOutput">{{ I18nT('base.copy') }}</el-button>
-              <el-button link size="small" :disabled="!output" @click="output = ''">{{ I18nT('base.clean') }}</el-button>
+              <el-button link size="small" :disabled="!output" @click="copyOutput">{{
+                I18nT('base.copy')
+              }}</el-button>
+              <el-button link size="small" :disabled="!output" @click="output = ''">{{
+                I18nT('base.clean')
+              }}</el-button>
             </div>
           </div>
           <pre ref="consolePre" class="fg-console-pre">{{ output || I18nT('flutter.ready') }}</pre>
@@ -389,7 +525,8 @@
       key: 'channel',
       label: 'Channel',
       value: sdkInfo.channel || '—',
-      ok: sdkInfo.channel === 'stable' ? true : sdkInfo.channel ? (null as unknown as boolean) : false
+      ok:
+        sdkInfo.channel === 'stable' ? true : sdkInfo.channel ? (null as unknown as boolean) : false
     },
     {
       key: 'android',
@@ -405,8 +542,15 @@
     {
       key: 'devices',
       label: 'ADB Devices',
-      value: devicesTotal.value ? `${devicesOnline.value} online / ${devicesTotal.value}` : 'No devices',
-      ok: devicesOnline.value > 0 ? true : devicesTotal.value > 0 ? (null as unknown as boolean) : false
+      value: devicesTotal.value
+        ? `${devicesOnline.value} online / ${devicesTotal.value}`
+        : 'No devices',
+      ok:
+        devicesOnline.value > 0
+          ? true
+          : devicesTotal.value > 0
+            ? (null as unknown as boolean)
+            : false
     }
   ])
 
@@ -573,7 +717,9 @@
     align-items: center;
     gap: 10px;
     overflow: hidden;
-    transition: box-shadow 0.2s, border-color 0.2s;
+    transition:
+      box-shadow 0.2s,
+      border-color 0.2s;
     min-width: 0;
 
     &:hover {

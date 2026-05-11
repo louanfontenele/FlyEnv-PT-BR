@@ -3,18 +3,24 @@ import { BrewStore } from '@/store/brew'
 import type { AllAppModule } from '@/core/type'
 import type { ModuleStaticItem } from '@/core/Module/ModuleStaticItem'
 
-type FlutterChannel = 'stable' | 'beta'
-
 export const StaticSetup = reactive<{
   reFetch: () => void
+  channel: {
+    channels: Partial<Record<AllAppModule, Array<{ label: string; value: string }>>>
+    tab: Partial<Record<AllAppModule, string>>
+    show: Partial<Record<AllAppModule, boolean>>
+  }
 }>({
-  reFetch: () => 0
+  reFetch: () => 0,
+  channel: {
+    channels: {},
+    tab: {},
+    show: {}
+  }
 })
 
 export const Setup = (typeFlag: AllAppModule) => {
   const brewStore = BrewStore()
-  const showChannelTabs = computed(() => typeFlag === 'flutter')
-  const channelTab = reactive<{ value: FlutterChannel }>({ value: 'stable' })
 
   const fetching = computed(() => {
     const module = brewStore.module(typeFlag)
@@ -74,9 +80,9 @@ export const Setup = (typeFlag: AllAppModule) => {
     const arr = []
     const list = brewStore.module(typeFlag).static
     for (const value of list) {
-      if (showChannelTabs.value) {
-        const channel = (value as any).channel ?? 'stable'
-        if (channel !== channelTab.value) {
+      if (StaticSetup.channel.show?.[typeFlag]) {
+        const channel = (value as any).channel ?? ''
+        if (channel !== StaticSetup.channel.tab?.[typeFlag]) {
           continue
         }
       }
@@ -118,8 +124,6 @@ export const Setup = (typeFlag: AllAppModule) => {
     tableData,
     reGetData,
     fetching,
-    showChannelTabs,
-    channelTab,
     fetchCommand,
     copyCommand
   }

@@ -17,7 +17,7 @@
       >
         <template #header-actions>
           <el-button link @click="showCreate = true">
-            <yb-icon :svg="import('@/svg/code-library.svg?raw')" width="20" height="20" />
+            <yb-icon :svg="import('@/svg/code-library.svg?raw')" width="16" height="16" />
           </el-button>
         </template>
         <template #operation="scope">
@@ -41,7 +41,8 @@
         :has-static="true"
         :show-brew-lib="false"
         :show-port-lib="false"
-      ></Manager>
+      >
+      </Manager>
       <AndroidToolchain v-else-if="tab === 4" />
     </div>
   </div>
@@ -58,6 +59,7 @@
   import CreateProject from './CreateProject.vue'
   import EditProject from './EditProject.vue'
   import { ref } from 'vue'
+  import { StaticSetup } from '@/components/VersionManager/static/setup'
 
   const { tab } = AppModuleSetup('flutter')
   const showCreate = ref(false)
@@ -71,12 +73,27 @@
     'Android'
   ]
 
+  if (!StaticSetup.channel.channels?.['flutter']) {
+    StaticSetup.channel.channels['flutter'] = [
+      {
+        label: 'Stable',
+        value: 'stable'
+      },
+      {
+        label: 'Beta',
+        value: 'beta'
+      }
+    ]
+    StaticSetup.channel.tab['flutter'] = 'stable'
+    StaticSetup.channel.show['flutter'] = true
+  }
+
   const openProjectEdit = (path: string) => {
     editingProjectPath.value = path
     showProjectEdit.value = true
   }
 
-  const onProjectCreated = (_projectPath: string) => {
+  const onProjectCreated = () => {
     // already added via ProjectSetup inside CreateProject.vue — switch to Projects tab
     tab.value = 1
   }
