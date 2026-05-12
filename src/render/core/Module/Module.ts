@@ -71,6 +71,36 @@ export class Module {
 
   private _fetchInstalledResolves: CallbackFn[] = []
 
+  resetCurrentVersion(autoSave: boolean = false) {
+    if (this.typeFlag !== 'php' && this.installed.length > 0) {
+      const appStore = AppStore()
+      const server = appStore.serverCurrent(this.typeFlag)
+      const currentVersion = server?.current?.version
+      const currentPath = server?.current?.path
+      const findCurrent =
+        currentVersion &&
+        currentPath &&
+        this.installed.find(
+          (d) => d.version && d.enable && d.version === currentVersion && d.path === currentPath
+        )
+      if (!findCurrent) {
+        const find = this.installed.find((d) => d.version && d.enable)
+        if (find) {
+          appStore.UPDATE_SERVER_CURRENT({
+            flag: this.typeFlag,
+            data: JSON.parse(JSON.stringify(find))
+          })
+          if (autoSave) {
+            appStore.saveConfig().catch()
+          }
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
   fetchInstalled(): Promise<boolean> {
     const appStore = AppStore()
     return new Promise((resolve) => {
@@ -127,28 +157,7 @@ export class Module {
             this.installed.push(...installItems)
             // this.installed = installItems as any
             console.log('this.installed: ', this.installed, this.typeFlag, this)
-            const server = appStore.serverCurrent(flag)
-            if (this.typeFlag !== 'php' && this.installed.length > 0) {
-              const currentVersion = server?.current?.version
-              const currentPath = server?.current?.path
-              const findCurrent =
-                currentVersion &&
-                currentPath &&
-                this.installed.find(
-                  (d) =>
-                    d.version && d.enable && d.version === currentVersion && d.path === currentPath
-                )
-              if (!findCurrent) {
-                const find = this.installed.find((d) => d.version && d.enable)
-                if (find) {
-                  appStore.UPDATE_SERVER_CURRENT({
-                    flag: flag,
-                    data: JSON.parse(JSON.stringify(find))
-                  })
-                  needSaveConfig = true
-                }
-              }
-            }
+            needSaveConfig = needSaveConfig || this.resetCurrentVersion(false)
           }
           if (needSaveConfig) {
             appStore.saveConfig().catch()

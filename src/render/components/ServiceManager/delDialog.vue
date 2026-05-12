@@ -27,31 +27,52 @@
   import type { ModuleInstalledItem } from '@/core/Module/ModuleInstalledItem'
   import { shell, fs } from '@/util/NodeFn'
   import { BrewStore } from '@/store/brew'
+  import { MessageError } from '@/util/Element'
+  import type { ModuleStaticItem } from '@/core/Module/ModuleStaticItem'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
   const props = defineProps<{
-    item: ModuleInstalledItem
+    item: ModuleInstalledItem & ModuleStaticItem
   }>()
 
   const doShowDir = () => {
     show.value = false
-    shell.showItemInFolder(props.item.path)
+    shell.showItemInFolder(props.item?.path ?? props.item?.appDir)
   }
 
   const brewStore = BrewStore()
 
   const doDel = () => {
+    console.log('doDel: ', props.item)
     show.value = false
     const m = props.item
     m.running = true
-    props.item
-      .stop()
-      .then(() => fs.remove(props.item.path))
+    const service = brewStore
+      .module(props.item.typeFlag)
+      .installed.find((f) => f.bin === props.item.bin)
+    console.log('doDel service: ', service)
+    const stop = (): Promise<string | boolean> => {
+      return new Promise<string | boolean>((resolve) => {
+        if (!service?.stop) {
+          resolve(true)
+          return
+        }
+        service.stop().then(resolve)
+      })
+    }
+    stop()
+      .then(() => fs.remove(props.item?.path ?? props.item?.appDir))
+      .catch((err: any) => {
+        MessageError(`${err}`)
+      })
       .finally(() => {
-        brewStore.module(props.item.typeFlag).installed = brewStore
+        const module = brewStore.module(props.item.typeFlag)
+        module.installed = brewStore
           .module(props.item.typeFlag)
-          .installed.filter((f) => f.path !== props.item.path)
+          .installed.filter((f) => f.bin !== props.item.bin)
+        module.resetCurrentVersion(true)
+        module.fetchStatic()
       })
   }
 
