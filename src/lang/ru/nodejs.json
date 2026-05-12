@@ -11,5 +11,6 @@
   "VSCode": "Код Visual Studio",
   "PhpStorm": "PhpStorm",
   "WebStorm": "WebStorm",
-  "projectEnvSet": "Среда проекта"
+  "projectEnvSet": "Среда проекта",
+  "installGit": "Установить <a href=\"javascript:void();\" onclick=\"openUrl('https://git-scm.com')\">Git</a>"
 }

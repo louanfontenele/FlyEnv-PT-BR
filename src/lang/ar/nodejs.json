@@ -11,5 +11,6 @@
   "VSCode": "فيجوال ستوديو كود (Visual Studio Code)",
   "PhpStorm": "بي إتش بي ستورم (PhpStorm)",
   "WebStorm": "ويب ستورم (WebStorm)",
-  "projectEnvSet": "بيئة المشروع"
+  "projectEnvSet": "بيئة المشروع",
+  "installGit": "تثبيت <a href=\"javascript:void();\" onclick=\"openUrl('https://git-scm.com')\">Git</a>"
 }

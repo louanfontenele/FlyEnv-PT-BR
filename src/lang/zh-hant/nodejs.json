@@ -11,5 +11,6 @@
   "VSCode": "Visual Studio Code",
   "PhpStorm": "PhpStorm",
   "WebStorm": "WebStorm",
-  "projectEnvSet": "專案環境"
+  "projectEnvSet": "專案環境",
+  "installGit": "安裝 <a href=\"javascript:void();\" onclick=\"openUrl('https://git-scm.com')\">Git</a>"
 }

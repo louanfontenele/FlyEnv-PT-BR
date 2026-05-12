@@ -11,5 +11,6 @@
   "VSCode": "Visual Studio Code",
   "PhpStorm": "PhpStorm",
   "WebStorm": "WebStorm",
-  "projectEnvSet": "Projektin Ympäristö"
+  "projectEnvSet": "Projektin Ympäristö",
+  "installGit": "Asenna <a href=\"javascript:void();\" onclick=\"openUrl('https://git-scm.com')\">Git</a>"
 }

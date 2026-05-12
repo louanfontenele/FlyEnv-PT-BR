@@ -11,5 +11,6 @@
   "VSCode": "Visual Studio Code",
   "PhpStorm": "PhpStorm",
   "WebStorm": "WebStorm",
-  "projectEnvSet": "Thiết lập môi trường dự án"
+  "projectEnvSet": "Thiết lập môi trường dự án",
+  "installGit": "Cài đặt <a href=\"javascript:void();\" onclick=\"openUrl('https://git-scm.com')\">Git</a>"
 }

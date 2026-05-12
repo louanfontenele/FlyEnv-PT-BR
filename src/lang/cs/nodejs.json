@@ -11,5 +11,6 @@
   "VSCode": "Kód vizuálního studia",
   "PhpStorm": "PhpStorm",
   "WebStorm": "Webová bouře",
-  "projectEnvSet": "Projektové prostředí"
+  "projectEnvSet": "Projektové prostředí",
+  "installGit": "Nainstalujte <a href=\"javascript:void();\" onclick=\"openUrl('https://git-scm.com')\">Git</a>"
 }
