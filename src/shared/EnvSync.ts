@@ -111,6 +111,10 @@ class EnvSync {
     }
     return this.AppEnv!
   }
+
+  clean() {
+    this.AppEnv = undefined
+  }
 }
 
 export default new EnvSync()

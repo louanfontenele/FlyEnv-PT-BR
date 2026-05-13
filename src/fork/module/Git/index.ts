@@ -4,6 +4,7 @@ import { Base } from '../Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { execPromiseWithEnv, mkdirp, remove, zipUnpack } from '../../Fn'
 import { isLinux, isMacOS, isWindows } from '@shared/utils'
+import EnvSync from '@shared/EnvSync'
 
 type GitCheckItem = {
   label: string
@@ -30,6 +31,7 @@ class Git extends Base {
 
   checkInstalled() {
     return new ForkPromise(async (resolve) => {
+      EnvSync.clean()
       const item = await this.checkCommand('git', 'Git Version')
       resolve({
         installed: item.ok,
