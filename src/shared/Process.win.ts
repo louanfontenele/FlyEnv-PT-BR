@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import { appDebugLog, uuid } from '@shared/utils'
 import { execPromiseWithEnv } from '@shared/child-process'
 import { readFile, remove } from '@shared/fs-extra'
+import EnvSync from '@shared/EnvSync'
 
 export const ProcessPidList = async (): Promise<PItem[]> => {
   let useHelper = false
@@ -39,8 +40,9 @@ export const ProcessPidList = async (): Promise<PItem[]> => {
   try {
     const file = join(tmpdir(), `${uuid()}.json`).split('\\').join('/')
     const command = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;[Console]::InputEncoding = [System.Text.Encoding]::UTF8;Get-CimInstance Win32_Process | Select-Object CommandLine,ProcessId,ParentProcessId,CreationClassName | ConvertTo-Json | Out-File -FilePath "${file}" -Encoding utf8`
+    await EnvSync.sync()
     await execPromiseWithEnv(command, {
-      shell: 'powershell.exe'
+      shell: EnvSync.PowerShellPath || 'powershell.exe'
     })
     const content = await readFile(file, 'utf-8')
     const list = JSON5.parse(content)
@@ -182,8 +184,9 @@ export const fetchProcessPidByPort = async (port: string): Promise<string[]> => 
   const command = `netstat -ano`
   let content: string = ''
   try {
+    await EnvSync.sync()
     const res = await execPromiseWithEnv(command, {
-      shell: 'powershell.exe'
+      shell: EnvSync.PowerShellPath || 'powershell.exe'
     })
     content = res.stdout.trim()
   } catch (e) {

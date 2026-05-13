@@ -4,6 +4,7 @@ import { join, basename } from 'node:path'
 import { existsSync } from 'node:fs'
 import { mkdirp, remove, spawnPromise, uuid, writeFile } from '../../Fn'
 import { isMacOS, isWindows } from '@shared/utils'
+import EnvSync from '@shared/EnvSync'
 
 class Code extends Base {
   constructor() {
@@ -30,6 +31,7 @@ class Code extends Base {
         console.timeLog('codeRun', 'befor exec')
         if (isWindows()) {
           try {
+            await EnvSync.sync()
             const res = await spawnPromise(
               'powershell.exe',
               [
@@ -40,7 +42,7 @@ class Code extends Base {
                 `"Unblock-File -LiteralPath './${psName}'; & './${psName}'"`
               ],
               {
-                shell: 'powershell.exe',
+                shell: EnvSync.PowerShellPath || 'powershell.exe',
                 cwd: baseDir
               }
             )

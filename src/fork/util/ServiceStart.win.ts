@@ -16,6 +16,7 @@ import iconv from 'iconv-lite'
 import { ServiceStartParams } from './ServiceStart'
 import type { ModuleExecItem } from '@shared/app'
 import { ProcessPidListByPid } from '@shared/Process.win'
+import EnvSync from '@shared/EnvSync'
 
 export async function readFileAsUTF8(filePath: string): Promise<string> {
   try {
@@ -103,6 +104,7 @@ export async function serviceStartExec(
   process.chdir(baseDir)
   let res: any
   try {
+    await EnvSync.sync()
     res = await spawnPromiseWithEnv(
       'powershell.exe',
       [
@@ -113,7 +115,7 @@ export async function serviceStartExec(
         `"Unblock-File -LiteralPath './${psName}'; & './${psName}'"`
       ],
       {
-        shell: 'powershell.exe',
+        shell: EnvSync.PowerShellPath || 'powershell.exe',
         cwd: baseDir
       }
     )
@@ -245,8 +247,9 @@ export async function serviceStartExecCMD(
   process.chdir(baseDir)
   let res: any
   try {
+    await EnvSync.sync()
     res = await spawnPromiseWithEnv(psName, [], {
-      shell: 'cmd.exe',
+      shell: EnvSync.CMDPath || 'cmd.exe',
       cwd: baseDir
     })
   } catch (e) {
@@ -360,11 +363,12 @@ export async function customerServiceStartExec(
   let res: any
   let error: any
   try {
+    await EnvSync.sync()
     res = await spawnPromiseWithEnv(
       'powershell.exe',
       ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `\`"${psPath}\`"`],
       {
-        shell: 'powershell.exe',
+        shell: EnvSync.PowerShellPath || 'powershell.exe',
         cwd: baseDir,
         env: version.env
       }

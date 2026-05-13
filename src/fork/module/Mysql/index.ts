@@ -38,6 +38,7 @@ import type { Connection } from 'mysql2/promise'
 import { parse as iniParse } from 'ini'
 import { compareVersions } from '@shared/compare-versions'
 import { format } from 'date-fns'
+import EnvSync from '@shared/EnvSync'
 
 class Mysql extends Base {
   constructor() {
@@ -610,8 +611,9 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
 
           process.chdir(global.Server.MysqlDir!)
           try {
+            await EnvSync.sync()
             await spawnPromise(cmdName, [], {
-              shell: 'cmd.exe',
+              shell: EnvSync.CMDPath || 'cmd.exe',
               cwd: global.Server.MysqlDir!
             })
           } catch (e: any) {

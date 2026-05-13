@@ -32,6 +32,7 @@ import Helper from '../../Helper'
 import { isWindows, pathFixedToUnix } from '@shared/utils'
 import { ProcessListSearch } from '@shared/Process.win'
 import type { PItem } from '@shared/Process'
+import EnvSync from '@shared/EnvSync'
 class RabbitMQ extends Base {
   baseDir: string = ''
 
@@ -127,11 +128,12 @@ PLUGINS_DIR="${pathFixedToUnix(pluginsDir)}"`
     }
     let str = ''
     try {
+      await EnvSync.sync()
       const stdout = (
         await execPromise(
           'Write-Host "##FlyEnv-ERLANG_HOME$($env:ERLANG_HOME)FlyEnv-ERLANG_HOME##"',
           {
-            shell: 'powershell.exe'
+            shell: EnvSync.PowerShellPath || 'powershell.exe'
           }
         )
       ).stdout.trim()
@@ -155,9 +157,10 @@ PLUGINS_DIR="${pathFixedToUnix(pluginsDir)}"`
         console.log('epmd.exe existsSync: ', bin)
         process.chdir(dirname(bin))
         try {
+          await EnvSync.sync()
           await execPromise(`start /B ./epmd.exe > NUL 2>&1`, {
             cwd: dirname(bin),
-            shell: 'cmd.exe'
+            shell: EnvSync.CMDPath || 'cmd.exe'
           })
         } catch (e: any) {
           console.log('epmd.exe start error: ', e)

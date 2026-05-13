@@ -388,7 +388,7 @@ export async function serviceStartSpawn(
     }
     if (isWindows()) {
       if (bin.endsWith('.ps1')) {
-        options.shell = 'powershell.exe'
+        options.shell = EnvSync.PowerShellPath || 'powershell.exe'
       } else if (!bin.endsWith('.exe') && !bin.endsWith('.com')) {
         options.shell = true
       }
@@ -429,6 +429,7 @@ export async function serviceStartSpawn(
   }
 
   try {
+    await EnvSync.sync()
     return await doExec()
   } catch (e) {
     on({

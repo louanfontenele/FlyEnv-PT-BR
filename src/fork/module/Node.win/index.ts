@@ -26,6 +26,7 @@ import type { SoftInstalled } from '@shared/app'
 import TaskQueue from '../../TaskQueue'
 import { run } from 'npm-check-updates'
 import { appDebugLog } from '@shared/utils'
+import EnvSync from '@shared/EnvSync'
 
 class Manager extends Base {
   constructor() {
@@ -513,9 +514,10 @@ class Manager extends Base {
       const all: any[] = []
       let fnmDir = ''
       try {
+        await EnvSync.sync()
         fnmDir = (
           await execPromiseWithEnv(`echo %FNM_DIR%`, {
-            shell: 'cmd.exe'
+            shell: EnvSync.CMDPath || 'cmd.exe'
           })
         ).stdout.trim()
         if (fnmDir === '%FNM_DIR%') {
@@ -560,9 +562,10 @@ class Manager extends Base {
 
       let nvmDir = ''
       try {
+        await EnvSync.sync()
         nvmDir = (
           await execPromiseWithEnv(`nvm root`, {
-            shell: 'cmd.exe'
+            shell: EnvSync.CMDPath || 'cmd.exe'
           })
         ).stdout
           .trim()
@@ -570,9 +573,10 @@ class Manager extends Base {
       } catch {}
       if (!nvmDir) {
         try {
+          await EnvSync.sync()
           nvmDir = (
             await execPromiseWithEnv(`nvm root`, {
-              shell: 'powershell.exe'
+              shell: EnvSync.PowerShellPath || 'powershell.exe'
             })
           ).stdout
             .trim()

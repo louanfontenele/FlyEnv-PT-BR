@@ -74,7 +74,7 @@ class NodePTY {
           TERM: 'xterm-256color',
           COLORTERM: 'truecolor'
         })
-        const pty: IPty = spawn('powershell.exe', [], {
+        const pty: IPty = spawn(EnvSync.PowerShellPath || 'powershell.exe', [], {
           name: 'xterm-color',
           cols: 80,
           rows: 34,

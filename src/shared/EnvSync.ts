@@ -8,6 +8,9 @@ import JSON5 from 'json5'
 
 class EnvSync {
   AppEnv: Record<string, any> | undefined
+  CMDPath: string | undefined
+  PowerShellPath: string | undefined
+
   constructor() {}
 
   /**
@@ -26,10 +29,47 @@ class EnvSync {
         return process.env as any
       }
     }
+    const findEnvByKey = (key: string): string | undefined => {
+      const lowKey = key.toLowerCase()
+      for (const k in process.env) {
+        const lowEnvKey = k.toLowerCase()
+        if (lowKey === lowEnvKey) {
+          return process.env[k]
+        }
+      }
+      return undefined
+    }
+
     let stdout = ''
+    let cmd = ''
+    const cmdDefault = `C:\\Windows\\System32\\cmd.exe`
+    const ComSpec = findEnvByKey('ComSpec')
+    const SystemRoot = findEnvByKey('SystemRoot')
+    if (ComSpec) {
+      cmd = ComSpec
+    } else if (SystemRoot) {
+      cmd = join(SystemRoot, 'System32/cmd.exe')
+    } else if (existsSync(cmdDefault)) {
+      cmd = cmdDefault
+    } else {
+      cmd = 'cmd.exe'
+    }
+    let powershell = ''
+    const powershellDefault = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+    if (SystemRoot) {
+      powershell = join(SystemRoot, 'System32/WindowsPowerShell/v1.0/powershell.exe')
+    } else if (existsSync(powershellDefault)) {
+      powershell = powershellDefault
+    } else {
+      powershell = 'powershell.exe'
+    }
+    appDebugLog(
+      `[EnvSync][getWindowsAllEnv][cmd]`,
+      `${JSON.stringify({ cmd, powershell }, null, 2)}`
+    ).catch()
     try {
-      const command = `powershell -NoProfile -ExecutionPolicy Bypass -File "${dest}"`
-      const res = await execPromise(command, { encoding: 'utf8' })
+      const command = `"${powershell}" -NoProfile -ExecutionPolicy Bypass -File "${dest}"`
+      const res = await execPromise(command, { encoding: 'utf8', shell: cmd })
       stdout = res?.stdout?.trim() ?? ''
     } catch (e) {
       console.error('[EnvSync] Failed to fetch Windows env from script:', e)
@@ -48,6 +88,75 @@ class EnvSync {
       appDebugLog(`[EnvSync][getWindowsAllEnv][parse][error]`, `${stdout}`).catch()
       return process.env as any
     }
+  }
+
+  // 获取 Windows下的各种路径. 防止因为用户系统环境变量设置问题导致找不到可执行文件
+  private fetchWinPaths() {
+    // 查找 CMD 路径
+    const fetchCMDPath = () => {
+      if (this.CMDPath) {
+        return
+      }
+      const cmdPath = `C:\\Windows\\System32\\cmd.exe`
+      // 绝对路径
+      if (existsSync(cmdPath)) {
+        this.CMDPath = cmdPath
+        return
+      }
+      // 系统ComSpec变量
+      if (this.AppEnv?.ComSpec && existsSync(this.AppEnv?.ComSpec)) {
+        this.CMDPath = this.AppEnv?.ComSpec
+        return
+      }
+      // 系统SystemRoot变量
+      if (this.AppEnv?.SystemRoot && existsSync(this.AppEnv?.SystemRoot)) {
+        this.CMDPath = join(this.AppEnv?.SystemRoot, 'System32/cmd.exe')
+        return
+      }
+      // 从 AppEnv 里找小写key
+      for (const k in this.AppEnv) {
+        const lowKey = k.toLowerCase()
+        if (lowKey === 'comspec' && existsSync(this.AppEnv?.[k])) {
+          this.CMDPath = this.AppEnv?.[k]
+          return
+        }
+        if (lowKey === 'systemroot' && existsSync(this.AppEnv?.[k])) {
+          this.CMDPath = join(this.AppEnv?.[k], 'System32/cmd.exe')
+          return
+        }
+      }
+    }
+    // 查找 PowerShell 路径
+    const fetchPowerShellPath = () => {
+      if (this.PowerShellPath) {
+        return
+      }
+      const powershellPath = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+      if (existsSync(powershellPath)) {
+        this.PowerShellPath = powershellPath
+        return
+      }
+      for (const k in this.AppEnv) {
+        const lowKey = k.toLowerCase()
+        if (lowKey === 'systemroot' && existsSync(this.AppEnv?.[k])) {
+          this.PowerShellPath = join(
+            this.AppEnv?.[k],
+            'System32/WindowsPowerShell/v1.0/powershell.exe'
+          )
+          return
+        }
+        if (lowKey === 'programfiles' && existsSync(this.AppEnv?.[k])) {
+          this.PowerShellPath = join(this.AppEnv?.[k], 'PowerShell/7/pwsh.exe')
+          return
+        }
+        if (lowKey === 'programfiles(x86)' && existsSync(this.AppEnv?.[k])) {
+          this.PowerShellPath = join(this.AppEnv?.[k], 'PowerShell/7/pwsh.exe')
+          return
+        }
+      }
+    }
+    fetchCMDPath()
+    fetchPowerShellPath()
   }
 
   async sync() {
@@ -81,11 +190,11 @@ class EnvSync {
           paths.push(p)
         }
       })
-      const extent = `C:\\Program Files\\RedHat\\Podman;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\`
+      const extent = `C:\\Program Files\\RedHat\\Podman;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32`
       extent.split(';').forEach((path) => {
         const p = path.trim()
         if (p) {
-          paths.push(p)
+          paths.unshift(p)
         }
       })
 
@@ -98,6 +207,7 @@ class EnvSync {
         }
       }
       this.AppEnv = env
+      this.fetchWinPaths()
       return this.AppEnv
     }
 
@@ -114,6 +224,8 @@ class EnvSync {
 
   clean() {
     this.AppEnv = undefined
+    this.CMDPath = undefined
+    this.PowerShellPath = undefined
   }
 }
 

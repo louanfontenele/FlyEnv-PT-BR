@@ -37,6 +37,7 @@ import {
 import { PItem, ProcessKill, ProcessListByPid } from '@shared/Process'
 import RequestTimer from '@shared/requestTimer'
 import Helper from '../../Helper'
+import EnvSync from '@shared/EnvSync'
 
 class Manager extends Base {
   constructor() {
@@ -1015,11 +1016,12 @@ chcp 65001>nul
         }
       }
       try {
+        await EnvSync.sync()
         await execPromiseWithEnv(
           `if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 }`,
-          { shell: 'powershell.exe' }
+          { shell: EnvSync.PowerShellPath || 'powershell.exe' }
         )
       } catch {}
 
