@@ -171,25 +171,25 @@ class EnvSync {
         lastEnv = await this.getWindowsAllEnv()
       } catch {}
       console.timeEnd('EnvSync getWindowsAllEnv')
+      const keys = ['PATH', 'Path', 'path']
       const paths: string[] = []
-      lastEnv?.PATH?.split(';')?.forEach((path) => {
-        const p = path.trim()
-        if (p) {
-          paths.push(p)
-        }
-      })
-      process.env?.Path?.split(';')?.forEach((path) => {
-        const p = path.trim()
-        if (p) {
-          paths.push(p)
-        }
-      })
-      process.env?.PATH?.split(';')?.forEach((path) => {
-        const p = path.trim()
-        if (p) {
-          paths.push(p)
-        }
-      })
+      for (const key of keys) {
+        lastEnv?.[key]?.split(';')?.forEach((path) => {
+          const p = path.trim()
+          if (p) {
+            paths.push(p)
+          }
+        })
+      }
+      for (const key of keys) {
+        process.env?.[key]?.split(';')?.forEach((path) => {
+          const p = path.trim()
+          if (p) {
+            paths.push(p)
+          }
+        })
+      }
+
       const extent = `C:\\Program Files\\RedHat\\Podman;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32`
       extent.split(';').forEach((path) => {
         const p = path.trim()

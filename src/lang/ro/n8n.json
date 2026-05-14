@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Portul pentru interfața n8n web (implicit: 5678)",
   "N8N_HOST": "Numele gazdei sau adresa IP pentru interfata n8n (implicit: localhost)",
   "N8N_PROTOCOL": "Protocol: http sau https (implicit: http)",

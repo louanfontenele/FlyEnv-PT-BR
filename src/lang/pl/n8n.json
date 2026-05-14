@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Port dla interfejsu sieci web n8n (domyślnie: 5678)",
   "N8N_HOST": "Nazwa hosta lub adres IP dla n8n interfejsu internetowego (domyślnie: localhost)",
   "N8N_PROTOCOL": "Protokół: http lub https (domyślnie: http)",

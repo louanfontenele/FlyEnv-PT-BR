@@ -47,7 +47,6 @@
   "addDev": "添加為開發依賴",
   "selectedDependencies": "已選擇的依賴項",
   "noPackagesSelected": "尚未選擇任何套件。",
-  "dependencyVersion": "版本",
   "remove": "移除",
   "checkUpdatesAfterCreate": "建立後檢查套件更新",
   "firebaseFilesByPlatform": "各平台的 Firebase 檔案",
@@ -62,7 +61,6 @@
   "outputDirRequired": "必須填寫輸出目錄",
   "creatingProject": "正在建立 Flutter 專案",
   "projectCreated": "專案已建立！",
-  "searchPubFailed": "搜尋 pub.dev 失敗",
   "flutterCreateFailed": "flutter create 失敗",
   "flutterProjectSettings": "Flutter 專案設定",
   "save": "儲存",
@@ -81,12 +79,9 @@
   "saveSuccess": "Flutter 專案設定已儲存",
   "saveFailed": "套用專案設定失敗",
   "projectPathRequired": "必須填寫專案路徑",
-  "readConfigFailed": "讀取專案設定失敗",
-  "readPubspecFailed": "讀取 pubspec 套件失敗",
   "templateAppDesc": "包含 Material UI 骨架的完整 Flutter 應用程式。",
   "templatePackageDesc": "可透過 pub.dev 分享的 Dart 套件。",
   "templatePluginDesc": "用於存取平台特定（Android/iOS/Windows...）API 的 Flutter 外掛。",
   "templateModuleDesc": "可嵌入現有 Android/iOS 應用的 Flutter 模組。",
   "templateSkeletonDesc": "使用 Material 3 和 Navigation 2.0 的清單/詳細頁 Flutter 應用。"
-
 }

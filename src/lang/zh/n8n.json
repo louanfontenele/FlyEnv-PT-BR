@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "n8n Web界面端口（默认: 5678）",
   "N8N_HOST": "n8n Web界面主机名或IP地址（默认: localhost）",
   "N8N_PROTOCOL": "协议：http 或 https（默认: http）",

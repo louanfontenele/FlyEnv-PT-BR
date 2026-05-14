@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "n8n Web 介面通訊埠（預設：5678）",
   "N8N_HOST": "n8n Web 介面主機名稱或 IP 位址（預設：localhost）",
   "N8N_PROTOCOL": "協定：http 或 https（預設：http）",

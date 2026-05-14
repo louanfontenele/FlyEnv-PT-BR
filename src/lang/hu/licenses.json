@@ -1,0 +1,60 @@
+{
+  "title": "Licencinformációk",
+  "description": "Ez a licenc elismeri és támogatja a FlyEnv és szerzőinek munkáját. Nem célja a felhasználók korlátozása, hanem arra ösztönöz, hogy tiszteletben tartsák a fejlesztők munkáját és szellemi tulajdonát. Kérjük, gondoskodjon érvényes licenc beszerzéséről, mielőtt a FlyEnv-et kereskedelmi célokra használná.",
+  "restrictions": {
+    "title": "A licenccel nem rendelkező felhasználókra az alábbi korlátozások vonatkoznak:",
+    "items": {
+      "0": "Legfeljebb három webhely hozható létre.",
+      "1": "Az AI chat funkció kizárólag háromnapos próbaidőszakban érhető el.",
+      "2": "A jövőbeli funkciókra további korlátozások vonatkozhatnak."
+    }
+  },
+  "howToObtain": {
+    "title": "Licenc beszerzése",
+    "description": "A FlyEnv rugalmas módokat kínál a licenc beszerzésére. A felhasználók az alábbi módszerek bármelyikével jelentkezhetnek:",
+    "methods": {
+      "0": {
+        "title": "Adományozás a projektnek",
+        "description": "Az adományoknál nincs kötelező fix összeg. A különböző országok felhasználóinak eltérő gazdasági helyzetét figyelembe véve (például sok felhasználó diák), válasszon olyan összeget, amely Önnek kényelmes."
+      },
+      "1": {
+        "title": "Hozzájárulás a fejlesztéshez",
+        "description": "Vegyen részt a projektben Pull Request beküldésével. A kód mennyiségétől függetlenül, ha a hozzájárulás pozitívan javítja a projektet (például fordítási hiba javítása), az hozzájárulásnak számít."
+      },
+      "2": {
+        "title": "A projekt népszerűsítése",
+        "description": "Népszerűsítse a FlyEnv-et tapasztalatainak megosztásával cikkekben, videókban, blogokon, vlogokban vagy hozzászólásokban. Előnyben részesül az őszinte felhasználói visszajelzés. A tartalom bármilyen nyelven és platformon lehet."
+      }
+    }
+  },
+  "submitInfo": "A fenti módszerek bármelyikének teljesítése után töltse ki az eredményeket az alábbi beviteli mezőben, majd kattintson a „Licenc igénylése” gombra a jelentkezés elküldéséhez. A licenckérelmek feldolgozása általában 24 órán belül megtörténik.",
+  "messageLabel": "Üzenet",
+  "messagePlaceholder": "Adományozás választása esetén adja meg az adományozót, az adományozási linket vagy a rendelésazonosítót.\nA projektfejlesztésben való részvétel esetén adja meg a PR hivatkozását.\nNépszerűsítés választása esetén adja meg a cikk, videó, blog, vlog vagy hozzászólás hivatkozását.",
+  "requestButton": "Licenc igénylése",
+  "refreshButton": "Állapot frissítése",
+  "licenseActivated": "Licenc aktiválva",
+  "licenseNoActivated": "A licenc nincs aktiválva",
+  "licenseInfo": "A jelenleg biztosított licenc állandó licenc, és minden számítógéphez egy licenc tartozik. Ha számítógépet vált, az új eszköz uuid azonosítóját a „Saját licencek” részben kell kötni, vagy új licencet kell igényelni.",
+  "logoutTips": "Biztosan kijelentkezik?",
+  "delBindTips": "Biztosan leválasztja a licencet erről az UUID-ről?",
+  "addBindTips": "Biztosan ehhez az UUID-hez köti a licencet?",
+  "currentLicenseState": "Licenc állapota ezen az eszközön",
+  "activeState": "Aktiválási állapot",
+  "myLicense": "Saját licencek",
+  "loginTips": "Előbb jelentkezzen be",
+  "logingTips": "Bejelentkezés GitHubon keresztül...",
+  "licenseNo": "Licencszám",
+  "licenseBindUUID": "Hozzákötött UUID",
+  "delBind": "Leválasztás",
+  "bindCurrentUUID": "Eszköz hozzákötése",
+  "licenseDescription": "Licenc leírása",
+  "loginFail": "Bejelentkezés sikertelen",
+  "oauthCanceledTitle": "Engedélyezés megszakítva",
+  "oauthCanceledMessage": "A felhasználó megszakította az engedélyezési folyamatot",
+  "oauthFailedTitle": "Engedélyezés sikertelen",
+  "oauthFailedMessage": "Az engedélyezés sikertelen. Ok: {error}",
+  "oauthFailedByNoAuthCode": "Nem érkezett engedélyezési kód",
+  "oauthTimeout": "Engedélyezési időtúllépés",
+  "oauthSuccessTitle": "Engedélyezés sikeres",
+  "oauthSuccessMessage": "Ez az oldal bezárható. Térjen vissza a FlyEnv-be a licencinformációk megtekintéséhez."
+}

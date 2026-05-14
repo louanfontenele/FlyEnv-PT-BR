@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Porta per l'interfaccia web n8n (default: 5678)",
   "N8N_HOST": "Nome host o indirizzo IP per l'interfaccia web n8n (predefinito: localhost)",
   "N8N_PROTOCOL": "Protocollo: http o https (default: http)",

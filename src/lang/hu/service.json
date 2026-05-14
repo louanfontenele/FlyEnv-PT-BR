@@ -1,0 +1,22 @@
+{
+  "setaliase": "Alias beállítása",
+  "env": "Környezet",
+  "alias": "Álnév",
+  "envTips": "Az útvonal hozzá lett adva a környezeti változóhoz?",
+  "aliasTips": "A terminálban használt álnév",
+  "bundleinVersionDelTips": "Ez egy beépített verzió, biztosan ne jelenjen meg?",
+  "customDirVersionDelTips": "Ez egy egyéni útvonalú verzió, biztosan ne jelenjen meg?",
+  "useSysPHP": "Alapértelmezett PHP verzió használata",
+  "setByApp": "A FlyEnv által beállított környezeti változók",
+  "setByNoApp": "Nem a FlyEnv által beállított környezeti változók",
+  "ftpdNeedPasswordToStart": "A Pure-FTPd indításához sudo jogosultság szükséges. Kérjük, adja meg a felhasználói jelszavát. A jelszó később automatikus kitöltésre kerül. Vagy az alábbi gombra kattintva kézzel is megadhatja a terminálban, de ez az üzenet újra megjelenhet.",
+  "ErrorTips": {
+    "VCRuntime": {
+      "title": "A rendszerből hiányzik a Visual C++ Redistributable (DLL-ek), amelyek szükségesek ennek a verziónak a futtatásához. Kérjük, kattintson az alábbi linkre a VC Runtime letöltéséhez és telepítéséhez a Microsoft hivatalos weboldaláról.",
+      "versionRelation": "Verziókompatibilitási referencia:",
+      "software": "Szoftver",
+      "versionRange": "Verziótartomány",
+      "msvsVersion": "MSVC verzió"
+    }
+  }
+}

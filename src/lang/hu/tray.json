@@ -1,0 +1,10 @@
+{
+  "showMainWin": "Főablak megjelenítése",
+  "exit": "Kilépés",
+  "run": "Fut",
+  "notRun": "Nem fut",
+  "trayMenuBarStyle": "Tálca felugró stílus",
+  "classic": "Klasszikus",
+  "modern": "Modern",
+  "trayMenuBarStyleTips": "Válassza ki a tálca felugró stílusát. Egyes Linux asztali környezetekben a modern stílus problémákat okozhat, ilyenkor válassza a klasszikus stílust."
+}

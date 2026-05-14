@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Port pro webové rozhraní n8n (výchozí: 5678)",
   "N8N_HOST": "Název hostitele nebo IP adresa pro n8n webové rozhraní (výchozí: localhost)",
   "N8N_PROTOCOL": "Protokol: http nebo https (výchozí: http)",

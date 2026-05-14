@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "n8n web arayüzü için port (varsayılan: 5678)",
   "N8N_HOST": "n8n web arayüzü için host adı veya IP adresi (varsayılan: localhost)",
   "N8N_PROTOCOL": "Protokol: http veya https (varsayılan: http)",

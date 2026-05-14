@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Portti n8n web-rajapintaa varten (oletus: 5678)",
   "N8N_HOST": "Isäntänimi tai IP-osoite n8n web-rajapinnalle (oletus: localhost)",
   "N8N_PROTOCOL": "Protokolla: http tai https (oletus: http)",

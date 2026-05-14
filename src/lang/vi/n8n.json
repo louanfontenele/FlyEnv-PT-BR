@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Cổng cho giao diện web n8n (mặc định: 5678)",
   "N8N_HOST": "Tên máy chủ hoặc địa chỉ IP cho giao diện web n8n (mặc định: localhost)",
   "N8N_PROTOCOL": "Giao thức: http hoặc https (mặc định: http)",

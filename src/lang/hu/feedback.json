@@ -1,0 +1,10 @@
+{
+  "email": "E-mail",
+  "country": "Ország",
+  "message": "Üzenet",
+  "messagelengthErr": "Az üzenet hossza 5 - 1024 karakter lehet",
+  "sendMessage": "Üzenet küldése",
+  "anythingToSay": "Van mondanivalója?",
+  "noSelected": "Nincs kiválasztva",
+  "inputFilter": "Szűrőbeviteli mező"
+}

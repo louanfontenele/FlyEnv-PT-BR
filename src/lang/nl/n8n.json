@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Poort voor de n8n webinterface (standaard: 5678)",
   "N8N_HOST": "Hostnaam of IP-adres voor de n8n webinterface (standaard: localhost)",
   "N8N_PROTOCOL": "Protocol: http of https (standaard: http)",

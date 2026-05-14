@@ -83,5 +83,6 @@
   "runSetting": "Postavke Pokretanja",
   "exec": "Izvrši",
   "runInTerminal": "Pokreni u Terminalu",
-  "portSetting": "Postavke Portova"
+  "portSetting": "Postavke Portova",
+  "projectFlutter": "Flutter projekti"
 }

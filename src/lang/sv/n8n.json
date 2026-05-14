@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "Port för n8n webbgränssnitt (standard: 5678)",
   "N8N_HOST": "Värdnamn eller IP-adress för n8n webbgränssnitt (standard: localhost)",
   "N8N_PROTOCOL": "Protokoll: http eller https (standard: http)",

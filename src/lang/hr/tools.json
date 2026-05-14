@@ -14,12 +14,10 @@
   "component": "URL Alata",
   "addTool": "Dodaj Alat",
   "editTool": "Uredi Alat",
-
   "envValue": "Vrijednost",
   "rawEnvPath": "Stvarna Putanja",
   "envValueErrorTips": "Putanja ne postoji. Možete kliknuti za kopiranje naredbe i testirati je u naredbenom retku.",
   "invalidPath": "Nevaljana Putanja",
-
   "base64-file-converter-title": "Base64 Pretvarač Datoteka",
   "base64-string-converter-title": "Base64 Koder/Dekoder Nizova",
   "chmod-calculator-title": "Chmod Kalkulator",
@@ -65,7 +63,6 @@
   "url-parse-title": "Parser URL-a",
   "wifi-qr-code-generator-title": "Generator WiFi QR Koda",
   "URLTimingAnalyzer": "Analizator Vremena URL-a",
-
   "CodePlayGround": "Code Playground",
   "CodeLibrary": "Knjižnica Koda",
   "GroupName": "Naziv Grupe",
@@ -83,7 +80,6 @@
   "MoveToTop": "Premjesti Na Vrh",
   "MoveToGroup": "Premjesti U Grupu",
   "MarkdownPreview": "Markdown Pregled",
-
   "Capturer": "Snimka Zaslona",
   "CapturerShortcut": "Prečica za Snimku Zaslona",
   "CapturerShortcutTips": "Pritisnite tipke koje želite koristiti za snimanje zaslona, npr. Ctrl+Shift+A",
@@ -98,7 +94,6 @@
   "CapturerDo": "Snimka Zaslona",
   "CapturerHideWindowDo": "Sakrij Ovaj Prozor i Snimi Zaslon",
   "CapturerPointPosition": "Koordinate",
-
   "ImageCompress": {
     "title": "Kompresija Slika",
     "preview": {
@@ -274,5 +269,6 @@
       "lab": "Lab",
       "bw": "Crno-bijelo"
     }
-  }
+  },
+  "websocket-sse-title": "WebSocket / SSE"
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "N8N_PORT": "n8n ウェブインターフェイスのポート (デフォルト: 5678)",
   "N8N_HOST": "n8n web インターフェイスのホスト名または IP アドレス (デフォルト: localhost)",
   "N8N_PROTOCOL": "プロトコル: http または https (デフォルト: http)",

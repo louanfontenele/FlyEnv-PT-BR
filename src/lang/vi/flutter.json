@@ -1,4 +1,4 @@
-﻿{
+{
   "sdkDetails": "SDK Details",
   "sdkNotFound": "Flutter SDK not found. Add a version in the Version tab.",
   "source": "Source",
@@ -47,7 +47,6 @@
   "addDev": "Add dev",
   "selectedDependencies": "Selected dependencies",
   "noPackagesSelected": "No packages selected.",
-  "dependencyVersion": "Version",
   "remove": "Remove",
   "checkUpdatesAfterCreate": "Check package updates after create",
   "firebaseFilesByPlatform": "Firebase files by platform",
@@ -62,7 +61,6 @@
   "outputDirRequired": "Output directory is required",
   "creatingProject": "Creating Flutter project",
   "projectCreated": "Project created!",
-  "searchPubFailed": "Failed to search pub.dev",
   "flutterCreateFailed": "flutter create failed",
   "flutterProjectSettings": "Flutter Project Settings",
   "save": "Lưu",
@@ -81,8 +79,6 @@
   "saveSuccess": "Flutter project settings saved",
   "saveFailed": "Failed to apply project config",
   "projectPathRequired": "Project path is required",
-  "readConfigFailed": "Failed to read project config",
-  "readPubspecFailed": "Failed to read pubspec packages",
   "templateAppDesc": "A full Flutter application with Material UI skeleton.",
   "templatePackageDesc": "A Dart package that can be shared via pub.dev.",
   "templatePluginDesc": "A Flutter plugin for platform-specific (Android/iOS/Windows...) APIs.",
