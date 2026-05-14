@@ -63,10 +63,6 @@ class EnvSync {
     } else {
       powershell = 'powershell.exe'
     }
-    appDebugLog(
-      `[EnvSync][getWindowsAllEnv][cmd]`,
-      `${JSON.stringify({ cmd, powershell }, null, 2)}`
-    ).catch()
     try {
       const command = `"${powershell}" -NoProfile -ExecutionPolicy Bypass -File "${dest}"`
       const res = await execPromise(command, { encoding: 'utf8', shell: cmd })
